@@ -8,13 +8,18 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     username: sa
-    password: 1234
+    password:
     url: jdbc:h2:mem:test
+    sql:
+      init:
+        schema-locations: classpath*:db/schema.sql #h2 테이블 위치
+        data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
+
 
 
   jpa:
     hibernate:
-      ddl-auto: create    # 스키마 자동 생성
+      ddl-auto: none    #스키마 직접 생성 (자동생성 X)
     show-sql: true        # SQL 쿼리 출력
     properties:
       hibernate:
@@ -23,8 +28,8 @@ spring:
           time_zone: Asia/Seoul   # 서버 시간 서울로 변경
   sql:
     init:
+      schema-locations: classpath*:db/schema.sql #h2 테이블 위치
       data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
-
 
 logging:
   level:
