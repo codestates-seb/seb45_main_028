@@ -8,7 +8,8 @@ public enum ExceptionCode {
     MEMBER_NOT_AUTHORIZED(401, "Member not authorized"),
     POST_NOT_FOUND(404, "POST not found"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
-    ITEM_NOT_FOUND(404, "ITEM not found");
+    ITEM_NOT_FOUND(404, "ITEM not found"),
+    Complain_NOT_FOUND(404,"COPLAIN not found");
 
 
 
