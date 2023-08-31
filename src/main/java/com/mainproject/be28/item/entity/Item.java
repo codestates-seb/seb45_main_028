@@ -1,13 +1,10 @@
 package com.mainproject.be28.item.entity;
 
-import com.mainproject.be28.board.entity.Board;
-import com.mainproject.be28.member.entity.Member;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
