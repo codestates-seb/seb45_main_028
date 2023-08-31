@@ -22,18 +22,6 @@ public class ComplainDto {
 
         }
 
-        @Setter
-        @Getter
-        public static class ListResponse{
-            private Long memberId;
-            private Long itemId;
-            private String content;
-
-
         }
 
-        public class DeleteRequest {
-            private Long complainId;
-        }
-    }
 
