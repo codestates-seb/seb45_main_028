@@ -37,14 +37,14 @@ CREATE TABLE COMMENT (
 -- ITEM 테이블
 CREATE TABLE ITEM (
                       ITEM_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
-                      ITEM_NAME VARCHAR(100),
-                      ITEM_PRICE BIGINT,
-                      ITEM_DETAIL VARCHAR(100),
-                      ITEM_STATUS VARCHAR(100),
-                      ITEM_COLOR VARCHAR(100),
-                      ITEM_SCORE DOUBLE,
-                      ITEM_BRAND VARCHAR(100),
-                      ITEM_CATEGORY VARCHAR(100)
+                      NAME VARCHAR(100),
+                      PRICE BIGINT,
+                      DETAIL VARCHAR(100),
+                      STATUS VARCHAR(100),
+                      COLOR VARCHAR(100),
+                      SCORE DOUBLE,
+                      BRAND VARCHAR(100),
+                      CATEGORY VARCHAR(100)
 );
 
 -- CART 테이블

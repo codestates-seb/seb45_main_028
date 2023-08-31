@@ -8,7 +8,7 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     username: sa
-    password: 1234
+    password:
     url: jdbc:h2:mem:test
     sql:
       init:

@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ComplainRepository extends JpaRepository<Complain, Long> {
-    @Query(value = "SELECT * FROM complain WHERE item_id = :itemId", nativeQuery = true)
-    List<Complain> findReviewsByItemId(Long itemId);
+
 }
