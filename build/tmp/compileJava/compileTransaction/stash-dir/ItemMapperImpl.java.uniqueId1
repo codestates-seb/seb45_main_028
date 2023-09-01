@@ -1,0 +1,96 @@
+package com.mainproject.be28.item.mapper;
+
+import com.mainproject.be28.item.dto.ItemDto.Patch;
+import com.mainproject.be28.item.dto.ItemDto.Post;
+import com.mainproject.be28.item.dto.OnlyItemResponseDto;
+import com.mainproject.be28.item.dto.OnlyItemResponseDto.OnlyItemResponseDtoBuilder;
+import com.mainproject.be28.item.entity.Item;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.processing.Generated;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = "org.mapstruct.ap.MappingProcessor",
+    date = "2023-09-01T15:19:31+0900",
+    comments = "version: 1.4.2.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.2.1.jar, environment: Java 11.0.18 (Azul Systems, Inc.)"
+)
+@Component
+public class ItemMapperImpl implements ItemMapper {
+
+    @Override
+    public Item itemPostDtoToItem(Post itemPostDto) {
+        if ( itemPostDto == null ) {
+            return null;
+        }
+
+        Item item = new Item();
+
+        item.setItemId( itemPostDto.getItemId() );
+        item.setName( itemPostDto.getName() );
+        item.setPrice( itemPostDto.getPrice() );
+        item.setDetail( itemPostDto.getDetail() );
+        item.setStatus( itemPostDto.getStatus() );
+        item.setColor( itemPostDto.getColor() );
+        item.setScore( itemPostDto.getScore() );
+        item.setBrand( itemPostDto.getBrand() );
+        item.setCategory( itemPostDto.getCategory() );
+
+        return item;
+    }
+
+    @Override
+    public Item itemPatchDtoToItem(Patch itemPatchDto) {
+        if ( itemPatchDto == null ) {
+            return null;
+        }
+
+        Item item = new Item();
+
+        item.setItemId( itemPatchDto.getItemId() );
+        item.setName( itemPatchDto.getName() );
+        item.setPrice( itemPatchDto.getPrice() );
+        item.setDetail( itemPatchDto.getDetail() );
+        item.setStatus( itemPatchDto.getStatus() );
+        item.setColor( itemPatchDto.getColor() );
+        item.setScore( itemPatchDto.getScore() );
+        item.setBrand( itemPatchDto.getBrand() );
+        item.setCategory( itemPatchDto.getCategory() );
+
+        return item;
+    }
+
+    @Override
+    public OnlyItemResponseDto itemToOnlyItemResponseDto(Item item) {
+        if ( item == null ) {
+            return null;
+        }
+
+        OnlyItemResponseDtoBuilder onlyItemResponseDto = OnlyItemResponseDto.builder();
+
+        onlyItemResponseDto.name( item.getName() );
+        onlyItemResponseDto.price( item.getPrice() );
+        onlyItemResponseDto.detail( item.getDetail() );
+        onlyItemResponseDto.status( item.getStatus() );
+        onlyItemResponseDto.color( item.getColor() );
+        onlyItemResponseDto.score( item.getScore() );
+        onlyItemResponseDto.brand( item.getBrand() );
+        onlyItemResponseDto.category( item.getCategory() );
+
+        return onlyItemResponseDto.build();
+    }
+
+    @Override
+    public List<OnlyItemResponseDto> itemsToOnlyItemResponseDtos(List<Item> items) {
+        if ( items == null ) {
+            return null;
+        }
+
+        List<OnlyItemResponseDto> list = new ArrayList<OnlyItemResponseDto>( items.size() );
+        for ( Item item : items ) {
+            list.add( itemToOnlyItemResponseDto( item ) );
+        }
+
+        return list;
+    }
+}
