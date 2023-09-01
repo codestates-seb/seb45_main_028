@@ -1,13 +1,13 @@
 package com.mainproject.be28.response;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-
-@Getter
 @AllArgsConstructor
+@Getter
 public class MultiResponseDto<T> {
     private List<T> data;
     private PageInfo pageInfo;
@@ -18,5 +18,3 @@ public class MultiResponseDto<T> {
                 page.getSize(), page.getTotalElements(), page.getTotalPages());
     }
 }
-
-
