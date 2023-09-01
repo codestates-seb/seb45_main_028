@@ -11,15 +11,16 @@ CREATE Table MEMBER
 );
 -- BOARD 테이블
 CREATE TABLE BOARD (
-                      BOARD_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
-                      TITLE VARCHAR(100) NOT NULL,
-                      MEMBER_ID BIGINT NOT NULL,
-                      CONTENT VARCHAR(1000),
-                      CREATED_AT TIMESTAMP NOT NULL,
-                      VIEW_COUNT BIGINT,
-                      LIKE_COUNT BIGINT,
-                      BOARD_CATEGORY VARCHAR(100) NOT NULL,
-                      FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
+
+                       BOARD_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
+                       TITLE VARCHAR(100) NOT NULL,
+                       MEMBER_ID BIGINT NOT NULL,
+                       CONTENT VARCHAR(1000),
+                       CREATED_AT TIMESTAMP NOT NULL,
+                       VIEW_COUNT BIGINT,
+                       LIKE_COUNT BIGINT,
+                       BOARD_CATEGORY VARCHAR(100) NOT NULL,
+                       FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
 
 -- COMMENT 테이블
@@ -37,14 +38,14 @@ CREATE TABLE COMMENT (
 -- ITEM 테이블
 CREATE TABLE ITEM (
                       ITEM_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
-                      ITEM_NAME VARCHAR(100),
-                      ITEM_PRICE BIGINT,
-                      ITEM_DETAIL VARCHAR(100),
-                      ITEM_STATUS VARCHAR(100),
-                      ITEM_COLOR VARCHAR(100),
-                      ITEM_SCORE DOUBLE,
-                      ITEM_BRAND VARCHAR(100),
-                      ITEM_CATEGORY VARCHAR(100)
+                      NAME VARCHAR(100),
+                      PRICE BIGINT,
+                      DETAIL VARCHAR(100),
+                      STATUS VARCHAR(100),
+                      COLOR VARCHAR(100),
+                      SCORE DOUBLE,
+                      BRAND VARCHAR(100),
+                      CATEGORY VARCHAR(100)
 );
 
 -- CART 테이블
@@ -63,6 +64,7 @@ CREATE TABLE REVIEW (
                         CREATED_AT TIMESTAMP,
                         LIKE_COUNT BIGINT,
                         UNLIKE_COUNT BIGINT,
+                        SCORE BIGINT,
                         FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID),
                         FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
@@ -83,6 +85,8 @@ CREATE TABLE COMPLAIN (
                           MEMBER_ID BIGINT NOT NULL,
                           ITEM_ID BIGINT NOT NULL,
                           CONTENT VARCHAR(1000),
+                          CREATED_AT TIMESTAMP,
+                          LAST_MODIFIED_AT TIMESTAMP,
                           FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                           FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );

@@ -1,13 +1,11 @@
 package com.mainproject.be28.item.entity;
 
-import com.mainproject.be28.board.entity.Board;
-import com.mainproject.be28.member.entity.Member;
+import com.mainproject.be28.review.entity.Review;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
+import java.util.*;
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -19,26 +17,29 @@ public class Item {
     private Long itemId;
 
     @Column(length = 100)
-    private String itemName;
+    private String name;
 
-    @Column()
-    private Long itemPrice;
-
-    @Column(length = 100)
-    private String itemDetail;
+    @Column
+    private Long price;
 
     @Column(length = 100)
-    private String itemStatus;
+    private String detail;
 
     @Column(length = 100)
-    private String itemColor;
-
-    @Column()
-    private Double itemScore;
+    private String status;
 
     @Column(length = 100)
-    private String itemBrand;
+    private String color;
+
+    @Column
+    private Double score;
 
     @Column(length = 100)
-    private String itemCategory;
+    private String brand;
+
+    @Column(length = 100)
+    private String category;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
 }
