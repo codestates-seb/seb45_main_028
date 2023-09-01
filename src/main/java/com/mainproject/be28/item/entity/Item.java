@@ -1,13 +1,10 @@
 package com.mainproject.be28.item.entity;
 
-import com.mainproject.be28.board.entity.Board;
-import com.mainproject.be28.member.entity.Member;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -19,26 +16,26 @@ public class Item {
     private Long itemId;
 
     @Column(length = 100)
-    private String itemName;
+    private String Name;
 
     @Column()
-    private Long itemPrice;
+    private Long Price;
 
     @Column(length = 100)
-    private String itemDetail;
+    private String Detail;
 
     @Column(length = 100)
-    private String itemStatus;
+    private String Status;
 
     @Column(length = 100)
-    private String itemColor;
+    private String Color;
 
     @Column()
-    private Double itemScore;
+    private Double Score;
 
     @Column(length = 100)
-    private String itemBrand;
+    private String Brand;
 
     @Column(length = 100)
-    private String itemCategory;
+    private String Category;
 }

@@ -2,7 +2,9 @@ package com.mainproject.be28.complain.entity;
 
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -13,6 +15,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table
 public class Complain {
     @Id
@@ -30,4 +34,8 @@ public class Complain {
 
     @Column(length = 1000)
     private String content;
+
+
+
+
 }

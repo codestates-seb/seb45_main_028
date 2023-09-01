@@ -1,11 +1,15 @@
 package com.mainproject.be28.member.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import javax.persistence.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
  public class Member {
@@ -31,4 +35,6 @@ import javax.persistence.*;
 //   @Column()
 //    private Long reportCount;
 
+   public Member(Long memberId) {
+   }
 }
