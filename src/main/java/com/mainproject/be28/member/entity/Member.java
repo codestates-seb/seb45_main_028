@@ -31,9 +31,9 @@ import javax.persistence.*;
 
     @Column(nullable = false)
     private String address;
-
-   @Column()
-    private Long reportCount;
+//
+//   @Column()
+//    private Long reportCount;
 
    public Member(Long memberId) {
    }
