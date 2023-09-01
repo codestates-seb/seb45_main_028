@@ -63,6 +63,7 @@ CREATE TABLE REVIEW (
                         CREATED_AT TIMESTAMP,
                         LIKE_COUNT BIGINT,
                         UNLIKE_COUNT BIGINT,
+                        SCORE BIGINT,
                         FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID),
                         FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
@@ -83,8 +84,6 @@ CREATE TABLE COMPLAIN (
                           MEMBER_ID BIGINT NOT NULL,
                           ITEM_ID BIGINT NOT NULL,
                           CONTENT VARCHAR(1000),
-                          CREATED_AT TIMESTAMP,
-                          Last_modified_at TIMESTAMP,
                           FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                           FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );
