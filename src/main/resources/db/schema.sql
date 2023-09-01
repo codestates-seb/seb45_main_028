@@ -85,6 +85,8 @@ CREATE TABLE COMPLAIN (
                           MEMBER_ID BIGINT NOT NULL,
                           ITEM_ID BIGINT NOT NULL,
                           CONTENT VARCHAR(1000),
+                          CREATED_AT TIMESTAMP,
+                          LAST_MODIFIED_AT TIMESTAMP,
                           FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                           FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );
