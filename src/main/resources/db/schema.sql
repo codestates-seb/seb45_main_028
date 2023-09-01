@@ -11,6 +11,7 @@ CREATE Table MEMBER
 );
 -- BOARD 테이블
 CREATE TABLE BOARD (
+
                        BOARD_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
                        TITLE VARCHAR(100) NOT NULL,
                        MEMBER_ID BIGINT NOT NULL,
