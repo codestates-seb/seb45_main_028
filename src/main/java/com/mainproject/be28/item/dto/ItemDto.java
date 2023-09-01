@@ -14,27 +14,28 @@ import java.util.List;
 
 
 public class ItemDto {
+
     @Getter
     @Setter
     @NoArgsConstructor
     public static class Post {
         private Long itemId;
         @NotBlank(message = "상품명을 입력해주세요.")
-        private String itemName;
+        private String name;
         @Min(100)
-        private Long itemPrice;
+        private Long price;
         @NotNull
-        private String itemDetail;
+        private String detail;
         @NotNull
-        private String itemStatus;
+        private String status;
         @NotNull
-        private String itemColor;
+        private String color;
         @Positive
-        private Double itemScore; // 리뷰 필요
+        private Double score; // 리뷰 필요
         @NotNull
-        private String itemBrand;
+        private String brand;
         @NotNull
-        private String itemCategory;
+        private String category;
     }
 
     @Getter
@@ -43,25 +44,25 @@ public class ItemDto {
     public static class Patch{
         private Long itemId;
         @NotBlank(message = "상품명을 입력해주세요.")
-        private String itemName;
+        private String name;
         @Min(100)
-        private Long itemPrice;
+        private Long price;
         @NotNull
-        private String itemDetail;
+        private String detail;
         @NotNull
-        private String itemStatus;
+        private String status;
         @NotNull
-        private String itemColor;
+        private String color;
         @Positive
-        private Double itemScore; // 리뷰 필요
+        private Double score; // 리뷰 필요
         @NotNull
-        private String itemBrand;
+        private String brand;
         @NotNull
-        private String itemCategory;
+        private String category;
     }
 
-    @AllArgsConstructor
     @Getter
+    @AllArgsConstructor
     public static class Response {
         private OnlyItemResponseDto item;
         private List<ReviewResponseDto> reviews;

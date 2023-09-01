@@ -2,15 +2,18 @@ package com.mainproject.be28.item.service;
 
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
+import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.repository.ItemRepository;
+import com.mainproject.be28.item.repository.ItemSearchCondition;
 import com.mainproject.be28.utils.CustomBeanUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
 @Service
 public class ItemService {
     private final ItemRepository itemRepository;
@@ -49,9 +52,9 @@ public class ItemService {
         return findItem;
     }
 
-    public Page<Item> findItems(int page, int size){
-
-        Page<Item> itemList = itemRepository.findAll(PageRequest.of(page, size, Sort.by("itemId").ascending()));
+    public List<OnlyItemResponseDto> findItems(ItemSearchCondition condition,int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("itemId").ascending());
+        List<OnlyItemResponseDto> itemList = itemRepository.searchAll(condition, pageRequest);
 
         /* 상품 전체 목록에서 각 상품에 리뷰 수 표시, 평점 추가 필요
 
@@ -63,6 +66,15 @@ public class ItemService {
         return itemList;
     }
 
+    /*
+    Controller에서 달아둔 주석과 동일한 이유.
+
+    public Page<Item> findAllByBrand(ItemSearchCondition condition, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("itemId").ascending());
+        String brand = condition.getBrand();
+        return itemRepository.findAllByBrand(brand, pageRequest);
+    }
+*/
     public void deleteItem(long itemId){
 
         Item findItem = findItem(itemId);

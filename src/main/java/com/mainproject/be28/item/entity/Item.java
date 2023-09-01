@@ -3,6 +3,7 @@ package com.mainproject.be28.item.entity;
 import com.mainproject.be28.review.entity.Review;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.util.*;
 import javax.persistence.*;
 
@@ -16,28 +17,28 @@ public class Item {
     private Long itemId;
 
     @Column(length = 100)
-    private String itemName;
+    private String name;
 
     @Column
-    private Long itemPrice;
+    private Long price;
 
     @Column(length = 100)
-    private String itemDetail;
+    private String detail;
 
     @Column(length = 100)
-    private String itemStatus;
+    private String status;
 
     @Column(length = 100)
-    private String itemColor;
+    private String color;
 
     @Column
-    private Double itemScore;
+    private Double score;
 
     @Column(length = 100)
-    private String itemBrand;
+    private String brand;
 
     @Column(length = 100)
-    private String itemCategory;
+    private String category;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();

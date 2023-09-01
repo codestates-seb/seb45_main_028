@@ -15,6 +15,8 @@ public interface ItemMapper {
     Item itemPostDtoToItem(ItemDto.Post itemPostDto);
     Item  itemPatchDtoToItem(ItemDto.Patch itemPatchDto);
     OnlyItemResponseDto itemToOnlyItemResponseDto(Item item);
+    List<OnlyItemResponseDto> itemsToOnlyItemResponseDtos(List<Item> items);
+
     default ItemDto.Response itemToItemResponseDto(Item item) {
 
         OnlyItemResponseDto onlyitemResponseDto = itemToOnlyItemResponseDto(item);

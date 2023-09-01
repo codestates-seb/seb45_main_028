@@ -13,10 +13,12 @@ INSERT INTO COMMENT VALUES (102, 101, 102, '첫 번째 게시물에 대한 댓�
 INSERT INTO COMMENT VALUES (103, 102, 103, '두 번째 게시물에 대한 댓글입니다.', NOW(), 0);
 INSERT INTO COMMENT VALUES (104, 102, 102, '두 번째 게시물에 대한 댓글입니다.', NOW(), 54);
 
+
 --ITEM테이블 데이터
-INSERT INTO ITEM VALUES (101, '로지텍 키보드', 150000, '키보드', '품절', 'WHITE', 3.8, '로지텍', '키보드');
-INSERT INTO ITEM VALUES (102, '맥북 PRO 13인치', 2500000, 'RAM 16GB', '재고 있음', 'SPACE GRAY', 4.98, 'APPLE', '노트북');
-INSERT INTO ITEM VALUES (103, '로지텍 마우스', 100000, '로지텍 마우스', '재고 있음', '검정', 4.2, '로지텍', '마우스');
+INSERT INTO ITEM VALUES (101, '로지텍 키보드', 150000, '키보드', '품절', 'WHITE', 3.8, 'Logitec', 'Keyboard');
+INSERT INTO ITEM VALUES (102, '맥북 PRO 13인치', 2500000, 'RAM 16GB', '재고 있음', 'SPACE GRAY', 4.98, 'APPLE', 'Notebook');
+INSERT INTO ITEM VALUES (103, '로지텍 마우스', 100000, '로지텍 마우스', '재고 있음', 'BLACK', 4.2, 'Logitec', 'Mouse');
+INSERT INTO ITEM VALUES (104, '매직 마우스', 100000, '매직 마우스', '재고 있음', 'BLACK', 3.2, 'APPLE', 'Mouse');
 
 -- CART  테이블 데이터
 INSERT INTO CART VALUES (101, 101);
@@ -26,6 +28,8 @@ INSERT INTO CART  VALUES (102, 102);
 INSERT INTO REVIEW VALUES (101, 101, 101, '좋은 상품입니다.', NOW(), 3, 5);
 INSERT INTO REVIEW VALUES (102, 101, 102, '키보드 별로에요', NOW(), 14, 3);
 INSERT INTO REVIEW VALUES (103, 102, 103, '맥북 사용해보니 좋아요.', NOW(), 33, 7);
+INSERT INTO REVIEW VALUES (104, 103, 101, '좋은 상품입니다.', NOW(), 3171, 51);
+INSERT INTO REVIEW VALUES (105, 103, 103, '마우스 별로에요', NOW(), 33, 3400);
 
 -- CART_ITEM 테이블 데이터
 INSERT INTO CART_ITEM VALUES (101, 102, 101, 101);

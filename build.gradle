@@ -1,7 +1,13 @@
+buildscript { // queryDSL
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.15'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10' // queryDSL
 }
 
 group = 'com.mainproject'
@@ -24,13 +30,44 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // queryDSL
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}" // queryDSL
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.5'
+    implementation 'org.json:json:20230618'
+    implementation 'jakarta.json:jakarta.json-api:2.1.2'
+    implementation 'com.fasterxml.jackson:jackson-base:2.14.2'
+    implementation 'com.fasterxml.jackson:jackson-parent:2.15'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor 'com.querydsl:querydsl-apt'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+def querydslDir = "$buildDir/generated/querydsl"
 
+querydsl {// queryDSL
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets { // queryDSL
+    main.java.srcDir querydslDir
+}
+
+configurations { // queryDSL
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl { // queryDSL
+    options.annotationProcessorPath = configurations.querydsl
+}
 tasks.named('test') {
     useJUnitPlatform()
 }
