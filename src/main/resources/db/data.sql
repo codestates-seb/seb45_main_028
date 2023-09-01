@@ -1,3 +1,4 @@
+
 --MEMBER 테이블 데이터
 INSERT INTO MEMBER VALUES (101, 'test1@test.com', 'test1', '테스트1', '010-1234-5678', '서울시 ㅇㅇ구 ㅇㅇ동', 37);
 INSERT INTO MEMBER VALUES (102, 'test2@test.com','test2',  '테스트2', '010-7654-3210', '경기도 xx시 xx구 xx동', 0);
@@ -43,3 +44,4 @@ INSERT INTO COMPLAIN VALUES (103, 102, 102, '이거 언제 입고 되나요?',NO
 -- MESSAGE 테이블 데이터
 INSERT INTO MESSAGE VALUES (101, '안녕하세요. 문의드립니다.', NOW(), 101,102);
 INSERT INTO MESSAGE VALUES (102, '안녕하세요. 답변드립니다.', NOW(), 102, 101);
+
