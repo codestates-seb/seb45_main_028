@@ -41,4 +41,5 @@ public class Board {
 
     @Column(nullable = false)
     private String boardCategory;
+
 }
