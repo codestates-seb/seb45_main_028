@@ -26,7 +26,7 @@ public class Message {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID",nullable = false)
+            //@JoinColumn(name = "MEMBER_ID",nullable = false)
     private Member senderMember;
 
     @ManyToOne
