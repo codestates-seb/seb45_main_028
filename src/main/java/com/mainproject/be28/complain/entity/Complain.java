@@ -1,5 +1,6 @@
 package com.mainproject.be28.complain.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table
-public class Complain {
+public class Complain extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column()
@@ -36,6 +37,15 @@ public class Complain {
     private String content;
 
 
+    public enum ComplainStatus {
+        COMPLAIN_NOT_EXIST("존재하지 않는 문의사항"),
+        COMPLAIN_EXIST("존재하는 문의사항");
 
+        @Getter
+        private String status;
+        ComplainStatus(String status) {
+            this.status = status;
+        }
+    }
 
 }
