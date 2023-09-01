@@ -11,7 +11,6 @@ import javax.persistence.*;
  public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long memberId;
 
     @Column(nullable = false)
@@ -28,8 +27,8 @@ import javax.persistence.*;
 
     @Column(nullable = false)
     private String address;
-
-   @Column()
-    private Long reportCount;
+//
+//   @Column()
+//    private Long reportCount;
 
 }

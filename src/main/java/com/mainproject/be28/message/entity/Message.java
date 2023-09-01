@@ -26,10 +26,10 @@ public class Message {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID",nullable = false)
+    @JoinColumn(name = "MEMBER_ID",nullable = false, insertable = false, updatable = false)
     private Member senderMember;
 
-    @ManyToOne
-    @JoinColumn(name = "MEMBER_ID", nullable = false)
-    private Member responseMember;
+//    @ManyToOne
+//    @JoinColumn(name = "MEMBER_ID", nullable = false)
+//    private Member responseMember;
 }
