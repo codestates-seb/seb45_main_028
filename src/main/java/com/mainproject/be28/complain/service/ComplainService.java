@@ -6,6 +6,9 @@ import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.item.repository.ItemRepository;
 import com.mainproject.be28.utils.CustomBeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -55,4 +58,22 @@ public class ComplainService {
         Complain findComplain = findComplain(complainId);
         complainRepository.delete(findComplain);
     }
-}
+
+    public Page<Complain> findComplains(int page, int size, String sort) {
+            Page<Complain> findAllComplain = complainRepository.findAllByComplainStatus( //삭제된 글 빼고 전체 문의글 가져옴
+                    PageRequest.of(page,size, Sort.by(sort).descending()),
+                    Complain.ComplainStatus.COMPLAIN_EXIST);
+
+
+            VerifiedNoComplain(findAllComplain);
+
+            return findAllComplain;
+
+        }
+    private void VerifiedNoComplain(Page<Complain> findAllComplain){
+        if(findAllComplain.getTotalElements()==0){
+            throw new BusinessLogicException(ExceptionCode.Complain_NOT_FOUND);
+        }
+    }
+    }
+

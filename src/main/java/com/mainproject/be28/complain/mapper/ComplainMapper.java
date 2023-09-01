@@ -7,6 +7,8 @@ import com.mainproject.be28.complain.entity.Complain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 
 public interface ComplainMapper {
@@ -21,6 +23,6 @@ public interface ComplainMapper {
     @Mapping(source = "complainId", target = "complainId")
     ComplainResponseDto complainToComplainResponseDto(Complain complain);
 
-
     Complain complainPatchDtoToComplain(ComplainDto.Patch complainPatchDto);//ComplainDto.Patch 객체를 기반으로 Complain 엔티티 객체로 변환하는 매핑
+    List<ComplainResponseDto> complainsToComplainResponseDtos(List<Complain> questions);
 }

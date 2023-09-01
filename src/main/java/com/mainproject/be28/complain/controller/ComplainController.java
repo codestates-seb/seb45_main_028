@@ -6,12 +6,15 @@ import com.mainproject.be28.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.service.ComplainService;
+import com.mainproject.be28.response.MultiResponseDto;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/complain")
@@ -39,7 +42,20 @@ public class ComplainController {
         ComplainResponseDto complainResponse = mapper.complainToComplainResponseDto(response);
         return new ResponseEntity<>(complainResponse, HttpStatus.OK);
     }
+    @GetMapping("/") //문의사항 목록보기
+    public ResponseEntity getQuestions(@Positive @RequestParam("page") int page,
+                                       @Positive @RequestParam("size") int size,
+                                       @RequestParam("sort") String sort){
 
+        Page<Complain> pageComplains = complainService.findComplains(page-1,size,sort);
+
+        List<Complain> complains = pageComplains.getContent();
+
+        return new ResponseEntity<>(new MultiResponseDto<>(
+                mapper.complainsToComplainResponseDtos(complains),
+                pageComplains),HttpStatus.OK);
+
+    }
 
     @PatchMapping("/{complain-id}")//문의사항 수정하기
     public ResponseEntity patchComplain(@PathVariable("complain-id") @Positive long complainId,
