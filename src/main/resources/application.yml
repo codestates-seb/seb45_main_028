@@ -14,9 +14,6 @@ spring:
       init:
         schema-locations: classpath*:db/schema.sql #h2 테이블 위치
         data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
-  jackson:
-    serialization:
-      fail-on-empty-beans: false
 
   jpa:
     hibernate:
