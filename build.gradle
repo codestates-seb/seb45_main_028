@@ -30,22 +30,15 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-<<<<<<< HEAD
     implementation 'org.springframework.boot:spring-boot-starter'
     // MapStruct
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
     implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-=======
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 
 
 
-
-
->>>>>>> 14547f3676e0d1edd485041d86b6ebb4217805ed
 }
 
 tasks.named('test') {

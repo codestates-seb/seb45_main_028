@@ -29,7 +29,7 @@ public class MemberService {
     }
 
 
-//    //회원 수정
+//    //회원정보 수정
 //    public Member updateMember(Member member, Long memberId){
 //        Member findMember = findVerifiedMember(memberId());
 //
