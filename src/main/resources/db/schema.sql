@@ -11,15 +11,15 @@ CREATE Table MEMBER
 );
 -- BOARD 테이블
 CREATE TABLE BOARD (
-                      BOARD_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
-                      TITLE VARCHAR(100) NOT NULL,
-                      MEMBER_ID BIGINT NOT NULL,
-                      CONTENT VARCHAR(1000),
-                      CREATED_AT TIMESTAMP NOT NULL,
-                      VIEW_COUNT BIGINT,
-                      LIKE_COUNT BIGINT,
-                      BOARD_CATEGORY VARCHAR(100) NOT NULL,
-                      FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
+                       BOARD_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
+                       TITLE VARCHAR(100) NOT NULL,
+                       MEMBER_ID BIGINT NOT NULL,
+                       CONTENT VARCHAR(1000),
+                       CREATED_AT TIMESTAMP NOT NULL,
+                       VIEW_COUNT BIGINT,
+                       LIKE_COUNT BIGINT,
+                       BOARD_CATEGORY VARCHAR(100) NOT NULL,
+                       FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
 
 -- COMMENT 테이블
@@ -63,6 +63,7 @@ CREATE TABLE REVIEW (
                         CREATED_AT TIMESTAMP,
                         LIKE_COUNT BIGINT,
                         UNLIKE_COUNT BIGINT,
+                        SCORE BIGINT,
                         FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID),
                         FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
