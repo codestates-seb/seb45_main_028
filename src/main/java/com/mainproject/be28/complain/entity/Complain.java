@@ -36,7 +36,8 @@ public class Complain extends Auditable {
     @Column(length = 1000)
     private String content;
 
-
+    @Enumerated(EnumType.STRING)
+    private ComplainStatus complainStatus;
     public enum ComplainStatus {
         COMPLAIN_NOT_EXIST("존재하지 않는 문의사항"),
         COMPLAIN_EXIST("존재하는 문의사항");
