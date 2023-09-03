@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ComplainRepository extends JpaRepository<Complain, Long> {
-    Page<Complain> findAllByComplainStatus(Pageable pageable, Complain.ComplainStatus complainStatus);
 
+    Page<Complain> findAllByComplainStatus(Pageable pageable, Complain.ComplainStatus complainStatus);
 }

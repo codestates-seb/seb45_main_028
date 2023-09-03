@@ -33,11 +33,19 @@ public class Complain extends Auditable {
     @JoinColumn(name = "ITEM_ID", nullable = false)
     private Item item;
 
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, name = "COMPLAIN_STATUS")
+    private ComplainStatus  complainStatus = ComplainStatus.COMPLAIN_EXIST;
+
+    @Column(length = 20)
+    private String title;
+
     @Column(length = 1000)
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    private ComplainStatus complainStatus;
+
+
     public enum ComplainStatus {
         COMPLAIN_NOT_EXIST("존재하지 않는 문의사항"),
         COMPLAIN_EXIST("존재하는 문의사항");

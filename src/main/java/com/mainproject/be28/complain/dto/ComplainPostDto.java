@@ -17,6 +17,9 @@ public class ComplainPostDto {
         @Positive
         private Long ItemId;
 
+        @NotBlank(message = "문의제목을 적어주세요")
+        private String title;
+
         @NotBlank(message = "문의내용을 적어주세요")
         private String content;
 

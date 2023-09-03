@@ -20,8 +20,11 @@ public class ComplainResponseDto {
         @Positive
         private Long ItemId;
 
-        @NotBlank(message = "문의내용을 적어주세요")
+        private String title;
+
         private String content;
+
+        private String name;
 
 
 }

@@ -84,9 +84,11 @@ CREATE TABLE COMPLAIN (
                           COMPLAIN_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
                           MEMBER_ID BIGINT NOT NULL,
                           ITEM_ID BIGINT NOT NULL,
+                          title VARCHAR(20),
                           CONTENT VARCHAR(1000),
                           CREATED_AT TIMESTAMP,
                           LAST_MODIFIED_AT TIMESTAMP,
+                          COMPLAIN_STATUS VARCHAR(255),
                           FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                           FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );
