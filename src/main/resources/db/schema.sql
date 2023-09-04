@@ -45,13 +45,17 @@ CREATE TABLE ITEM (
                       COLOR VARCHAR(100),
                       SCORE DOUBLE,
                       BRAND VARCHAR(100),
-                      CATEGORY VARCHAR(100)
+                      CATEGORY VARCHAR(100),
+                      CREATED_AT TIMESTAMP,
+                      LAST_MODIFIED_AT TIMESTAMP
 );
 
 -- CART 테이블
 CREATE TABLE CART (
                       CART_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
                       MEMBER_ID BIGINT NOT NULL,
+                      CREATED_AT TIMESTAMP,
+                      LAST_MODIFIED_AT TIMESTAMP,
                       FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
 
