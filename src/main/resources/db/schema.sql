@@ -79,6 +79,8 @@ CREATE TABLE CART_ITEM (
                            COUNT BIGINT NOT NULL,
                            CART_ID BIGINT NOT NULL,
                            ITEM_ID BIGINT NOT NULL,
+                           CREATED_AT TIMESTAMP,
+                           LAST_MODIFIED_AT TIMESTAMP,
                            FOREIGN KEY (CART_ID) REFERENCES CART(CART_ID),
                            FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );

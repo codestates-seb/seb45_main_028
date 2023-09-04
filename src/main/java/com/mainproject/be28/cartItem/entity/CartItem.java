@@ -1,5 +1,6 @@
 package com.mainproject.be28.cartItem.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.item.entity.Item;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table
-public class CartItem {
+public class CartItem extends Auditable {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
