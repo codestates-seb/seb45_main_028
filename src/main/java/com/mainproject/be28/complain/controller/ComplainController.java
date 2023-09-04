@@ -17,8 +17,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
-import static com.mainproject.be28.complain.entity.QComplain.complain;
-
 @RestController
 @RequestMapping("/complain")
 public class ComplainController {
@@ -33,8 +31,6 @@ public class ComplainController {
 
     @PostMapping ("/new") // 문의사항등록
     public ResponseEntity postComplain(@RequestBody @Valid ComplainPostDto complainPostDto) {
-        Long ItemId = complainPostDto.getItemId();
-        Long memberId = complainPostDto.getMemberId();
 
         complainService.createComplain(mapper.complainPostDtoToComplain(complainPostDto));
         return new ResponseEntity<> (HttpStatus.OK);
@@ -50,7 +46,7 @@ public class ComplainController {
     @GetMapping("/") //문의사항 목록보기
     public ResponseEntity getQuestions(@RequestParam(name = "page", defaultValue = "0") int page,
                                        @RequestParam(name = "size", defaultValue = "10") int size
-                                      ){
+    ){
 
         Page<Complain> pageComplains = complainService.findComplains(page,size);
 
@@ -62,22 +58,24 @@ public class ComplainController {
 
     }
 
+
     @PatchMapping("/{complain-id}")//문의사항 수정하기
     public ResponseEntity patchComplain(@PathVariable("complain-id") @Positive long complainId,
-                                    @Valid @RequestBody ComplainPatchDto requestBody){
+                                    @Valid @RequestBody ComplainPatchDto complainPatchDto){
 
-        requestBody.setComplainId(complainId);
+        complainPatchDto.setComplainId(complainId);
 
-        Complain complain = mapper.complainPatchDtoToComplain(requestBody);
+        Complain complain = mapper.complainPatchDtoToComplain(complainPatchDto);
 
         Complain response = complainService.updateComplain(complain);
 
         return new ResponseEntity<>(mapper.complainToComplainResponseDto(response), HttpStatus.OK);
     }
+
     @DeleteMapping("/{complain-id}")//문의사항 삭제
     public ResponseEntity deleteComplain(@PathVariable("complain-id") @Positive long complainId){
 
-        complainService.deleteItem(complainId);
+        complainService.deleteComplain(complainId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

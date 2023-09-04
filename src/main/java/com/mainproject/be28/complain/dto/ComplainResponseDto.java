@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,6 +26,8 @@ public class ComplainResponseDto {
         private String content;
 
         private String name;
-
+        private String itemname;
+        private LocalDateTime modifiedAt;
+        private LocalDateTime createdAt;
 
 }

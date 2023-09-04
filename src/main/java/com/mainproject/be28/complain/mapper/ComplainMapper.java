@@ -8,6 +8,7 @@ import com.mainproject.be28.complain.entity.Complain;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -22,11 +23,28 @@ public interface ComplainMapper {
     @Mapping(source = "item.itemId", target ="itemId") // Complain 엔티티의 item 필드의 itemId 값을 ComplainResponseDto 객체의 itemId 필드에 복사
     @Mapping(source = "member.memberId", target = "memberId")
     @Mapping(source = "member.name", target = "name")
+    @Mapping(source = "item.name", target = "itemname")
 
     ComplainResponseDto complainToComplainResponseDto(Complain complain);
 
     Complain complainPatchDtoToComplain(ComplainPatchDto complainPatchDto);//ComplainPatchDto 객체를 기반으로 Complain 엔티티 객체로 변환하는 매핑
 
-    List<ComplainResponseDto> complainsToComplainResponsesDto(List<Complain> complains);
+    public default List<ComplainResponsesDto> complainsToComplainResponsesDto(List<Complain> complains) {
+        List<ComplainResponsesDto> responseDtos = new ArrayList<>();
 
+        for (Complain complain : complains) {
+            ComplainResponsesDto responseDto = new ComplainResponsesDto();
+            responseDto.setComplainId(complain.getComplainId());
+            responseDto.setItemId(complain.getItem().getItemId());
+            responseDto.setMemberId(complain.getMember().getMemberId());
+            responseDto.setName(complain.getMember().getName());
+            responseDto.setItemname(complain.getItem().getName());
+
+            responseDto.setTitle(complain.getTitle());
+
+            responseDtos.add(responseDto);
+        }
+
+        return responseDtos;
+    }
 }
