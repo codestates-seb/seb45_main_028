@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 @RestController
 @RequestMapping("/item")
@@ -71,8 +69,8 @@ public class ItemController {
             , @RequestParam(value = "color", required = false) String searchColor
             , @RequestParam(value = "lowPrice", required = false) Long lowPrice
             , @RequestParam(value = "highPrice", required = false) Long highPrice
-                               /* 아래는 검색조건 미구현 필드
             , @RequestParam(value = "name", required = false) String searchName
+                               /* 아래는 검색조건 미구현 필드
             , @RequestParam(value = "score", required = false) String sortScore
             , @RequestParam(value = "status", required = false) String searchStatus */
     ){
@@ -82,6 +80,7 @@ public class ItemController {
         condition.setColor(searchColor);
         condition.setLowPrice(lowPrice);
         condition.setHighPrice(highPrice);
+        condition.setName(searchName);
         return itemService.findItems(condition, page, size);
     }
 
