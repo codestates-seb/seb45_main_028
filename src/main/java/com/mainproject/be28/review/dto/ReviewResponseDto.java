@@ -10,12 +10,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ReviewResponseDto {
-// 매핑을 위한 임의 생성, 추후 변경 필요
     private Long reviewId;
     private Long itemId;
     private Long memberId;
     private String name;
     private String content;
+    private  int score;
+    private LocalDateTime modifiedAt;
     private LocalDateTime createdAt;
     private Long likeCount;
     private Long unlikeCount;
