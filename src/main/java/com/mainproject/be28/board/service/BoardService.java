@@ -1,5 +1,6 @@
 package com.mainproject.be28.board.service;
 
+import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.board.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,19 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public Board updateBoard(Long boardId, Board updatedBoard) {
+    public Board updateBoard(Long boardId, BoardDto updatedBoardDto) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         if (optionalBoard.isPresent()) {
             Board existingBoard = optionalBoard.get();
-            existingBoard.setTitle(updatedBoard.getTitle());
-            existingBoard.setContent(updatedBoard.getContent());
+
+            if (updatedBoardDto.getTitle() != null) {
+                existingBoard.setTitle(updatedBoardDto.getTitle());
+            }
+            if (updatedBoardDto.getContent() != null) {
+                existingBoard.setContent(updatedBoardDto.getContent());
+            }
+            // ... (update other fields as needed)
+
             return boardRepository.save(existingBoard);
         } else {
             return null;

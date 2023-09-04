@@ -2,6 +2,7 @@ package com.mainproject.be28.board.controller;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
+import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
 import com.mainproject.be28.member.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +16,27 @@ import java.util.Optional;
 public class BoardController {
     @Autowired
     private BoardService boardService;
-
+    @Autowired
+    private BoardMapper mapper;
     @PostMapping
     public Board createBoard(@RequestBody BoardDto boardDto) {
-        Board board = new Board();
-        board.setTitle(boardDto.getTitle());
-        board.setContent(boardDto.getContent());
-        board.setBoardCategory(boardDto.getBoardCategory());
+        Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
 
-        Member member = new Member();
-        member.setMemberId(boardDto.getMemberId());
-        board.setMember(member);
-
-        return boardService.createBoard(board);
+        return boardService.createBoard(mapperBoard);
+//        Board board = new Board();
+//        board.setTitle(boardDto.getTitle());
+//        board.setContent(boardDto.getContent());
+//        board.setBoardCategory(boardDto.getBoardCategory());
+//
+//        Member member = new Member();
+//        member.setMemberId(boardDto.getMemberId());
+//        //board.setMember(member);
+//
+//        return boardService.createBoard(board);
     }
 
     @GetMapping("/{boardId}")
-    public Optional<Board> getBoardById(@PathVariable Long boardId) {
+    public Optional<Board> getBoardById(@PathVariable("boardId") Long boardId) {
         return boardService.getBoardById(boardId);
     }
 
@@ -40,17 +45,13 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
-    @PutMapping("/{boardId}")
-    public Board updateBoard(@PathVariable Long boardId, @RequestBody BoardDto boardDto) {
-        Board updatedBoard = new Board();
-        updatedBoard.setTitle(boardDto.getTitle());
-        updatedBoard.setContent(boardDto.getContent());
-        // ... (update other fields as needed)
-        return boardService.updateBoard(boardId, updatedBoard);
+    @PatchMapping("/{boardId}")
+    public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
+        return boardService.updateBoard(boardId, boardDto);
     }
 
     @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable Long boardId) {
+    public void deleteBoard(@PathVariable("boardId") Long boardId) {
         boardService.deleteBoard(boardId);
     }
 }
