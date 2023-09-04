@@ -16,10 +16,11 @@ CREATE TABLE BOARD (
                        TITLE VARCHAR(100) NOT NULL,
                        MEMBER_ID BIGINT NOT NULL,
                        CONTENT VARCHAR(1000),
-                       CREATED_AT TIMESTAMP NOT NULL,
                        VIEW_COUNT BIGINT,
                        LIKE_COUNT BIGINT,
                        BOARD_CATEGORY VARCHAR(100) NOT NULL,
+                       CREATED_AT TIMESTAMP,
+                       LAST_MODIFIED_AT TIMESTAMP,
                        FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
 
@@ -29,8 +30,9 @@ CREATE TABLE COMMENT (
                          BOARD_ID BIGINT NOT NULL,
                          MEMBER_ID BIGINT NOT NULL,
                          CONTENT VARCHAR(1000),
-                         CREATED_AT TIMESTAMP,
                          LIKE_COUNT BIGINT,
+                         CREATED_AT TIMESTAMP,
+                         LAST_MODIFIED_AT TIMESTAMP,
                          FOREIGN KEY (BOARD_ID) REFERENCES BOARD(BOARD_ID),
                          FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );

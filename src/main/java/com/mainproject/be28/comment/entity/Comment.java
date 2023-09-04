@@ -1,5 +1,6 @@
 package com.mainproject.be28.comment.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.member.entity.Member;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table
-public class Comment {
+public class Comment extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMMENT_ID")
@@ -28,10 +29,6 @@ public class Comment {
 
     @Column(name = "CONTENT", length = 1000)
     private String content;
-
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "LIKE_COUNT")
     private Long likeCount;

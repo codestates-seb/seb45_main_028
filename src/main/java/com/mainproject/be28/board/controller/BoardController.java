@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +26,7 @@ public class BoardController {
         Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
 
         return new ResponseEntity<>(boardService.createBoard(mapperBoard), HttpStatus.CREATED);
-//        Board board = new Board();
-//        board.setTitle(boardDto.getTitle());
-//        board.setContent(boardDto.getContent());
-//        board.setBoardCategory(boardDto.getBoardCategory());
-//
+
 //        Member member = new Member();
 //        member.setMemberId(boardDto.getMemberId());
 //        //board.setMember(member);
@@ -51,6 +48,7 @@ public class BoardController {
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);
         Board board = mapper.boardPatchDtoToBoard(boardDto);
+        board.setModifiedAt(LocalDateTime.now());
         return boardService.updateBoard(boardId, board);
     }
 

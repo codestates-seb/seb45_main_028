@@ -1,5 +1,6 @@
 package com.mainproject.be28.board.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import org.springframework.data.annotation.CreatedDate;
 import com.mainproject.be28.member.entity.Member;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table
-public class Board {
+public class Board extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column()
@@ -29,15 +30,11 @@ public class Board {
     @Column( length = 1000)
     private String content;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(columnDefinition = "bigint default 0")
+    private Long viewCount = 0L;
 
-    @Column()
-    private Long viewCount;
-
-    @Column()
-    private Long likeCount;
+    @Column(columnDefinition = "bigint default 0")
+    private Long likeCount = 0L;
 
     @Column(nullable = false)
     private String boardCategory;
