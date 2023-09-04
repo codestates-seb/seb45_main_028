@@ -6,6 +6,8 @@ import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
 import com.mainproject.be28.member.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +21,10 @@ public class BoardController {
     @Autowired
     private BoardMapper mapper;
     @PostMapping
-    public Board createBoard(@RequestBody BoardDto boardDto) {
+    public ResponseEntity createBoard(@RequestBody BoardDto boardDto) {
         Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
 
-        return boardService.createBoard(mapperBoard);
+        return new ResponseEntity<>(boardService.createBoard(mapperBoard), HttpStatus.CREATED);
 //        Board board = new Board();
 //        board.setTitle(boardDto.getTitle());
 //        board.setContent(boardDto.getContent());
@@ -47,8 +49,9 @@ public class BoardController {
 
     @PatchMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
-
-        return boardService.updateBoard(boardId, boardDto);
+        boardDto.setBoardId(boardId);
+        Board board = mapper.boardPatchDtoToBoard(boardDto);
+        return boardService.updateBoard(boardId, board);
     }
 
     @DeleteMapping("/{boardId}")

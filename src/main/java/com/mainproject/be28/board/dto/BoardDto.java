@@ -17,5 +17,4 @@ public class BoardDto {
     private Long viewCount;
     private Long likeCount;
     private String boardCategory;
-
 }

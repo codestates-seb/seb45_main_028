@@ -2,7 +2,12 @@ package com.mainproject.be28.board.service;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
+import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.repository.BoardRepository;
+import com.mainproject.be28.exception.BusinessLogicException;
+import com.mainproject.be28.exception.ExceptionCode;
+import com.mainproject.be28.item.entity.Item;
+import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +18,13 @@ import java.util.Optional;
 public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private BoardMapper mapper;
+    private final CustomBeanUtils<Board> beanUtils;
 
+    public BoardService(CustomBeanUtils<Board> beanUtils) {
+        this.beanUtils = beanUtils;
+    }
     public Board createBoard(Board board) {
         return boardRepository.save(board);
     }
@@ -26,22 +37,12 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
-    public Board updateBoard(Long boardId, BoardDto updatedBoardDto) {
+    public Board updateBoard(Long boardId, Board updatedBoardDto) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
-        if (optionalBoard.isPresent()) {
-            Board existingBoard = optionalBoard.get();
-
-            if (updatedBoardDto.getTitle() != null) {
-                existingBoard.setTitle(updatedBoardDto.getTitle());
-            }
-            if (updatedBoardDto.getContent() != null) {
-                existingBoard.setContent(updatedBoardDto.getContent());
-            }
-
-            return boardRepository.save(existingBoard);
-        } else {
-            return null;
-        }
+        Board board = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
+        Board updatedBoard =
+                    beanUtils.copyNonNullProperties(updatedBoardDto,board);
+        return boardRepository.save(updatedBoard);
     }
 
     public void deleteBoard(Long boardId) {
