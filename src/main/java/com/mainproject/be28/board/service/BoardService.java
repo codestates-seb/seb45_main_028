@@ -37,7 +37,6 @@ public class BoardService {
             if (updatedBoardDto.getContent() != null) {
                 existingBoard.setContent(updatedBoardDto.getContent());
             }
-            // ... (update other fields as needed)
 
             return boardRepository.save(existingBoard);
         } else {
