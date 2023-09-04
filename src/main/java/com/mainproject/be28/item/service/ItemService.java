@@ -31,7 +31,7 @@ public class ItemService {
     }
 
     public Item updateItem(Item item) {
-       Item findItem = verifyExistItem(item.getItemId());
+       Item findItem = findItem(item.getItemId());
 
         // 관리자만 수정 권한 기능 추가 필요
 
@@ -46,10 +46,7 @@ public class ItemService {
         Optional<Item> optionalItem =
                 itemRepository.findById(itemId);
         //리뷰 수,  평점
-        Item findItem = optionalItem.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-
-
-        return findItem;
+        return optionalItem.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
     }
 
     public List<OnlyItemResponseDto> findItems(ItemSearchCondition condition,int page, int size){
@@ -92,8 +89,4 @@ public class ItemService {
         return tokenMemberId == adminId;
 }
 */
-    public Item verifyExistItem(long itemId) {
-        Optional<Item> item = itemRepository.findById(itemId);
-        return item.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-    }
 }
