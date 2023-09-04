@@ -37,6 +37,7 @@ public interface ItemMapper {
                                 .memberId(review.getMember().getMemberId())
                                 .name(review.getMember().getName())
                                 .content(review.getContent())
+                                .score(review.getScore())
                                 .createdAt(review.getCreatedAt())
                                 .likeCount(review.getLikeCount())
                                 .unlikeCount(review.getUnlikeCount())
