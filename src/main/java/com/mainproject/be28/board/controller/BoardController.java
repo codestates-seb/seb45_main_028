@@ -45,9 +45,13 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
-    @PatchMapping("/{boardId}")
+    @PutMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
-        return boardService.updateBoard(boardId, boardDto);
+        Board updatedBoard = new Board();
+        updatedBoard.setTitle(boardDto.getTitle());
+        updatedBoard.setContent(boardDto.getContent());
+        // ... (update other fields as needed)
+        return boardService.updateBoard(boardId, updatedBoard);
     }
 
     @DeleteMapping("/{boardId}")
