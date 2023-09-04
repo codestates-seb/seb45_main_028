@@ -37,7 +37,7 @@ public interface ItemMapper {
                                 .memberId(review.getMember().getMemberId())
                                 .name(review.getMember().getName())
                                 .content(review.getContent())
-                                .score(review.getScore())
+                                .score(review.getScore()) //상품별점추가
                                 .createdAt(review.getCreatedAt())
                                 .likeCount(review.getLikeCount())
                                 .unlikeCount(review.getUnlikeCount())
