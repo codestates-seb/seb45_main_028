@@ -11,9 +11,9 @@ public class BoardDto {
     private String title;
     private Long memberId;
     private String content;
-    private LocalDateTime createdAt;
-    //updatedAt 추가
-    private LocalDateTime updatedAt;
+//    private LocalDateTime createdAt;
+//    updatedAt 추가
+//    private LocalDateTime updatedAt;
     private Long viewCount;
     private Long likeCount;
     private String boardCategory;

@@ -2,18 +2,25 @@ package com.mainproject.be28.board.mapper;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
+import com.mainproject.be28.item.dto.ItemDto;
+import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class BoardMapper {
-    public static BoardDto toDto(Board board) {
-        BoardDto dto = new BoardDto();
-        dto.setBoardId(board.getBoardId());
-        dto.setTitle(board.getTitle());
-        dto.setContent(board.getContent());
-        dto.setBoardCategory(board.getBoardCategory());
-        dto.setMemberId(board.getMember().getMemberId());
-        return dto;
-    }
+@Mapper(componentModel = "spring")
+public interface BoardMapper {
+    //    public static BoardDto toDto(Board board) {
+//        BoardDto dto = new BoardDto();
+//        dto.setBoardId(board.getBoardId());
+//        dto.setTitle(board.getTitle());
+//        dto.setContent(board.getContent());
+//        dto.setBoardCategory(board.getBoardCategory());
+//        dto.setMemberId(board.getMember().getMemberId());
+//        return dto;
+//    }
+    @Mapping(source = "memberId", target = "member.memberId")
+    Board boardPostDtoToBoard(BoardDto boardPostDto);
 
     public static Board toEntity(BoardDto dto) {
         Board board = new Board();
@@ -23,7 +30,6 @@ public class BoardMapper {
 
         Member member = new Member();
         member.setMemberId(dto.getMemberId());
-        board.setMember(member);
 
         return board;
     }
