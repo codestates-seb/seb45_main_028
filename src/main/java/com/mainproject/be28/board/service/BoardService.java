@@ -13,9 +13,7 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
-    public Board createBoard(Board board) {
-        return boardRepository.save(board);
-    }
+    public Board createBoard(Board board) {  return boardRepository.save(board );    }
 
     public Optional<Board> getBoardById(Long boardId) {
         return boardRepository.findById(boardId);
