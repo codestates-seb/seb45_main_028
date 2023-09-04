@@ -26,7 +26,7 @@ public class ComplainResponseDto {
         private String content;
 
         private String name;
-        private String itemname;
+        private String itemname;//추가
         private LocalDateTime modifiedAt;
         private LocalDateTime createdAt;
 
