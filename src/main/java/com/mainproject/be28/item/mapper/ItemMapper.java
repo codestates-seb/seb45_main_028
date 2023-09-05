@@ -21,7 +21,12 @@ public interface ItemMapper {
 
         OnlyItemResponseDto onlyitemResponseDto = itemToOnlyItemResponseDto(item);
         List<ReviewResponseDto> reviewResponseDtos = getReviewsResponseDto(item);
-
+        double scoreAverage = 0;
+        for (ReviewResponseDto reviewResponseDto : reviewResponseDtos) {
+            scoreAverage += reviewResponseDto.getScore();
+        }
+        scoreAverage /= reviewResponseDtos.size();
+        onlyitemResponseDto.setScore(scoreAverage);
         return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos);
     }
 
