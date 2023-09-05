@@ -46,6 +46,16 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
+    //회원아이디로 게시글 검색기능 추가
+    @GetMapping("/member/{memberId}")
+    public List<Board> getBoardsByMemberId(@PathVariable Long memberId) {
+        return boardService.getBoardsByMemberId(memberId);
+    }
+    // 키워드로 검색기능 추가
+    @GetMapping("/search")
+    public List<Board> getBoardsByKeyword(@RequestParam String keyword){
+        return boardService.getBoardsByKeyword(keyword);
+    }
     @PatchMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);

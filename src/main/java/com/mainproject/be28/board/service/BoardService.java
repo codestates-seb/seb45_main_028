@@ -45,8 +45,15 @@ public class BoardService {
                     beanUtils.copyNonNullProperties(updatedBoardDto,board);
         return boardRepository.save(updatedBoard);
     }
-
+    // 회원아이디로 게시글 검색기능 추가
+    public List<Board> getBoardsByMemberId(Long memberId) {
+        return boardRepository.findByMember_MemberId(memberId);
+    }
     public void deleteBoard(Long boardId) {
         boardRepository.deleteById(boardId);
+    }
+// 키워드로 게시글검색기능 추가
+    public List<Board> getBoardsByKeyword(String keyword){
+        return boardRepository.findByTitleContainingOrContentContaining(keyword, keyword);
     }
 }

@@ -5,4 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByTitleContaining(String keyword);
+    List<Board> findByMember_MemberId(Long memberId); // 회원아이디로 게시글검색 추가
+
+    List<Board> findByTitleContainingOrContentContaining(String titleKeyword, String contentKeyword); // 키워드로찾기 추가
 }
