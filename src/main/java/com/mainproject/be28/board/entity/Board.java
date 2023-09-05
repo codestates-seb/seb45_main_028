@@ -1,11 +1,12 @@
 package com.mainproject.be28.board.entity;
 
 import com.mainproject.be28.auditable.Auditable;
+import com.mainproject.be28.comment.entity.Comment;
 import org.springframework.data.annotation.CreatedDate;
 import com.mainproject.be28.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
-
+import java.util.List;
 import javax.persistence.*;
 import java.security.Timestamp;
 import java.time.LocalDateTime;
@@ -39,5 +40,9 @@ public class Board extends Auditable {
 
     @Column(nullable = false)
     private String boardCategory;
+
+    //@OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+   // private List<Comment> comments;
+
 
 }
