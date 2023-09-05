@@ -6,8 +6,11 @@ import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
 import com.mainproject.be28.member.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,22 +22,18 @@ public class BoardController {
     @Autowired
     private BoardMapper mapper;
     @PostMapping
-    public Board createBoard(@RequestBody BoardDto boardDto) {
-        /*
-        // 매퍼에서 이미 했음.
-        Board board = new Board();
-        board.setTitle(boardDto.getTitle());
-        board.setContent(boardDto.getContent());
-        board.setBoardCategory(boardDto.getBoardCategory());
 
-        // 매퍼에서 멤버를 매핑.
-        Member member = new Member();
-        member.setMemberId(boardDto.getMemberId());
-        board.setMember(member);
-*/
+    public ResponseEntity createBoard(@RequestBody BoardDto boardDto) {
         Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
 
-        return boardService.createBoard(mapperBoard);
+        return new ResponseEntity<>(boardService.createBoard(mapperBoard), HttpStatus.CREATED);
+
+//        Member member = new Member();
+//        member.setMemberId(boardDto.getMemberId());
+//        //board.setMember(member);
+//
+//        return boardService.createBoard(board);
+
     }
 
     @GetMapping("/{boardId}")
@@ -47,13 +46,12 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
-    @PutMapping("/{boardId}")
-    public Board updateBoard(@PathVariable Long boardId, @RequestBody BoardDto boardDto) {
-        Board updatedBoard = new Board();
-        updatedBoard.setTitle(boardDto.getTitle());
-        updatedBoard.setContent(boardDto.getContent());
-        // ... (update other fields as needed)
-        return boardService.updateBoard(boardId, updatedBoard);
+    @PatchMapping("/{boardId}")
+    public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
+        boardDto.setBoardId(boardId);
+        Board board = mapper.boardPatchDtoToBoard(boardDto);
+        board.setModifiedAt(LocalDateTime.now());
+        return boardService.updateBoard(boardId, board);
     }
 
     @DeleteMapping("/{boardId}")

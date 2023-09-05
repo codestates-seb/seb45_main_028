@@ -1,25 +1,21 @@
-package com.mainproject.be28.board.dto;
+package com.mainproject.be28.comment.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+
 @Getter
 @Setter
-public class BoardDto {
+public class CommentDto {
+    @NotNull
+    private Long commentId;
     @NotNull
     private Long boardId;
     @NotNull
-    private String title;
-    @NotNull
     private Long memberId;
     private String content;
-
-    @NotNull
-    private Long viewCount;
     @NotNull
     private Long likeCount;
-    @NotNull
-    private String boardCategory;
+
 }
