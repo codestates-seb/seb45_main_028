@@ -49,7 +49,7 @@ public class CartMapperImpl implements CartMapper{
     public List<CartItemResponseDto> getCartItemsResponseDto(Cart cart) {
         List<CartItemResponseDto> cartItemDtos = new ArrayList<>();
         if (cart == null) {
-            throw new BusinessLogicException(ExceptionCode.CART_NOT_FOUND);
+            return new ArrayList<>();
         }
         List<CartItem> cartItems = cart.getCartItems();
         if (cartItems != null) {
