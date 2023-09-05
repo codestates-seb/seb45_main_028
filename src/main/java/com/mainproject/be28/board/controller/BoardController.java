@@ -2,6 +2,7 @@ package com.mainproject.be28.board.controller;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
+import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
 import com.mainproject.be28.member.entity.Member;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +16,29 @@ import java.util.Optional;
 public class BoardController {
     @Autowired
     private BoardService boardService;
-
+    @Autowired
+    private BoardMapper mapper;
     @PostMapping
     public Board createBoard(@RequestBody BoardDto boardDto) {
+        /*
+        // 매퍼에서 이미 했음.
         Board board = new Board();
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
         board.setBoardCategory(boardDto.getBoardCategory());
 
+        // 매퍼에서 멤버를 매핑.
         Member member = new Member();
         member.setMemberId(boardDto.getMemberId());
         board.setMember(member);
+*/
+        Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
 
-        return boardService.createBoard(board);
+        return boardService.createBoard(mapperBoard);
     }
 
     @GetMapping("/{boardId}")
-    public Optional<Board> getBoardById(@PathVariable Long boardId) {
+    public Optional<Board> getBoardById(@PathVariable("boardId") Long boardId) {
         return boardService.getBoardById(boardId);
     }
 
@@ -50,7 +57,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable Long boardId) {
+    public void deleteBoard(@PathVariable("boardId") Long boardId) {
         boardService.deleteBoard(boardId);
     }
 }

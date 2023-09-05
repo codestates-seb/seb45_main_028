@@ -1,5 +1,6 @@
 package com.mainproject.be28.cartItem.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.item.entity.Item;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table
-public class CartItem {
+public class CartItem extends Auditable {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +22,23 @@ public class CartItem {
         @Column(nullable = false)
         private Long count;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "CART_ID", nullable = false)
         private Cart cart;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "ITEM_ID", nullable = false)
         private Item item;
 
+        public static CartItem createCartItem(Cart cart, Item item, long count) {
+                CartItem cartItem = new CartItem();
+                cartItem.setCart(cart);
+                cartItem.setItem(item);
+                cartItem.setCount(count);
+                return cartItem;
+        }
+
+        public void addCount(long count) {
+                this.count += count;
+        }
 }

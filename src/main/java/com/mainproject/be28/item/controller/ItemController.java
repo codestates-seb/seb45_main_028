@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 @RestController
 @RequestMapping("/item")
@@ -71,8 +69,8 @@ public class ItemController {
             , @RequestParam(value = "color", required = false) String searchColor
             , @RequestParam(value = "lowPrice", required = false) Long lowPrice
             , @RequestParam(value = "highPrice", required = false) Long highPrice
-                               /* 아래는 검색조건 미구현 필드
             , @RequestParam(value = "name", required = false) String searchName
+                               /* 아래는 검색조건 미구현 필드
             , @RequestParam(value = "score", required = false) String sortScore
             , @RequestParam(value = "status", required = false) String searchStatus */
     ){
@@ -82,26 +80,10 @@ public class ItemController {
         condition.setColor(searchColor);
         condition.setLowPrice(lowPrice);
         condition.setHighPrice(highPrice);
+        condition.setName(searchName);
         return itemService.findItems(condition, page, size);
     }
 
-
-    /* 브랜드별 필터링.
-    다만 이 방식으로는 다중 필터 적용이 어렵고, 각각 브랜드/컬러/카테고리 등 필터 시 구분이 애매해 조건문으로 번잡하게 설정해야 한다.
-
-       페이지네이션 필요. MultiResponse?
-      @GetMapping("/search")
-    public ResponseEntity getItems(@RequestParam String brand, @Positive @RequestParam int page,
-                                       @Positive @RequestParam int size){
-
-        Page<Item> itemList = itemService.findAllByBrand(brand,page - 1, size);
-
-        List<Item> items = itemList.getContent();
-        return new ResponseEntity<>(
-                new MultiResponseDto<>(mapper.itemsToOnlyItemResponseDtos(items), itemList),
-                HttpStatus.OK);
-    }
-*/
     @DeleteMapping("/{item-id}")
     public ResponseEntity deleteQuestion(@PathVariable("item-id") @Positive long itemId){
 

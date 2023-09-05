@@ -1,12 +1,14 @@
 package com.mainproject.be28.item.repository;
 
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
+import com.mainproject.be28.item.entity.QItem;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 import static com.mainproject.be28.item.entity.QItem.item;
@@ -17,7 +19,7 @@ import static com.mainproject.be28.item.entity.QItem.item;
 public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
     @Override
-    public List<OnlyItemResponseDto> searchAll(ItemSearchCondition condition, Pageable pageable){
+    public List<OnlyItemResponseDto> searchByCondition(ItemSearchCondition condition, Pageable pageable){
 
         return queryFactory
                 .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달
@@ -30,8 +32,10 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                         equalsColor(condition.getColor()),
 //                      betweenPrice(condition.getLowPrice(), condition.getHighPrice()),
                         minimumPrice(condition.getLowPrice()),
-                        maximumPrice(condition.getHighPrice())
+                        maximumPrice(condition.getHighPrice()),
+                        nameLike(condition.getName())
                 )
+                .orderBy(item.itemId.desc())
                 .fetch();
     }
 
@@ -53,5 +57,9 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
     private BooleanExpression maximumPrice(Long highPrice){
         return highPrice==null ? null: item.price.loe(highPrice);
+    }
+
+    private BooleanExpression nameLike(String searchQuery) {
+        return searchQuery == null ? null : QItem.item.name.like("%" + searchQuery + "%");
     }
 }
