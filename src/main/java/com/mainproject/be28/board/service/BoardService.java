@@ -22,6 +22,7 @@ public class BoardService {
     private BoardMapper mapper;
     private final CustomBeanUtils<Board> beanUtils;
 
+
     public BoardService(CustomBeanUtils<Board> beanUtils) {
         this.beanUtils = beanUtils;
     }

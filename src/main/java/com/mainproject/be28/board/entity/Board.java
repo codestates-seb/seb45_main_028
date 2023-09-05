@@ -26,6 +26,7 @@ public class Board extends Auditable {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
+//    private Long memberId;
 
     @Column( length = 1000)
     private String content;

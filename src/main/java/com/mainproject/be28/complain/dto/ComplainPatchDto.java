@@ -7,20 +7,20 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-
-public class ComplainDto {
-
-        @Setter
-        @Getter
-        public static class Patch {
-
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ComplainPatchDto {
+            @Positive
             private Long memberId;
+            @Positive
             private Long complainId;
+            @Positive
             private Long itemId;
-            @NotBlank(message = "문의내용을 적어주세요")
-            private String content;
+            private String title;
 
-        }
+            private String content;
 
         }
 

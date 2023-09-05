@@ -15,9 +15,7 @@ public class BoardDto {
     @NotNull
     private Long memberId;
     private String content;
-//    private LocalDateTime createdAt;
-//    updatedAt 추가
-//    private LocalDateTime updatedAt;
+
     @NotNull
     private Long viewCount;
     @NotNull

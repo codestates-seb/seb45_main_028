@@ -15,9 +15,8 @@ public class ItemSearchCondition {
     private String color;
     private Long lowPrice;
     private Long highPrice;
-/* 아래는 검색조건 설정 미구현된 필드
     private String name;
-
+/* 아래는 검색조건 설정 미구현된 필드
     private String status;
     private Double score;
 */

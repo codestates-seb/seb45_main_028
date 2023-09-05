@@ -47,13 +47,17 @@ CREATE TABLE ITEM (
                       COLOR VARCHAR(100),
                       SCORE DOUBLE,
                       BRAND VARCHAR(100),
-                      CATEGORY VARCHAR(100)
+                      CATEGORY VARCHAR(100),
+                      CREATED_AT TIMESTAMP,
+                      LAST_MODIFIED_AT TIMESTAMP
 );
 
 -- CART 테이블
 CREATE TABLE CART (
                       CART_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
                       MEMBER_ID BIGINT NOT NULL,
+                      CREATED_AT TIMESTAMP,
+                      LAST_MODIFIED_AT TIMESTAMP,
                       FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
 
@@ -63,10 +67,11 @@ CREATE TABLE REVIEW (
                         ITEM_ID BIGINT NOT NULL,
                         MEMBER_ID BIGINT NOT NULL,
                         CONTENT VARCHAR(1000),
-                        CREATED_AT TIMESTAMP,
                         LIKE_COUNT BIGINT,
                         UNLIKE_COUNT BIGINT,
                         SCORE BIGINT,
+                        CREATED_AT TIMESTAMP,
+                        LAST_MODIFIED_AT TIMESTAMP,
                         FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID),
                         FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
@@ -77,6 +82,8 @@ CREATE TABLE CART_ITEM (
                            COUNT BIGINT NOT NULL,
                            CART_ID BIGINT NOT NULL,
                            ITEM_ID BIGINT NOT NULL,
+                           CREATED_AT TIMESTAMP,
+                           LAST_MODIFIED_AT TIMESTAMP,
                            FOREIGN KEY (CART_ID) REFERENCES CART(CART_ID),
                            FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );
@@ -86,9 +93,11 @@ CREATE TABLE COMPLAIN (
                           COMPLAIN_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
                           MEMBER_ID BIGINT NOT NULL,
                           ITEM_ID BIGINT NOT NULL,
+                          title VARCHAR(20),
                           CONTENT VARCHAR(1000),
                           CREATED_AT TIMESTAMP,
                           LAST_MODIFIED_AT TIMESTAMP,
+                          COMPLAIN_STATUS VARCHAR(255),
                           FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                           FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID)
 );

@@ -21,6 +21,7 @@ public interface BoardMapper {
 //    }
     @Mapping(source = "memberId", target = "member.memberId")
     Board boardPostDtoToBoard(BoardDto boardPostDto);
+
     @Mapping(source = "memberId", target = "member.memberId")
     Board boardPatchDtoToBoard(BoardDto boardPatchDto);
 

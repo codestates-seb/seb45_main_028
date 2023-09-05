@@ -1,10 +1,14 @@
 package com.mainproject.be28.member.mapper;
 
+import com.mainproject.be28.complain.dto.ComplainResponsesDto;
+import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.member.dto.MemberPatchDto;
 import com.mainproject.be28.member.dto.MemberPostDto;
 import com.mainproject.be28.member.dto.MemberResponseDto;
 import com.mainproject.be28.member.entity.Member;
 import org.mapstruct.Mapper;
+
+import java.util.List;
 
 @Mapper(componentModel = "Spring")
 public interface MemberMapper {
@@ -34,4 +38,5 @@ public interface MemberMapper {
         );
         return response;
     }
+
 }

@@ -31,7 +31,7 @@ public class ItemService {
     }
 
     public Item updateItem(Item item) {
-       Item findItem = verifyExistItem(item.getItemId());
+       Item findItem = findItem(item.getItemId());
 
         // 관리자만 수정 권한 기능 추가 필요
 
@@ -46,15 +46,12 @@ public class ItemService {
         Optional<Item> optionalItem =
                 itemRepository.findById(itemId);
         //리뷰 수,  평점
-        Item findItem = optionalItem.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-
-
-        return findItem;
+        return optionalItem.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
     }
 
     public List<OnlyItemResponseDto> findItems(ItemSearchCondition condition,int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("itemId").ascending());
-        List<OnlyItemResponseDto> itemList = itemRepository.searchAll(condition, pageRequest);
+        List<OnlyItemResponseDto> itemList = itemRepository.searchByCondition(condition, pageRequest);
 
         /* 상품 전체 목록에서 각 상품에 리뷰 수 표시, 평점 추가 필요
 
@@ -66,15 +63,6 @@ public class ItemService {
         return itemList;
     }
 
-    /*
-    Controller에서 달아둔 주석과 동일한 이유.
-
-    public Page<Item> findAllByBrand(ItemSearchCondition condition, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("itemId").ascending());
-        String brand = condition.getBrand();
-        return itemRepository.findAllByBrand(brand, pageRequest);
-    }
-*/
     public void deleteItem(long itemId){
 
         Item findItem = findItem(itemId);
@@ -92,8 +80,4 @@ public class ItemService {
         return tokenMemberId == adminId;
 }
 */
-    public Item verifyExistItem(long itemId) {
-        Optional<Item> item = itemRepository.findById(itemId);
-        return item.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-    }
 }

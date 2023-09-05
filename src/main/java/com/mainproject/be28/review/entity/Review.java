@@ -1,8 +1,11 @@
 package com.mainproject.be28.review.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -12,8 +15,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table
-public class Review {
+public class Review extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column()
@@ -27,16 +32,18 @@ public class Review {
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
+
+
     @Column(length = 1000)
     private String content;
-
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column()
     private Long likeCount;
 
     @Column()
     private Long unlikeCount;
+
+    @Column()
+    private int Score;
+
 }

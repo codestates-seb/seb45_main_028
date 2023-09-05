@@ -1,5 +1,6 @@
 package com.mainproject.be28.item.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.review.entity.Review;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table
-public class Item {
+public class Item extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;

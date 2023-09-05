@@ -22,6 +22,7 @@ public class BoardController {
     @Autowired
     private BoardMapper mapper;
     @PostMapping
+
     public ResponseEntity createBoard(@RequestBody BoardDto boardDto) {
         Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
 
@@ -32,6 +33,7 @@ public class BoardController {
 //        //board.setMember(member);
 //
 //        return boardService.createBoard(board);
+
     }
 
     @GetMapping("/{boardId}")
