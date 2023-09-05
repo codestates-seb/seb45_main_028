@@ -19,7 +19,7 @@ import static com.mainproject.be28.item.entity.QItem.item;
 public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
     @Override
-    public List<OnlyItemResponseDto> searchAll(ItemSearchCondition condition, Pageable pageable){
+    public List<OnlyItemResponseDto> searchByCondition(ItemSearchCondition condition, Pageable pageable){
 
         return queryFactory
                 .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달

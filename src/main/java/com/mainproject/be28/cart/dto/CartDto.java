@@ -24,9 +24,11 @@ public class CartDto {
         private long memberId;
         private List<CartItemDto> cartItems;
     }
+@Getter
+@AllArgsConstructor
     public static class Response {
-        private long cartId;
-        private long memberId;
         private List<CartItemDto> cartItems;
+        private long totalPrice;
+
     }
 }

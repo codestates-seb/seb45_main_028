@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface CustomItemRepository {
-    List<OnlyItemResponseDto> searchAll(ItemSearchCondition condition, Pageable pageable); // 다중 검색 조건 메서드.  Impl 파일에서 메서드 구현
+    List<OnlyItemResponseDto> searchByCondition(ItemSearchCondition condition, Pageable pageable); // 다중 검색 조건 메서드.  Impl 파일에서 메서드 구현
 
 }

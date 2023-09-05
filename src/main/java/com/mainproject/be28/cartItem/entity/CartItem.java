@@ -41,8 +41,4 @@ public class CartItem extends Auditable {
         public void addCount(long count) {
                 this.count += count;
         }
-
-        public void updateCount(long count) {
-                this.count = count;
-        }
 }

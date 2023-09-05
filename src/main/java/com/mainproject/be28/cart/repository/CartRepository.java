@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
-//    Service에서 구현할 로그인한 회원의 모든 장바구니 삭제 기능
-//     void deleteAllByMemberId(Long memberId);
-//    Cart findByMemberId(Long memberId);
+    Cart findCartByMember_MemberId(long memberId);
+
 }
