@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
@@ -32,7 +33,7 @@ public class CartController {
 // 전달받은 인증된 회원의 인증 토큰만 담기면,  생성된 Cart 객체에 Id와  담긴 회원 정보의 memberId만 추가해 넘겨주면 된다.
 
         CartItem cartItem = cartService.addCart(cartItemDto,memberId);
-        return new ResponseEntity<>(cartItem, HttpStatus.OK);
+        return new ResponseEntity<>(cartItemDto, HttpStatus.OK);
     }
     @PostMapping("/reduce/{memberId}")
     public ResponseEntity reduceCart(@RequestBody @Valid CartItemDto cartItemDto,@PathVariable("memberId")long memberId){
