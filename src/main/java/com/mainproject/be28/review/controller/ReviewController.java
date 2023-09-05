@@ -3,17 +3,13 @@ package com.mainproject.be28.review.controller;
 import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.member.mapper.MemberMapper;
 import com.mainproject.be28.member.service.MemberService;
-import com.mainproject.be28.response.MultiResponseDto;
-import com.mainproject.be28.response.SingleResponseDto;
 import com.mainproject.be28.review.dto.ReviewPatchDto;
 import com.mainproject.be28.review.dto.ReviewPostDto;
-import com.mainproject.be28.review.dto.ReviewResponseDto;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.review.mapper.ReviewMapper;
 import com.mainproject.be28.review.service.ReviewService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Arrays;
-import java.util.List;
 
 
 
@@ -39,10 +33,12 @@ public class ReviewController {
     private final MemberService memberService;
 
 
-    @PostMapping("/new")// 리뷰등록
-    public ResponseEntity createReview(@RequestBody @Valid  ReviewPostDto reviewPostDto) {
-           reviewService.createReview(mapper.ReviewPostDtoToReview(reviewPostDto));
-            return new ResponseEntity<>( HttpStatus.CREATED);
+    @PostMapping("/new/{score}")// 리뷰등록
+    public ResponseEntity createReview(@PathVariable("item-id")long itemId,@RequestBody @Valid  ReviewPostDto reviewPostDto,@PathVariable("score") int score) {
+        reviewPostDto.setScore(score);
+        reviewPostDto.setItemId(itemId);
+       reviewService.createReview(mapper.ReviewPostDtoToReview(reviewPostDto));
+        return new ResponseEntity<>( HttpStatus.CREATED);
 
     }
     @PatchMapping("/{review-id}")// 리뷰수정
