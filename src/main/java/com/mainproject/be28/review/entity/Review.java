@@ -32,13 +32,11 @@ public class Review extends Auditable {
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
 
-
-
     @Column(length = 1000)
     private String content;
 
     @Column()
-    private Long likeCount;
+    private Long  likeCount;
 
     @Column()
     private Long unlikeCount;

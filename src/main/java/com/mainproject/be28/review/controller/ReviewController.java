@@ -5,6 +5,7 @@ import com.mainproject.be28.member.mapper.MemberMapper;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.review.dto.ReviewPatchDto;
 import com.mainproject.be28.review.dto.ReviewPostDto;
+import com.mainproject.be28.review.dto.ReviewResponseDto;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.review.mapper.ReviewMapper;
 import com.mainproject.be28.review.service.ReviewService;
@@ -34,7 +35,9 @@ public class ReviewController {
 
 
     @PostMapping("/new/{score}")// 리뷰등록
-    public ResponseEntity createReview(@PathVariable("item-id")long itemId,@RequestBody @Valid  ReviewPostDto reviewPostDto,@PathVariable("score") int score) {
+    public ResponseEntity createReview(@PathVariable("item-id")long itemId,
+                                       @RequestBody @Valid  ReviewPostDto reviewPostDto,
+                                       @PathVariable("score") int score) {
         reviewPostDto.setScore(score);
         reviewPostDto.setItemId(itemId);
        reviewService.createReview(mapper.ReviewPostDtoToReview(reviewPostDto));
@@ -54,5 +57,18 @@ public class ReviewController {
         reviewService.deleteReview(reviewId);
         return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    @PostMapping("/{review-id}/like")//리뷰 좋아요
+    public ResponseEntity addLike(@PathVariable("review-id") Long reviewId) {
+        Review likeReview = reviewService.addLike(reviewId);
+        return new ResponseEntity<>( mapper.reviewToReviewResponseDto( likeReview), HttpStatus.OK);
+        }
+
+    @PostMapping("/{review-id}/unlike")
+    public ResponseEntity addDislike(@PathVariable("review-id") Long reviewId) {
+            Review unlikeReview = reviewService.addDislike(reviewId);
+            return new ResponseEntity<>(mapper.reviewToReviewResponseDto( unlikeReview), HttpStatus.OK);
+        }
+
 }
+
 
