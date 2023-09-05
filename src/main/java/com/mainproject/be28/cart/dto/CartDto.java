@@ -1,6 +1,7 @@
 package com.mainproject.be28.cart.dto;
 
 import com.mainproject.be28.cartItem.dto.CartItemDto;
+import com.mainproject.be28.cartItem.dto.CartItemResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,7 @@ public class CartDto {
 @Getter
 @AllArgsConstructor
     public static class Response {
-        private List<CartItemDto> cartItems;
+        private List<CartItemResponseDto> cartItems;
         private long totalPrice;
 
     }

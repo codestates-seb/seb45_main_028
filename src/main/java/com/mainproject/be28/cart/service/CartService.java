@@ -73,6 +73,9 @@ public class CartService {
 
     public Cart findCartByMemberId(Long memberId) {
         Cart cart = cartRepository.findCartByMember_MemberId(memberId);
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        Member member = optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        if(cart == null){ Cart.createCart(member);}
         return cart;
     }
     public void deleteCart(long cartItemId) { // 장바구니 내 개별 상품 제거
