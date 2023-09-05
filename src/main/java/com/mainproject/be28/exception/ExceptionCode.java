@@ -10,6 +10,7 @@ public enum ExceptionCode {
     POST_NOT_FOUND(404, "POST not found"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
     ITEM_NOT_FOUND(404, "ITEM not found"),
+    CART_NOT_FOUND(404, "CART NOT FOUND"),
     BOARD_NOT_FOUND(404, "BOARD not found"),
     Complain_NOT_FOUND(404,"COMPLAIN not found"),
     Review_NOT_FOUND(404,"REVIEW not found" );
