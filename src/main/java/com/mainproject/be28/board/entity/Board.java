@@ -1,5 +1,6 @@
 package com.mainproject.be28.board.entity;
 
+import com.mainproject.be28.auditable.Auditable;
 import org.springframework.data.annotation.CreatedDate;
 import com.mainproject.be28.member.entity.Member;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Board {
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID", nullable = false)
     private Member member;
+//    private Long memberId;
 
     @Column( length = 1000)
     private String content;
