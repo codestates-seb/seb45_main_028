@@ -10,6 +10,7 @@ public enum ExceptionCode {
     POST_NOT_FOUND(404, "POST not found"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
     ITEM_NOT_FOUND(404, "ITEM not found"),
+    ITEM_EXIST(409, "동일한 상품명이 존재합니다."),
     CART_NOT_FOUND(404, "CART NOT FOUND"),
     BOARD_NOT_FOUND(404, "BOARD not found"),
     Complain_NOT_FOUND(404,"COMPLAIN not found"),
