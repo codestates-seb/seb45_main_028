@@ -22,6 +22,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
     @Override
     public Page<OnlyItemResponseDto> searchByCondition(ItemSearchCondition condition, Pageable pageable){
+
         List<OnlyItemResponseDto> results = queryFactory
                 .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달
                         ,item.name,item.price,item.detail,item.status, item.color,item.brand ,item.category)
@@ -48,14 +49,14 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
 
     private BooleanExpression equalsCategory(String searchCategory){
-        return searchCategory == null ? null : item.category.contains(searchCategory);
+        return searchCategory == null ? null : item.category.toUpperCase().contains(searchCategory.toUpperCase());
     }
 
     private BooleanExpression equalsBrand(String searchBrand){
-        return searchBrand == null ? null : item.brand.contains(searchBrand);
+        return searchBrand == null ? null : item.brand.toUpperCase().contains(searchBrand.toUpperCase());
     }
     private BooleanExpression equalsColor(String searchColor){
-        return searchColor == null ? null : item.color.contains(searchColor);
+        return searchColor == null ? null : item.color.toUpperCase().contains(searchColor.toUpperCase());
     }
 //    private BooleanExpression betweenPrice(Long lowPrice, Long highPrice){
 //        return (lowPrice==null&&highPrice==null) ? null: item.price.between(lowPrice, highPrice);
