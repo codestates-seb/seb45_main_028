@@ -13,7 +13,9 @@ public enum ExceptionCode {
     CART_NOT_FOUND(404, "CART NOT FOUND"),
     BOARD_NOT_FOUND(404, "BOARD not found"),
     Complain_NOT_FOUND(404,"COMPLAIN not found"),
-    Review_NOT_FOUND(404,"REVIEW not found" );
+    Review_NOT_FOUND(404,"REVIEW not found" ),
+    IMAGE_NOT_FOUND(404,"IMAGE not found" ),
+    ITEM_REGIST_ERROR(0,"상품 등록 중 알 수 없는 에러가 발생하였습니다.");
 
     @Getter
     private int status;
