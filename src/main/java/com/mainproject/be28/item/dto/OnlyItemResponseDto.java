@@ -17,4 +17,5 @@ public class OnlyItemResponseDto {
     private Double score;
     private String brand;
     private String category;
+    private Integer reviewCount;
 }

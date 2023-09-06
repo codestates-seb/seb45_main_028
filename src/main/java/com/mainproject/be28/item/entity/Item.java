@@ -32,7 +32,7 @@ public class Item extends Auditable {
     @Column(length = 100)
     private String color;
 
-    @Column
+    @Transient
     private Double score;
 
     @Column(length = 100)
@@ -40,6 +40,9 @@ public class Item extends Auditable {
 
     @Column(length = 100)
     private String category;
+
+    @Transient
+    private long reviewCount;
 
     @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
