@@ -7,7 +7,7 @@ INSERT INTO MEMBER VALUES  (103, 'test3@test.com','test3',  '테스트3', '010-7
 -- BOARD 테이블 데이터
 INSERT INTO BOARD VALUES (101, '첫 번째 게시물', 101, '첫 번째 게시물 내용입니다.', 100, 50, '자유게시판', NOW(),NOW());
 INSERT INTO BOARD VALUES (102, '두 번째 게시물', 102, '두 번째 게시물 내용입니다.', 120, 60, '스터디모집', NOW(),NOW());
-INSERT INTO BOARD VALUES (103, '세 번째 게시물', 103, '세 번째 게시물 내용입니다.', 110, 55, '모집모집', NOW(),NOW());
+
 
 -- COMMENT 테이블
 INSERT INTO COMMENT VALUES (101, 101,101, '첫 번째 게시물에 대한 댓글입니다.', 31, NOW(),NOW());
