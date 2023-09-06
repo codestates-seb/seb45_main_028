@@ -69,6 +69,6 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
 
     private BooleanExpression nameLike(String searchQuery) {
-        return searchQuery == null ? null : QItem.item.name.like("%" + searchQuery + "%");
+        return searchQuery == null ? null : QItem.item.name.toUpperCase().like("%" + searchQuery.toUpperCase() + "%");
     }
 }
