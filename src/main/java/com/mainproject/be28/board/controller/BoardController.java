@@ -56,6 +56,16 @@ public class BoardController {
     public List<Board> getBoardsByKeyword(@RequestParam String keyword){
         return boardService.getBoardsByKeyword(keyword);
     }
+    // 좋아요
+    @GetMapping("/sorted/likes")
+    public List<Board> getAllBoardsSortedByLikes(){
+        return boardService.getAllBoardSortedByLikes();
+    }
+    // 조회수
+    @GetMapping("/sorted/views")
+    public List<Board> getAllBoardsSortedByViews(){
+        return boardService.getAllBoardSortedByViews();
+    }
     @PatchMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);

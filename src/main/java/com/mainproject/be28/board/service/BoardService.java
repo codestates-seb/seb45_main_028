@@ -56,4 +56,13 @@ public class BoardService {
     public List<Board> getBoardsByKeyword(String keyword){
         return boardRepository.findByTitleContainingOrContentContaining(keyword, keyword);
     }
+// 좋아요순 내림차순정렬
+    public List<Board> getAllBoardSortedByLikes(){
+        return boardRepository.findAllByOrderByLikeCountDesc();
+    }
+// 조회수순 내림차순정렬
+    public List<Board> getAllBoardSortedByViews(){
+        return boardRepository.findAllByOrderByViewCountDesc();
+    }
+
 }
