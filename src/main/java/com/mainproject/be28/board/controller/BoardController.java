@@ -66,6 +66,11 @@ public class BoardController {
     public List<Board> getAllBoardsSortedByViews(){
         return boardService.getAllBoardSortedByViews();
     }
+    //공지사항
+    @GetMapping("/notices")
+    public List<Board> getNoticeBoards(){
+        return boardService.getNoticeBoards();
+    }
     @PatchMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);

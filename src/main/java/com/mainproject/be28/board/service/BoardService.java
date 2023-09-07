@@ -38,6 +38,7 @@ public class BoardService {
         return boardRepository.findAll();
     }
 
+
     public Board updateBoard(Long boardId, Board updatedBoardDto) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         Board board = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
@@ -63,6 +64,10 @@ public class BoardService {
 // 조회수순 내림차순정렬
     public List<Board> getAllBoardSortedByViews(){
         return boardRepository.findAllByOrderByViewCountDesc();
+    }
+    //공지사항
+    public List<Board> getNoticeBoards() {
+        return boardRepository.findByBoardCategoryOrderByCreatedAtDesc("공지사항");
     }
 
 }

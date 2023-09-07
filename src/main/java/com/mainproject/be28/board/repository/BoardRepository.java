@@ -11,4 +11,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     List<Board> findAllByOrderByLikeCountDesc(); // 좋아요
     List<Board> findAllByOrderByViewCountDesc(); // 조회수
+//공지사항
+    List<Board> findByBoardCategoryOrderByCreatedAtDesc(String boardCategory);
 }
