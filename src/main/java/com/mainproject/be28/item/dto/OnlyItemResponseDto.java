@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Builder
 public class OnlyItemResponseDto {
+    private Long itemId;
     private String name;
     private Long price;
     private String detail;

@@ -1,13 +1,12 @@
 package com.mainproject.be28.item.repository;
 
+import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.QItem;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -21,11 +20,11 @@ import static com.mainproject.be28.item.entity.QItem.item;
 public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
     @Override
-    public Page<OnlyItemResponseDto> searchByCondition(ItemSearchCondition condition, Pageable pageable){
+    public List<OnlyItemResponseDto> searchByCondition(ItemSearchConditionDto condition, Pageable pageable){
 
-        List<OnlyItemResponseDto> results = queryFactory
+        return queryFactory
                 .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달
-                        ,item.name,item.price,item.detail,item.status, item.color,item.brand ,item.category)
+                       ,item.itemId ,item.name,item.price,item.detail,item.status, item.color,item.brand ,item.category)
                 )
                 .from(item)
                 .where(
@@ -43,10 +42,8 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-
-        long total = results.size();
-        return new PageImpl<>(results, pageable, total);
     }
+
 
     private BooleanExpression equalsCategory(String searchCategory){
         return searchCategory == null ? null : item.category.toUpperCase().contains(searchCategory.toUpperCase());

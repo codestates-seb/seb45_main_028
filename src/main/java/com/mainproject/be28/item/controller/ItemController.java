@@ -6,7 +6,7 @@ import com.mainproject.be28.item.dto.ItemDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
-import com.mainproject.be28.item.repository.ItemSearchCondition;
+import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -70,26 +70,21 @@ public class ItemController {
         return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
     @GetMapping("/search")
-    public Page<OnlyItemResponseDto> getItems(int page, int size
-            , @RequestParam(value = "category", required = false) String searchCategory
-            , @RequestParam(value = "brand", required = false) String searchBrand
-            , @RequestParam(value = "color", required = false) String searchColor
-            , @RequestParam(value = "lowPrice", required = false) Long lowPrice
-            , @RequestParam(value = "highPrice", required = false) Long highPrice
-            , @RequestParam(value = "name", required = false) String searchName
+    public Page<OnlyItemResponseDto> getItems(@Valid @RequestBody ItemSearchConditionDto itemSearchConditionDto
                                /* 아래는 검색조건 미구현 필드
             , @RequestParam(value = "score", required = false) String sortScore
             , @RequestParam(value = "status", required = false) String searchStatus */
     ){
-        ItemSearchCondition condition = new ItemSearchCondition();
-        condition.setCategory(searchCategory);
-        condition.setBrand(searchBrand);
-        condition.setColor(searchColor);
-        condition.setLowPrice(lowPrice);
-        condition.setHighPrice(highPrice);
-        condition.setName(searchName);
 
-        return itemService.findItems(condition, page, size);
+//        condition.setCategory(searchCategory);
+//        condition.setBrand(searchBrand);
+//        condition.setColor(searchColor);
+//        condition.setLowPrice(lowPrice);
+//        condition.setHighPrice(highPrice);
+//        condition.setName(searchName);
+
+        Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
+        return items;
 
     }
 
