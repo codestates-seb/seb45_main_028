@@ -34,6 +34,7 @@ public class ItemSearchConditionDto {
     @Pattern(regexp = "^(score|review|name|price)$", message = "정렬 기준은 score, review, name, price 중 하나만 입력 되어야 합니다.")
     private String sort;
     @Nullable
+    @Pattern(regexp = "^(asc|desc)$", message = "정렬 순서는 asc,desc 중 하나만 입력 되어야 합니다.")
     private String order;
 /* 아래는 검색조건 설정 미구현된 필드
     private String status;

@@ -30,7 +30,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                 .where(
                         equalsCategory(condition.getCategory()), // 동적 쿼리 조건문
                         equalsBrand(condition.getBrand()),
-                        equalsColor(condition.getColor()),
+                        colorLike(condition.getColor()),
 //                      betweenPrice(condition.getLowPrice(), condition.getHighPrice()),
                         minimumPrice(condition.getLowPrice()),
                         maximumPrice(condition.getHighPrice())
@@ -52,8 +52,8 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     private BooleanExpression equalsBrand(String searchBrand){
         return searchBrand == null ? null : item.brand.toUpperCase().contains(searchBrand.toUpperCase());
     }
-    private BooleanExpression equalsColor(String searchColor){
-        return searchColor == null ? null : item.color.toUpperCase().contains(searchColor.toUpperCase());
+    private BooleanExpression colorLike(String searchColor){
+        return searchColor == null ? null : item.color.toUpperCase().like("%"+searchColor.toUpperCase()+"%");
     }
 //    private BooleanExpression betweenPrice(Long lowPrice, Long highPrice){
 //        return (lowPrice==null&&highPrice==null) ? null: item.price.between(lowPrice, highPrice);
@@ -66,6 +66,6 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
 
     private BooleanExpression nameLike(String searchQuery) {
-        return searchQuery == null ? null : QItem.item.name.toUpperCase().like("%" + searchQuery.toUpperCase() + "%");
+        return searchQuery == null ? null : item.name.toUpperCase().like("%" + searchQuery.toUpperCase() + "%");
     }
 }

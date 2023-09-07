@@ -91,7 +91,7 @@ public class ItemService {
 
     private List<OnlyItemResponseDto> customSort(List<OnlyItemResponseDto> itemList, ItemSearchConditionDto condition) {
         if (condition.getSort() != null) { // 정렬기준이 있을 경우,
-            itemList.sort((o1, o2) -> sortStandard(o1, o2, condition));
+            itemList.sort((item1, item2) -> sortStandard(item1, item2, condition));
         } else {
             if (condition.getOrder() != null && condition.getOrder().equals("asc")) { // 정렬 기준은 없고, 오름차순만 요구할 경우, Item ID 기준 오름차순 정렬
                 itemList.sort(Comparator.comparing(OnlyItemResponseDto::getItemId));
