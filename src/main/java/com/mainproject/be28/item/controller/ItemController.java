@@ -8,6 +8,8 @@ import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
 import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.service.ItemService;
+import com.mainproject.be28.response.MultiResponseDto;
+import com.mainproject.be28.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,20 +46,17 @@ public class ItemController {
         }
 //        URI location = UriCreator.createUri(ITEM_DEFAULT_URL, item.getItemId()); // URI 전달
 
-        return new ResponseEntity<>(mapper.itemToItemResponseDto(item),HttpStatus.CREATED);
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.itemToItemResponseDto(item)),HttpStatus.CREATED);
     }
 
     @PatchMapping("/{item-id}")
     public ResponseEntity patchItem(@PathVariable("item-id") @Positive long itemId,
                                         @Valid @RequestBody ItemDto.Patch requestBody){
-
         requestBody.setItemId(itemId);
-
         Item item = mapper.itemPatchDtoToItem(requestBody);
-
         Item response = itemService.updateItem(item);
 
-        return new ResponseEntity<>(mapper.itemToItemResponseDto(response),HttpStatus.OK);
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.itemToItemResponseDto(response)),HttpStatus.OK);
     }
 
     @GetMapping("/{item-id}")
@@ -70,22 +69,9 @@ public class ItemController {
         return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
     @GetMapping("/search")
-    public Page<OnlyItemResponseDto> getItems(@Valid @RequestBody ItemSearchConditionDto itemSearchConditionDto
-                               /* 아래는 검색조건 미구현 필드
-            , @RequestParam(value = "score", required = false) String sortScore
-            , @RequestParam(value = "status", required = false) String searchStatus */
-    ){
-
-//        condition.setCategory(searchCategory);
-//        condition.setBrand(searchBrand);
-//        condition.setColor(searchColor);
-//        condition.setLowPrice(lowPrice);
-//        condition.setHighPrice(highPrice);
-//        condition.setName(searchName);
-
+    public ResponseEntity getItems(@Valid @RequestBody ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
-        return items;
-
+        return new ResponseEntity<>( new SingleResponseDto<>(items), HttpStatus.OK);
     }
 
     @DeleteMapping("/{item-id}")
