@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 @Getter
@@ -30,11 +31,11 @@ public class ItemSearchConditionDto {
     @Nullable
     private String name;
     @Nullable
+    @Pattern(regexp = "^(score|review|name|price)$", message = "정렬 기준은 score, review, name, price 중 하나만 입력 되어야 합니다.")
     private String sort;
     @Nullable
     private String order;
 /* 아래는 검색조건 설정 미구현된 필드
     private String status;
-    private Double score;
 */
 }
