@@ -32,14 +32,14 @@ public class Item extends Auditable {
     @Column(length = 100)
     private String color;
 
-    @Transient
-    private Double score;
-
     @Column(length = 100)
     private String brand;
 
     @Column(length = 100)
     private String category;
+
+    @Transient
+    private Double score;
 
     @Transient
     private long reviewCount;
