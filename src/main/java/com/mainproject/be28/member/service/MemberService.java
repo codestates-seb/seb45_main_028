@@ -29,22 +29,23 @@ public class MemberService {
     }
 
 
-//    //회원정보 수정
-//    public Member updateMember(Member member, Long memberId){
-//        Member findMember = findVerifiedMember(memberId());
-//
-//        Optional.ofNullable(member.getPassword())
-//                .ifPresent(password -> findMember.setPassword(password));
-//        Optional.ofNullable(member.getEmail())
-//                .ifPresent(email -> findMember.setEmail(email));
-//        Optional.ofNullable(member.getPhone())
-//                .ifPresent(phone -> findMember.setPhone(phone));
-//        Optional.ofNullable(member.getAddress())
-//                .ifPresent(address -> findMember.setAddress(address));
-//
-//        Member saveMember = MemberRepository.save(findMember);
-//        return saveMember;
-//    }
+    //회원정보 수정
+    public Member updateMember(Member member, Long memberId){
+        Member findMember = findVerifiedMember(memberId);
+
+        Optional.ofNullable(member.getPassword())
+                .ifPresent(password -> findMember.setPassword(password));
+        Optional.ofNullable(member.getEmail())
+                .ifPresent(email -> findMember.setEmail(email));
+        Optional.ofNullable(member.getPhone())
+                .ifPresent(phone -> findMember.setPhone(phone));
+        Optional.ofNullable(member.getAddress())
+                .ifPresent(address -> findMember.setAddress(address));
+
+        Member saveMember = memberRepository.save(findMember);
+        return saveMember;
+    }
+
 
 
     //회원조회

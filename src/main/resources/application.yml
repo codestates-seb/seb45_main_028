@@ -41,3 +41,6 @@ server:                   # 모든 response 에 대해 지정된 인코딩 적�
   servlet:
     encoding:
       force-response: true
+jwt:
+  access-Token-Expiration-Minutes: 60
+  refresh-Token-Expiration-Minutes: 120

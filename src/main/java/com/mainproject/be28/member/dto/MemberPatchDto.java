@@ -11,7 +11,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 public class MemberPatchDto {
     @Id
-    private String memberId;
+    private Long memberId;
     private String password;
     private String phone;
     private String address;

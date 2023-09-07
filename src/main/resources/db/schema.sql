@@ -1,5 +1,5 @@
 -- MEMBER 테이블
-CREATE Table MEMBER
+CREATE TABLE MEMBER
 (
     MEMBER_ID LONG primary key AUTO_INCREMENT,
     EMAIL VARCHAR (50) not null  unique,
@@ -9,6 +9,14 @@ CREATE Table MEMBER
     ADDRESS VARCHAR (50) not null,
     REPORT_COUNT LONG
 );
+
+CREATE TABLE MEMBER_ROLES (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              member_member_id INT,
+                              roles VARCHAR(255),
+                              FOREIGN KEY (member_member_id) REFERENCES MEMBER(member_id)
+);
+
 -- BOARD 테이블
 CREATE TABLE BOARD (
 

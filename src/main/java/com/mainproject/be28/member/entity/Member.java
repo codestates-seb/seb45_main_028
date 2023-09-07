@@ -4,7 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.userdetails.User;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,10 +35,17 @@ import javax.persistence.*;
 
     @Column(nullable = false)
     private String address;
+
+   @ElementCollection(fetch = FetchType.EAGER)
+   private List<String> roles = new ArrayList<>();
+
+
+
 //
 //   @Column()
 //    private Long reportCount;
 
    public Member(Long memberId) {
    }
+
 }

@@ -45,3 +45,5 @@ INSERT INTO COMPLAIN VALUES (103, 102, 102, '제목','이거 언제 입고 되�
 INSERT INTO MESSAGE VALUES (101, '안녕하세요. 문의드립니다.', NOW(), 101,102);
 INSERT INTO MESSAGE VALUES (102, '안녕하세요. 답변드립니다.', NOW(), 102, 101);
 
+
+
