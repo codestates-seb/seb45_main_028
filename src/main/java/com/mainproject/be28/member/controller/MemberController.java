@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<MemberResponseDto> postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
         Member member = mapper.memberPostToMember(memberPostDto);
         Member savedMember = memberService.createMember(member);
@@ -32,16 +32,16 @@ public class MemberController {
     }
 
 
-//    //회원정보수정
-//    @PatchMapping("/{member-id}")
-//    public ResponseEntity patchMember(@PathVariable("member-id") Long memberId,
-//                                      @RequestBody MemberPatchDto requestBody){
-//        requestBody.setMemberId(memberId);
-//
-//        Member response = memberService.updateMember(mapper.memberPatchToMember(requestBody),memberId);
-//
-//        return new ResponseEntity<>(mapper.memberToMemberResponse(response),HttpStatus.OK);
-//    }
+    //회원정보수정
+    @PatchMapping("/{member-id}")
+    public ResponseEntity patchMember(@PathVariable("member-id") Long memberId,
+                                      @RequestBody MemberPatchDto requestBody){
+        requestBody.setMemberId(memberId);
+
+        Member response = memberService.updateMember(mapper.memberPatchToMember(requestBody),memberId);
+
+        return new ResponseEntity<>(mapper.memberToMemberResponse(response),HttpStatus.OK);
+    }
 
 
     //회원정보조회
