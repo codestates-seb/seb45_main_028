@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Builder
 public class OnlyItemResponseDto {
+    private Long itemId;
     private String name;
     private Long price;
     private String detail;
@@ -17,4 +18,5 @@ public class OnlyItemResponseDto {
     private Double score;
     private String brand;
     private String category;
+    private Integer reviewCount;
 }

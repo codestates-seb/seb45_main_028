@@ -25,5 +25,4 @@ public class MemberPostDto {
     private String phone;
     private String address;
 
-
 }

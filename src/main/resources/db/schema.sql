@@ -45,7 +45,6 @@ CREATE TABLE ITEM (
                       DETAIL VARCHAR(100),
                       STATUS VARCHAR(100),
                       COLOR VARCHAR(100),
-                      SCORE DOUBLE,
                       BRAND VARCHAR(100),
                       CATEGORY VARCHAR(100),
                       CREATED_AT TIMESTAMP,

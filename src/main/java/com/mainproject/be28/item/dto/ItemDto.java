@@ -9,7 +9,6 @@ import lombok.Setter;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 
@@ -30,8 +29,6 @@ public class ItemDto {
         private String status;
         @NotNull
         private String color;
-        @Positive
-        private Double score; // 리뷰 필요
         @NotNull
         private String brand;
         @NotNull
@@ -53,8 +50,6 @@ public class ItemDto {
         private String status;
         @NotNull
         private String color;
-        @Positive
-        private Double score; // 리뷰 필요
         @NotNull
         private String brand;
         @NotNull

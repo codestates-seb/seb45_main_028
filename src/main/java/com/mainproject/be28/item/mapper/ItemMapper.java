@@ -15,18 +15,14 @@ public interface ItemMapper {
     Item itemPostDtoToItem(ItemDto.Post itemPostDto);
     Item  itemPatchDtoToItem(ItemDto.Patch itemPatchDto);
     OnlyItemResponseDto itemToOnlyItemResponseDto(Item item);
-    List<OnlyItemResponseDto> itemsToOnlyItemResponseDtos(List<Item> items);
+    Item onlyItemResponseDtotoItem(OnlyItemResponseDto onlyItemResponseDto);
 
     default ItemDto.Response itemToItemResponseDto(Item item) {
 
         OnlyItemResponseDto onlyitemResponseDto = itemToOnlyItemResponseDto(item);
+
         List<ReviewResponseDto> reviewResponseDtos = getReviewsResponseDto(item);
-        double scoreAverage = 0;
-        for (ReviewResponseDto reviewResponseDto : reviewResponseDtos) {
-            scoreAverage += reviewResponseDto.getScore();
-        }
-        scoreAverage /= reviewResponseDtos.size();
-        onlyitemResponseDto.setScore(scoreAverage);
+
         return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos);
     }
 

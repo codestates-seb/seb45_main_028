@@ -1,7 +1,7 @@
 package com.mainproject.be28.item.repository;
 
+import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
-import com.mainproject.be28.item.entity.QItem;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -19,35 +19,39 @@ import static com.mainproject.be28.item.entity.QItem.item;
 public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
     @Override
-    public List<OnlyItemResponseDto> searchByCondition(ItemSearchCondition condition, Pageable pageable){
+    public List<OnlyItemResponseDto> searchByCondition(ItemSearchConditionDto condition, Pageable pageable){
 
         return queryFactory
                 .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달
-                        ,item.name,item.price,item.detail,item.status,item.color,item.score ,item.brand ,item.category)
+                       ,item.itemId ,item.name,item.price,item.detail,item.status, item.color,item.brand ,item.category)
                 )
                 .from(item)
                 .where(
                         equalsCategory(condition.getCategory()), // 동적 쿼리 조건문
                         equalsBrand(condition.getBrand()),
-                        equalsColor(condition.getColor()),
+                        colorLike(condition.getColor()),
 //                      betweenPrice(condition.getLowPrice(), condition.getHighPrice()),
                         minimumPrice(condition.getLowPrice()),
-                        maximumPrice(condition.getHighPrice()),
+                        maximumPrice(condition.getHighPrice())
+                )
+                .where(
                         nameLike(condition.getName())
                 )
                 .orderBy(item.itemId.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 
     private BooleanExpression equalsCategory(String searchCategory){
-        return searchCategory == null ? null : item.category.contains(searchCategory);
+        return searchCategory == null ? null : item.category.toUpperCase().contains(searchCategory.toUpperCase());
     }
 
     private BooleanExpression equalsBrand(String searchBrand){
-        return searchBrand == null ? null : item.brand.contains(searchBrand);
+        return searchBrand == null ? null : item.brand.toUpperCase().contains(searchBrand.toUpperCase());
     }
-    private BooleanExpression equalsColor(String searchColor){
-        return searchColor == null ? null : item.color.contains(searchColor);
+    private BooleanExpression colorLike(String searchColor){
+        return searchColor == null ? null : item.color.toUpperCase().like("%"+searchColor.toUpperCase()+"%");
     }
 //    private BooleanExpression betweenPrice(Long lowPrice, Long highPrice){
 //        return (lowPrice==null&&highPrice==null) ? null: item.price.between(lowPrice, highPrice);
@@ -60,6 +64,6 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
 
     private BooleanExpression nameLike(String searchQuery) {
-        return searchQuery == null ? null : QItem.item.name.like("%" + searchQuery + "%");
+        return searchQuery == null ? null : item.name.toUpperCase().like("%" + searchQuery.toUpperCase() + "%");
     }
 }
