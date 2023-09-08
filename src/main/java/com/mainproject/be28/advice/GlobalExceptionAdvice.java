@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
             return new ResponseEntity<>(response, HttpStatus.valueOf(e.getExceptionCode()
                     .getStatus()));
         }
+
+    // BAD_REQUEST - DTO 애너테이션에 붙인 DTO 위배 이유 (message = "~~~") 출력 목적
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(

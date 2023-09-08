@@ -2,7 +2,6 @@ package com.mainproject.be28.item.repository;
 
 import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
-import com.mainproject.be28.item.entity.QItem;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -43,7 +42,6 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                 .limit(pageable.getPageSize())
                 .fetch();
     }
-
 
     private BooleanExpression equalsCategory(String searchCategory){
         return searchCategory == null ? null : item.category.toUpperCase().contains(searchCategory.toUpperCase());
