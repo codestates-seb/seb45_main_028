@@ -46,6 +46,31 @@ public class BoardController {
         return boardService.getAllBoards();
     }
 
+    //회원아이디로 게시글 검색기능 추가
+    @GetMapping("/member/{memberId}")
+    public List<Board> getBoardsByMemberId(@PathVariable Long memberId) {
+        return boardService.getBoardsByMemberId(memberId);
+    }
+    // 키워드로 검색기능 추가
+    @GetMapping("/search")
+    public List<Board> getBoardsByKeyword(@RequestParam String keyword){
+        return boardService.getBoardsByKeyword(keyword);
+    }
+    // 좋아요
+    @GetMapping("/sorted/likes")
+    public List<Board> getAllBoardsSortedByLikes(){
+        return boardService.getAllBoardSortedByLikes();
+    }
+    // 조회수
+    @GetMapping("/sorted/views")
+    public List<Board> getAllBoardsSortedByViews(){
+        return boardService.getAllBoardSortedByViews();
+    }
+    //공지사항
+    @GetMapping("/notices")
+    public List<Board> getNoticeBoards(){
+        return boardService.getNoticeBoards();
+    }
     @PatchMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);

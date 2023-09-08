@@ -17,4 +17,19 @@ public class CommentService {
     public Comment getCommentById(Long id){
         return commentRepository.findById(id).orElse(null);
     }
+
+    public Comment updateComment(Long id, Comment updatedComment) {
+        Comment existingComment = commentRepository.findById(id).orElse(null);
+        if (existingComment != null) {
+            existingComment.setContent(updatedComment.getContent());
+            existingComment.setLikeCount(updatedComment.getLikeCount());
+            return commentRepository.save(existingComment);
+        }
+        return null;
+    }
+    public void deleteComment(Long id){
+        commentRepository.deleteById(id);
+    }
 }
+
+
