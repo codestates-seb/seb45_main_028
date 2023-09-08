@@ -25,6 +25,8 @@ public class MemberService {
 
     //회원생성
     public Member createMember(Member member){
+        String password = "{noop}" + member.getPassword();
+        member.setPassword(password);
         return memberRepository.save(member);
     }
 
