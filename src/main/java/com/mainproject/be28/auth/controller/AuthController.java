@@ -1,6 +1,5 @@
 package com.mainproject.be28.auth.controller;
 
-import com.mainproject.be28.auth.dto.LogoutDto;
 import com.mainproject.be28.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,7 @@ public class AuthController {
     }
 
     @DeleteMapping("/logOut")
-    public ResponseEntity logOut(@RequestBody LogoutDto logoutDto){
-
-        authService.deleteRefreshToken(logoutDto.getEmail());
+    public ResponseEntity logOut(){
 
         return new ResponseEntity(HttpStatus.OK);
     }
