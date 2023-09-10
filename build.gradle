@@ -90,3 +90,7 @@ jar {
         attributes 'Main-Class': 'com.mainproject.be28.Be28Application'
     }
 }
+
+jar {
+    enabled = false
+}
