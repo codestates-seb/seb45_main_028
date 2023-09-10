@@ -85,3 +85,6 @@ compileQuerydsl { // queryDSL
 tasks.named('test') {
     useJUnitPlatform()
 }
+springBoot {
+    mainClass = 'com.mainproect.be28.Be28Application'
+}
