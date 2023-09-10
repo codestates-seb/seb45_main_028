@@ -44,6 +44,8 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
     annotationProcessor 'com.querydsl:querydsl-apt'
 
+    implementation 'org.springframework.boot:spring-boot-starter'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -89,8 +91,4 @@ jar {
     manifest {
         attributes 'Main-Class': 'com.mainproject.be28.Be28Application'
     }
-}
-
-jar {
-    enabled = false
 }

@@ -16,7 +16,7 @@ spring:
 
   datasource:
     url: jdbc:mysql://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:3306/main28
-    username: main28
+    username: seb45
     password: Seb45_main28
     driver-class-name: com.mysql.cj.jdbc.Driver
 
@@ -34,3 +34,6 @@ h2:
   console:
     enabled: false
 
+jwt:
+  access-Token-Expiration-Minutes: 60
+  refresh-Token-Expiration-Minutes: 120
