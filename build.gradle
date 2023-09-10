@@ -86,5 +86,5 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 springBoot {
-    mainClass = 'com.mainproect.be28.Be28Application'
+    mainClass = 'com.mainproject.be28.Be28Application'
 }
