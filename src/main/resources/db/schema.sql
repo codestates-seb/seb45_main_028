@@ -1,18 +1,18 @@
 -- MEMBER 테이블
 CREATE TABLE MEMBER
 (
-    MEMBER_ID LONG primary key AUTO_INCREMENT,
+    MEMBER_ID  BIGINT primary key AUTO_INCREMENT,
     EMAIL VARCHAR (50) not null  unique,
     PASSWORD VARCHAR (50) not null,
     NAME VARCHAR (30) not null  unique,
     PHONE VARCHAR (30) not null  unique,
     ADDRESS VARCHAR (50) not null,
-    REPORT_COUNT LONG
+    REPORT_COUNT BIGINT
 );
 
 CREATE TABLE MEMBER_ROLES (
-                              id INT AUTO_INCREMENT PRIMARY KEY,
-                              member_member_id INT,
+                              id  BIGINT AUTO_INCREMENT PRIMARY KEY,
+                              member_member_id BIGINT,
                               roles VARCHAR(255),
                               FOREIGN KEY (member_member_id) REFERENCES MEMBER(member_id)
 );
@@ -74,8 +74,8 @@ CREATE TABLE REVIEW (
                         ITEM_ID BIGINT NOT NULL,
                         MEMBER_ID BIGINT NOT NULL,
                         CONTENT VARCHAR(1000),
-                        LIKE_COUNT BIGINT,
-                        UNLIKE_COUNT BIGINT,
+                        LIKE_COUNT  BIGINT,
+                        UNLIKE_COUNT  BIGINT,
                         SCORE BIGINT,
                         CREATED_AT TIMESTAMP,
                         LAST_MODIFIED_AT TIMESTAMP,
@@ -118,4 +118,30 @@ CREATE TABLE MESSAGE (
                          RESPONSE_MEMBER_ID BIGINT NOT NULL,
                          FOREIGN KEY (SENDER_MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                          FOREIGN KEY (RESPONSE_MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
+);
+-- Order 테이블
+CREATE TABLE ORDERS (
+                    ORDER_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
+                    MEMBER_ID BIGINT NOT NULL,
+                    ORDER_DATE TIMESTAMP,
+                    ORDER_STATUS VARCHAR(255),
+                    TOTAL_PRICE BIGINT,
+                    CREATED_AT TIMESTAMP,
+                    LAST_MODIFIED_AT TIMESTAMP,
+                    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
+
+);
+
+--OrderDetail 테이블
+CREATE TABLE ORDER_ITEM(
+                ORDER_ITEM_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
+                ORDER_ID BIGINT NOT NULL,
+                ITEM_ID BIGINT NOT NULL,
+                PRICE BIGINT ,
+                COUNT BIGINT NOT NULL,
+                CREATED_AT TIMESTAMP,
+                LAST_MODIFIED_AT TIMESTAMP,
+                FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID),
+                FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID)
+
 );
