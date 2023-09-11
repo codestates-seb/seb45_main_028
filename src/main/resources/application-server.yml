@@ -35,5 +35,5 @@ h2:
     enabled: false
 
 jwt:
-  access-Token-Expiration-Minutes: 60
-  refresh-Token-Expiration-Minutes: 120
+  access-token-expiration-minutes: 60
+  refresh-token-expiration-minutes: 120
