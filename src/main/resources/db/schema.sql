@@ -7,7 +7,8 @@ CREATE TABLE MEMBER
     NAME VARCHAR (30) not null  unique,
     PHONE VARCHAR (30) not null  unique,
     ADDRESS VARCHAR (50) not null,
-    REPORT_COUNT LONG
+    REPORT_COUNT LONG,
+    STATUS VARCHAR (20)
 );
 
 CREATE TABLE MEMBER_ROLES (
