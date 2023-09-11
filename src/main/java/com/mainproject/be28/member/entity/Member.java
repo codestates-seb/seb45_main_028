@@ -40,6 +40,16 @@ import java.util.List;
    private List<String> roles = new ArrayList<>();
 
 
+    // 회원 상태
+    @Column(nullable = false)
+    private MemberStatus status;
+
+    public enum MemberStatus {
+        ACTIVE,    // 활성 상태
+        SUSPENDED, // 정지 상태
+        INACTIVE,  // 비활성 상태
+        DELETED    // 삭제 상태
+    }
 
 //
 //   @Column()
