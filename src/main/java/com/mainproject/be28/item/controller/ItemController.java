@@ -40,6 +40,8 @@ public class ItemController {
         try {
             item = itemService.createItem(itemMapper);
 //              상품 이미지 등록 보류      , itemImgFileList);
+        } catch (BusinessLogicException e){
+            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.ITEM_REGIST_ERROR);
         }
