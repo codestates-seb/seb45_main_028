@@ -1,6 +1,7 @@
 package com.mainproject.be28.item.entity;
 
 import com.mainproject.be28.auditable.Auditable;
+import com.mainproject.be28.itemImage.entity.ItemImage;
 import com.mainproject.be28.review.entity.Review;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,9 @@ public class Item extends Auditable {
 
     @Column(length = 100)
     private String category;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<ItemImage> Images = new ArrayList<>();
 
     @Transient
     private Double score;

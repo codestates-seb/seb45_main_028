@@ -1,4 +1,4 @@
-package com.mainproject.be28.utils;
+package com.mainproject.be28.itemImage.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

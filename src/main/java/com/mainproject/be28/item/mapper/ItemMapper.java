@@ -3,6 +3,8 @@ package com.mainproject.be28.item.mapper;
 import com.mainproject.be28.item.dto.ItemDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
+import com.mainproject.be28.itemImage.dto.ItemImageResponseDto;
+import com.mainproject.be28.itemImage.entity.ItemImage;
 import com.mainproject.be28.review.dto.ReviewResponseDto;
 import com.mainproject.be28.review.entity.Review;
 import org.mapstruct.Mapper;
@@ -22,8 +24,29 @@ public interface ItemMapper {
         OnlyItemResponseDto onlyitemResponseDto = itemToOnlyItemResponseDto(item);
 
         List<ReviewResponseDto> reviewResponseDtos = getReviewsResponseDto(item);
+        List<ItemImageResponseDto> itemImageResponseDtos = getImageResponseDto(item);
 
-        return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos);
+        return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos, itemImageResponseDtos);
+    }
+
+    default List<ItemImageResponseDto> getImageResponseDto(Item item){
+        List<ItemImageResponseDto> itemImageResponseDtos = new ArrayList<>();
+        List<ItemImage> imageList = item.getImages();
+
+        if (imageList != null) {
+            for (ItemImage image : imageList) {
+                ItemImageResponseDto itemImageResponseDto =
+                        ItemImageResponseDto.builder()
+                        . itemId(image.getItem().getItemId())
+                        .itemImageId(image.getItemImageId())
+                        .imageName(image.getImageName())
+                        .URL(image.getBaseUrl() + image.getImageName())
+                        .representationImage(image.getRepresentationImage())
+                        .build();
+                itemImageResponseDtos.add(itemImageResponseDto);
+            }
+        }
+        return itemImageResponseDtos;
     }
 
     default List<ReviewResponseDto> getReviewsResponseDto(Item item) {

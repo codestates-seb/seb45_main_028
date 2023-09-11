@@ -41,3 +41,10 @@ server:                   # 모든 response 에 대해 지정된 인코딩 적�
   servlet:
     encoding:
       force-response: true
+cloud:
+  aws:
+    credentials.access-key: ${S3_ACCESS_KEY}
+    credentials.secret-key: ${S3_SECRET_KEY}
+    s3.bucket: 28be
+    region.static: ap-northeast-2
+    stack.auto: false

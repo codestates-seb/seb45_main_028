@@ -7,6 +7,8 @@ import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
 import com.mainproject.be28.item.repository.ItemRepository;
 import com.mainproject.be28.item.dto.ItemSearchConditionDto;
+import com.mainproject.be28.itemImage.entity.ItemImage;
+import com.mainproject.be28.itemImage.repository.ItemImageRepository;
 import com.mainproject.be28.itemImage.service.ItemImageService;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.utils.CustomBeanUtils;
@@ -14,7 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -25,42 +30,49 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper mapper;
     private final ItemImageService itemImageService;
+    private  final ItemImageRepository itemImageRepository;
     private final CustomBeanUtils<Item> beanUtils;
-    public ItemService(ItemRepository itemRepository, ItemMapper mapper, ItemImageService itemImageService, CustomBeanUtils<Item> beanUtils) {
+
+    public ItemService(ItemRepository itemRepository, ItemMapper mapper, ItemImageService itemImageService, ItemImageRepository itemImageRepository, CustomBeanUtils<Item> beanUtils) {
         this.itemRepository = itemRepository;
         this.mapper = mapper;
         this.itemImageService = itemImageService;
+        this.itemImageRepository = itemImageRepository;
         this.beanUtils = beanUtils;
     }
 
-
-    public Item createItem(Item item){
-//            , List<MultipartFile> itemImgFileList) throws Exception{
+    public Item createItem(Item item, List<MultipartFile> itemImgFileList) throws IOException{
         if(itemRepository.findItemByName(item.getName())!=null){
             throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);}
-       item = itemRepository.save(item);
-
-//        for (int i = 0; i < itemImgFileList.size(); i++) {
-//            ItemImage itemimg = new ItemImage();
-//            itemimg.setItem(item);
-//            if (i == 0) {
-//                itemimg.setRepresentationImage("Yes");
-//            } else{
-//                itemimg.setRepresentationImage("No");
-//            }
-//            itemImageService.saveItemImg(itemimg, itemImgFileList.get(i));
-//        }
+        List<ItemImage> images = new ArrayList<>();
+        for(int i =0 ; i < itemImgFileList.size();i++){
+           MultipartFile file = itemImgFileList.get(i);
+            ItemImage image = itemImageService.uploadImage(file, item);
+            if(i==0){ image.setRepresentationImage("YES"); }
+            else { image.setRepresentationImage("NO");}
+            images.add(image);
+        }
+        item.setImages(images);
+        itemRepository.save(item); // 저장 순서 중요.
+        itemImageRepository.saveAll(images);
         return item;
     }
 
-    public Item updateItem(Item item) {
-       Item findItem = findItem(item.getItemId());
-
+    public Item updateItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
         // 관리자만 수정 권한 기능 추가 필요
+       Item findItem = findItem(item.getItemId());
+        Item updatedItem =
+                beanUtils.copyNonNullProperties(item, findItem);
 
-         Item updatedItem =
-                    beanUtils.copyNonNullProperties(item, findItem);
-            return itemRepository.save(updatedItem);
+        if (itemImgFileList != null) {
+            List<ItemImage> images = updatedItem.getImages();
+            for (MultipartFile image : itemImgFileList) {
+                ItemImage img = itemImageService.uploadImage(image, item);
+                images.add(img);
+            }
+            updatedItem.setImages(images);
+        }
+        return itemRepository.save(updatedItem);
 
     }
 
