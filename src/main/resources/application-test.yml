@@ -1,0 +1,43 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2 # 경로
+      settings:
+        web-allow-others: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    url: jdbc:h2:mem:test
+    sql:
+      init:
+        schema-locations: classpath*:db/schema.sql #h2 테이블 위치
+        data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
+
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none    #스키마 직접 생성 (자동생성 X)
+    show-sql: true        # SQL 쿼리 출력
+    properties:
+      hibernate:
+        format_sql: true  # SQL pretty print
+        jdbc:
+          time_zone: Asia/Seoul   # 서버 시간 서울로 변경
+  sql:
+    init:
+      schema-locations: classpath*:db/schema.sql #h2 테이블 위치
+      data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
+
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: DEBUG
+server:                   # 모든 response 에 대해 지정된 인코딩 적용(한글 깨짐 방지)
+  servlet:
+    encoding:
+      force-response: true
