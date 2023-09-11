@@ -16,7 +16,8 @@ public enum ExceptionCode {
     Complain_NOT_FOUND(404,"COMPLAIN not found"),
     Review_NOT_FOUND(404,"REVIEW not found" ),
     IMAGE_NOT_FOUND(404,"IMAGE not found" ),
-    ITEM_REGIST_ERROR(0,"상품 등록 중 알 수 없는 에러가 발생하였습니다.");
+    ITEM_REGIST_ERROR(0,"상품 등록 중 알 수 없는 에러가 발생하였습니다."),
+    INCORRECT_PASSWORD(401,"비밀번호가 일치하지 않습니다.");
 
     @Getter
     private int status;

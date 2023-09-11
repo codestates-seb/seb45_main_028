@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    // Logback 의존성 추가
+    implementation 'ch.qos.logback:logback-classic:1.2.6'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'

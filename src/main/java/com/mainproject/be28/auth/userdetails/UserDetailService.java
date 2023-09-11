@@ -7,13 +7,16 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -22,6 +25,7 @@ public class UserDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final MemberAuthority memberAuthority;
     private final JwtTokenizer jwtTokenizer;
+    private String username;
 
     public UserDetailService(MemberRepository memberRepository, MemberAuthority memberAuthority, JwtTokenizer jwtTokenizer) {
         this.memberRepository = memberRepository;
@@ -29,18 +33,6 @@ public class UserDetailService implements UserDetailsService {
         this.jwtTokenizer = jwtTokenizer;
     }
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        Member member = memberRepository.findByEmail(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-//
-//        // 사용자 정보를 UserDetails로 변환하여 반환 (예: org.springframework.security.core.userdetails.User)
-//        return User.builder()
-//                .username(member.getEmail())
-//                .password(jwtTokenizer.encodedBase64SecretKey(member.getPassword()))
-//                .roles("USER") // 사용자의 권한을 설정합니다.
-//                .build();
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,6 +42,15 @@ public class UserDetailService implements UserDetailsService {
 
         return new MemberDetails(findMember);
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public final class MemberDetails extends Member implements UserDetails {
         MemberDetails(Member member) {
             setMemberId(member.getMemberId());
@@ -64,12 +65,19 @@ public class UserDetailService implements UserDetailsService {
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
-            return null;
+            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+            // 사용자의 역할 정보를 가져와서 GrantedAuthority로 변환
+            for (String role : getRoles()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+            }
+
+            return authorities;
         }
 
         @Override
         public String getUsername() {
-            return getEmail();
+            return getName();
         }
 
         @Override
