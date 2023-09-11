@@ -1,0 +1,39 @@
+spring:
+  profiles:
+    active: production
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        highlight_sql: true
+        format_sql: true
+        show_sql: true
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  datasource:
+    url: jdbc:mysql://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:3306/main28
+    username: seb45
+    password: Seb45_main28
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  level:
+    org:
+      springframework:
+        orm:
+          jpa: DEBUG
+server:
+  servlet:
+    encoding:
+      force-response: true
+h2:
+  console:
+    enabled: false
+
+jwt:
+  access-Token-Expiration-Minutes: 60
+  refresh-Token-Expiration-Minutes: 120
