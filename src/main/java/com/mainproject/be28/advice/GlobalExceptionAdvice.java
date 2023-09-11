@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
         // 비지니스로직 사용자 정의 예외
         @ExceptionHandler
-        public ResponseEntity handleBusinessLogicException(BusinessLogicException e) {
+        @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+        public ErrorResponse handleBusinessLogicException(BusinessLogicException e) {
             final ErrorResponse response = ErrorResponse.of(e.getExceptionCode());
-            return new ResponseEntity<>(response, HttpStatus.valueOf(e.getExceptionCode()
-                    .getStatus()));
+            response.setStatus(e.getExceptionCode().getStatus());
+            response.setMessage(e.getMessage());
+            return response;
         }
 
     // BAD_REQUEST - DTO 애너테이션에 붙인 DTO 위배 이유 (message = "~~~") 출력 목적
