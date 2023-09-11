@@ -38,6 +38,8 @@ dependencies {
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     // Logback 의존성 추가
     implementation 'ch.qos.logback:logback-classic:1.2.6'
+    // S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -82,7 +84,6 @@ configurations { // queryDSL
     }
     querydsl.extendsFrom compileClasspath
 }
-
 compileQuerydsl { // queryDSL
     options.annotationProcessorPath = configurations.querydsl
 }
