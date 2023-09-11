@@ -75,7 +75,7 @@ public class SecurityConfig {
                 .and()
 //                .oauth2Client(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.GET, "/member/myPage/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/member/myPage/**").permitAll()
                 .anyRequest().permitAll());
 //               .and()
 //                .oauth2Login(oauth2 -> oauth2
