@@ -12,6 +12,7 @@ import com.mainproject.be28.itemImage.repository.ItemImageRepository;
 import com.mainproject.be28.itemImage.service.ItemImageService;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.utils.CustomBeanUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +27,7 @@ import java.util.Optional;
 
 
 @Service
+@Slf4j
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper mapper;
@@ -63,16 +65,27 @@ public class ItemService {
        Item findItem = findItem(item.getItemId());
         Item updatedItem =
                 beanUtils.copyNonNullProperties(item, findItem);
+        List<ItemImage> images = new ArrayList<>();
+        //기존 상품에 이미지가 있다면 다시 등록
+        if(findItem.getImages()!=null){ images = new ArrayList<>(findItem.getImages()); }
 
+        //새로운 파일 이미지가 있다면, 새로 추가
         if (itemImgFileList != null) {
-            List<ItemImage> images = updatedItem.getImages();
             for (MultipartFile image : itemImgFileList) {
                 ItemImage img = itemImageService.uploadImage(image, item);
                 images.add(img);
             }
+            ItemImage repImg = images.get(0);
+            if(repImg.getRepresentationImage()==null||!repImg.getRepresentationImage().equals("YES")) {
+                repImg.setRepresentationImage("YES");
+                images.set(0, repImg);
+            }
             updatedItem.setImages(images);
+            itemImageRepository.saveAll(images);
         }
-        return itemRepository.save(updatedItem);
+        itemRepository.save(updatedItem);
+
+        return updatedItem;
 
     }
 
@@ -124,7 +137,7 @@ public class ItemService {
         }
         return condition.getOrder().equals("asc") ? result:result*-1;
     }
-    public Double updateScore(Item item){
+    private Double updateScore(Item item){
         if(item.getScore()==null){item.setScore(0.0);}
         List<Review> itemList = item.getReviews();
         double score = 0D;

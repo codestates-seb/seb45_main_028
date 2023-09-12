@@ -41,19 +41,12 @@ public class ItemDto {
     @NoArgsConstructor
     public static class Patch{
         private Long itemId;
-        @NotBlank(message = "상품명을 입력해주세요.")
         private String name;
-        @Min(100)
         private Long price;
-        @NotNull
         private String detail;
-        @NotNull
         private String status;
-        @NotNull
         private String color;
-        @NotNull
         private String brand;
-        @NotNull
         private String category;
     }
 
