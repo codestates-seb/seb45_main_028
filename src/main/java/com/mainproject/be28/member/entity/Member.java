@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -41,14 +40,20 @@ import java.util.List;
 
 
     // 회원 상태
-    @Column(nullable = false)
-    private MemberStatus status;
+//    @Column(nullable = false)
+//    private MemberStatus status;
 
     public enum MemberStatus {
-        ACTIVE,    // 활성 상태
-        SUSPENDED, // 정지 상태
-        INACTIVE,  // 비활성 상태
-        DELETED    // 삭제 상태
+        ACTIVE(0, "활성 상태"),   // 활성 상태
+        SUSPENDED(1, "정지 상태"), // 정지 상태
+        INACTIVE(2, "비활성 상태"),  // 비활성 상태
+        DELETED(3, "삭제 상태");    // 삭제 상태
+        private int code;
+        private String status;
+        MemberStatus(int code, String status) {
+            this.code = code;
+            this.status = status;
+        }
     }
 
 //
@@ -57,5 +62,4 @@ import java.util.List;
 
    public Member(Long memberId) {
    }
-
 }
