@@ -17,13 +17,14 @@ public enum ExceptionCode {
     Review_NOT_FOUND(404,"REVIEW not found" ),
     IMAGE_NOT_FOUND(404,"IMAGE not found" ),
     ITEM_REGIST_ERROR(0,"상품 등록 중 알 수 없는 에러가 발생하였습니다."),
-    INCORRECT_PASSWORD(401,"비밀번호가 일치하지 않습니다.");
+    INCORRECT_PASSWORD(401,"비밀번호가 일치하지 않습니다."),
+    IMAGE_NOT_CONVERTED(500, "이미지 변환 실패"),
+    IMAGE_NOT_UPLOADED(500, "이미지 업로드 실패") ;
+    @Getter
+    private final int status;
 
     @Getter
-    private int status;
-
-    @Getter
-    private String message;
+    private final String message;
 
     ExceptionCode(int code, String message) {
         this.status = code;

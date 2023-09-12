@@ -1,5 +1,6 @@
 package com.mainproject.be28.item.dto;
 
+import com.mainproject.be28.itemImage.dto.ItemImageResponseDto;
 import com.mainproject.be28.review.dto.ReviewResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,19 +41,12 @@ public class ItemDto {
     @NoArgsConstructor
     public static class Patch{
         private Long itemId;
-        @NotBlank(message = "상품명을 입력해주세요.")
         private String name;
-        @Min(100)
         private Long price;
-        @NotNull
         private String detail;
-        @NotNull
         private String status;
-        @NotNull
         private String color;
-        @NotNull
         private String brand;
-        @NotNull
         private String category;
     }
 
@@ -61,5 +55,6 @@ public class ItemDto {
     public static class Response {
         private OnlyItemResponseDto item;
         private List<ReviewResponseDto> reviews;
+        private List<ItemImageResponseDto> imageURLs;
     }
 }
