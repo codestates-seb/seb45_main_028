@@ -75,6 +75,7 @@ public class ItemService {
                 ItemImage img = itemImageService.uploadImage(image, item);
                 images.add(img);
             }
+            //대표 이미지 설정이 안되어있다면, 맨 첫번째 이미지 대표이미지로 설정
             ItemImage repImg = images.get(0);
             if(repImg.getRepresentationImage()==null||!repImg.getRepresentationImage().equals("YES")) {
                 repImg.setRepresentationImage("YES");
