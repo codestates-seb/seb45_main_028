@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-/*  axios로 api 주소 받아오는 로직
-import axios from 'axios'*/
+/*  axios로 api 주소 받아오는 로직*/
+import axios from 'axios';
 
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const handleUsernameChange = (e) => {
@@ -17,78 +18,106 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = () => {
-    // 로그인 처리 로직 추가
-  };
 
   const handleSignUp = () => {
     navigate('/signup');
   };
 
-/*
-  const login = async (username, password) => {
-  try {
-    const response = await axios.post('API', {
-      username: username,
-      password: password,
-    });
-  } catch (error) {
-    console.error('로그인 실패:', error);
-  }
-};
+
+  const getLogin = async (email, password) => {
+    try {
+      const response = await axios.post('http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/member/login', {
+        email: email,
+        password: password,
+      });
+      console.log(response.data);
+      return response.data; // 백엔드에서 반환된 데이터를 반환합니다.
+    } catch (error) {
+      console.error('로그인 실패:', error);
+      throw error; // 에러를 다시 던집니다.
+    }
+  };
+  
 
 const handleLogin = async () => {
   try {
-    await login(username, password);
-    // 로그인 성공 시에 필요한 처리를 추가하세요.
+    const response = await getLogin(username, password);
+    console.log(response);
+    // 로그인 성공 후의 처리를 여기에 추가하세요
+    setIsLoggedIn(true);
   } catch (error) {
-    // 로그인 실패 시에 필요한 처리를 추가하세요.
+    // 로그인 실패 후의 처리를 여기에 추가하세요
+    setIsLoggedIn(false);
   }
 };
 
-*/
 
-  return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white p-8 rounded shadow-md w-80">
-        <h1 className="text-xl font-semibold mb-4">로그인</h1>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="username">ID: </label>
-          <input
-            className="w-full border rounded py-2 px-3 bg-white"
-            type="text"
-            id="username"
-            value={username}
-            onChange={handleUsernameChange}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="password">Password: </label>
-          <input
-            className="w-full border rounded py-2 px-3"
-            type="password"
-            id="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <button
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 border-solid border-black"
-          onClick={handleLogin}
-        >
-          로그인
-        </button>
-        <p className="mt-4">
-          아직 계정이 없으신가요?{' '}
-          <Link to="/signup" className="text-blue-500 hover:underline p-0">
-          <button className="text-blue-500 hover:underline p-0">
-          회원가입
+const handleLogout = () => {
+  setIsLoggedIn(false);
+};
+
+
+return (
+  <div className="flex justify-center items-center h-screen">
+    <div className="bg-white p-8 rounded shadow-md w-80">
+      <h1 className="text-xl font-semibold mb-4">로그인</h1>
+      {isLoggedIn ? (
+        <div>
+          <p className="mb-2">로그인 되었습니다.</p>
+          <button
+            className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 border-solid border-black"
+            onClick={handleLogout}
+          >
+            로그아웃
           </button>
+        </div>
+      ) : (
+        <div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1" htmlFor="username">ID: </label>
+            <input
+              className="w-full border rounded py-2 px-3 bg-white"
+              type="text"
+              id="username"
+              value={username}
+              onChange={handleUsernameChange}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1" htmlFor="password">Password: </label>
+            <input
+              className="w-full border rounded py-2 px-3"
+              type="password"
+              id="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+          </div>
+          <button
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 border-solid border-black"
+            onClick={handleLogin}
+          >
+            로그인
+          </button>
+        </div>
+      )}
+      <p className="mt-4">
+        {isLoggedIn ? (
+          <Link to="/" className="text-blue-500 hover:underline">
+            홈으로 이동
           </Link>
-        </p>
-      </div>
+        ) : (
+          <>
+            아직 계정이 없으신가요?{' '}
+            <Link to="/signup" className="text-blue-500 hover:underline">
+              회원가입
+            </Link>
+          </>
+        )}
+      </p>
     </div>
-  );
+  </div>
+);
 };
 
 export default Login;
