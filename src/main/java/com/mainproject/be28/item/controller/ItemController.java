@@ -70,7 +70,7 @@ public class ItemController {
 
         return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
-    @GetMapping("/search")
+    @PutMapping("/search")
     public ResponseEntity getItems(@Valid @RequestBody ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
         return new ResponseEntity<>( new SingleResponseDto<>(items), HttpStatus.OK);
