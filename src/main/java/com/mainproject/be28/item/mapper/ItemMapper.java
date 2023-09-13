@@ -57,9 +57,9 @@ public interface ItemMapper {
                 ReviewResponseDto reviewResponseDto =
                         ReviewResponseDto.builder()
                                 .reviewId(review.getReviewId())
-                                .itemId(review.getItem().getItemId())
+                                .itemName(review.getItem().getName())
                                 .memberId(review.getMember().getMemberId())
-                                .name(review.getMember().getName())
+                                .memberName(review.getMember().getName())
                                 .content(review.getContent())
                                 .score(review.getScore()) //상품별점추가
                                 .modifiedAt(review.getModifiedAt())//수정일 추가

@@ -25,7 +25,16 @@ public interface MemberMapper {
         return member;
     }
 
-    Member memberPatchToMember(MemberPatchDto memberPatchDto);
+    default Member memberPatchToMember(MemberPatchDto memberPatchDto){
+            if ( memberPatchDto == null ) {
+                return null;
+            }
+            Member member = new Member();
+            member.setPhone( memberPatchDto.getPhone() );
+            member.setAddress( memberPatchDto.getAddress() );
+
+            return member;
+        }
 
     default MemberResponseDto memberToMemberResponse(Member member){
         MemberResponseDto response = new MemberResponseDto(

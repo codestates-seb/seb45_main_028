@@ -11,7 +11,8 @@ import javax.validation.constraints.Pattern;
 @Setter
 @AllArgsConstructor
 public class PasswordPatchDto {
-
+    @NotNull
+    private  String email;
     @NotNull
     private String password;
     @NotNull
