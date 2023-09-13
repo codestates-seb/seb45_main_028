@@ -67,6 +67,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     implementation 'mysql:mysql-connector-java:8.0.28'
 
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 
 
 }
