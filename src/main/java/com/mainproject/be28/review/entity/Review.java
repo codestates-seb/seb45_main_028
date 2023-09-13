@@ -35,11 +35,11 @@ public class Review extends Auditable {
     @Column(length = 1000)
     private String content;
 
-    @Column()
-    private Long  likeCount;
+    @Column
+    private Long  likeCount= 0L;
 
-    @Column()
-    private Long unlikeCount;
+    @Column
+    private Long unlikeCount=0L;
 
     @Column()
     private int Score;
