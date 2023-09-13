@@ -39,8 +39,8 @@ security:
     client:
       registration:
         google:
-          clientId: ${G_CLIENT_ID}
-          clientSecret: ${G_CLIENT_SECRET}
+          clientId: 43519252390-qotnkln7fj16ngr8orjumtm4s35hr9on.apps.googleusercontent.com
+          clientSecret: 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
           scope:
             - email
             - profile

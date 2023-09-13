@@ -24,11 +24,21 @@ public class Stamp extends Auditable {
     @OneToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
+    @javax.persistence.Id
+    private Long id;
 
     public void setMember(Member member) {
         this.member = member;
         if (member.getStamp() != this) {
             member.setStamp(this);
         }
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
