@@ -10,7 +10,6 @@ const ProductWrite = () => {
     title:'',
     contents: '',
     writer: '',
-    image: '',
   })
 
   const { title, contents, writer } = product; //비구조화 할당
@@ -46,7 +45,7 @@ const ProductWrite = () => {
             className="h-[40px] w-[800px] border border-gray-300 border-solid  bg-white focus:outline-1 focus:ring focus:outline-gray-200"
             type="text" name="title" value={title} onChange={onChange} />
         </div>
-        <div className="">
+        <div>
           <span className="text-gray-700">작성자</span>
           <input
             className="h-[40px] w-[800px]  border border-gray-300 border-solid bg-white focus:outline-1 focus:ring focus:outline-gray-200"

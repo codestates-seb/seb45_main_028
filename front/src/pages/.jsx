@@ -1,8 +1,29 @@
 import Search from "../components/Search";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 
 function QuestionList() {
 
+  const QuestionList = () => {
+    const navigate = useNavigate();
+    const [questionList, setQuestionList] = useState([]);
+
+    const getQuestionList = async () => {
+      const resp = await (await axios.get()).data;
+      setQuestionList(resp.data);
+
+      const pngn = resp.qagination;
+      console.log(pngn);
+    };
+
+    const moveToWrite = () => {
+      navigate('/write');
+    };
+
+    useEffect(() => {
+      getQuestionList();
+    }, []);
+  }
 
   return (
     <div className="z-0 max-w-7xl">

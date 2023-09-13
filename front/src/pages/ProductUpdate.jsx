@@ -34,6 +34,8 @@ const ProductUpdate = () => {
             alert('수정되었습니다.');
             navigate('/productlist/' + idx);
         });
+
+        
     };
 
     const backToDetail = () => {

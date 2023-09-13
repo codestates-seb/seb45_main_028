@@ -3,7 +3,7 @@ import Search from "../components/Search";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-function ProductList() {
+export default function ProductList() {
   const navigate = useNavigate();
   const [isProductList, setProductList] = useState([]);
 
@@ -85,5 +85,3 @@ function ProductList() {
     </div>
   );
 }
-
-export default ProductList;

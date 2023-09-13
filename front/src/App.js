@@ -6,7 +6,8 @@ import ProductWrite from "./pages/ProductWrite";
 import QuestionWrite from "./pages/QuestionWrite";
 import ProductList from "./pages/ProductList";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import QandAwrite from "./pages/QuestionWrite";
+import ProductUpdate from "./pages/ProductUpdate";
+
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Route path="/productwrite" element={<ProductWrite />} />
           <Route path="/questionwrite" element={<QuestionWrite />} />
           <Route path="/productlist" element={<ProductList />} />
-          <Route path="/qandawrite" element={<QandAwrite />} />
+          <Route path="/productupdate" element={<ProductUpdate />} />
         </Routes>
       </div>
     </BrowserRouter>
