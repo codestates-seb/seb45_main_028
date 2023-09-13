@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 public class ReviewResponseDto {
     private Long reviewId;
-    private Long itemId;
+    private String itemName;
     private Long memberId;
-    private String name;
+    private String memberName;
     private String content;
     private  int score;
     private LocalDateTime modifiedAt;

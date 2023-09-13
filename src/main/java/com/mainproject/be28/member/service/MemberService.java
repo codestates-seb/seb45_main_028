@@ -2,16 +2,21 @@ package com.mainproject.be28.member.service;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
+import com.mainproject.be28.board.repository.BoardRepository;
 import com.mainproject.be28.comment.dto.CommentDto;
 import com.mainproject.be28.comment.entity.Comment;
 import com.mainproject.be28.comment.repository.CommentRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
-import com.mainproject.be28.member.dto.MemberPatchDto;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
+import com.mainproject.be28.review.dto.ReviewResponseDto;
+import com.mainproject.be28.review.entity.Review;
+import com.mainproject.be28.review.mapper.ReviewMapper;
+import com.mainproject.be28.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +37,6 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
 
-
     //회원생성
     public Member createMember(Member member){
         String password = "{noop}" + member.getPassword();
@@ -40,28 +44,8 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-
-    public Member updateMember(Long memberId, MemberPatchDto requestBody) {
-        Member findMember = findVerifiedMember(memberId);
-
-        Optional.ofNullable(requestBody.getPhone())
-                .ifPresent(phone -> findMember.setPhone(phone));
-        Optional.ofNullable(requestBody.getAddress())
-                .ifPresent(address -> findMember.setAddress(address));
-
-        Member savedMember = memberRepository.save(findMember);
-        return savedMember;
-    }
-
     public Member findMember(Long memberId) {
         return findVerifiedMember(memberId);
-    }
-
-    //회원 탈퇴
-    public void deleteMember(Long memberId){
-        Member member = findVerifiedMember(memberId);
-
-        memberRepository.delete(member);
     }
 
     public Member findVerifiedMember(Long memberId){
@@ -72,29 +56,28 @@ public class MemberService {
         return findMember;
     }
 
-
-    //비밀번호 변경
-    public Member updatePassword(String email, String password, String afterPassword) {
-        // 회원이 존재하는지 검증
-        log.info("### 회원이 존재하는지 검증합니다!");
-        Optional<Member> findUserOpt = checkUserExist(email);
-        log.info("### 검증 완료!");
-
-        // 회원이 존재하지 않을 경우 예외 처리
-        Member findUser = findUserOpt.orElseThrow();
-
-        // 비밀번호가 일치하는지 검증
-        log.info("### 비밀번호가 일치하는지 검증합니다!");
-        if (passwordEncoder.matches(password, findUser.getPassword())) {
-            // 비밀번호 변경
-            findUser.setPassword(passwordEncoder.encode(afterPassword));
-            memberRepository.save(findUser);
-        } else {
-            throw new BusinessLogicException(ExceptionCode.INCORRECT_PASSWORD);
-        }
-
-        return findUser;
-    }
+//    //비밀번호 변경
+//    public Member updatePassword(String email, String password, String afterPassword) {
+//        // 회원이 존재하는지 검증
+//        log.info("### 회원이 존재하는지 검증합니다!");
+//        Optional<Member> findUserOpt = checkUserExist(email);
+//        log.info("### 검증 완료!");
+//
+//        // 회원이 존재하지 않을 경우 예외 처리
+//        Member findUser = findUserOpt.orElseThrow();
+//
+//        // 비밀번호가 일치하는지 검증
+//        log.info("### 비밀번호가 일치하는지 검증합니다!");
+//        if (passwordEncoder.matches(password, findUser.getPassword())) {
+//            // 비밀번호 변경
+//            findUser.setPassword(passwordEncoder.encode(afterPassword));
+//            memberRepository.save(findUser);
+//        } else {
+//            throw new BusinessLogicException(ExceptionCode.INCORRECT_PASSWORD);
+//        }
+//
+//        return findUser;
+//    }
 
     private Optional<Member> checkUserExist(String email) {
         // 이메일을 사용하여 회원을 찾음
@@ -106,55 +89,41 @@ public class MemberService {
 
 
     //좋아요한 게시물
-    public List<BoardDto> getLikedPost(Optional<Board> likeBoard) {
-        if (likeBoard.isPresent()) {
-            Board board = likeBoard.get();
-            BoardDto boardDto = convertToBoardDto(board);
-            return Collections.singletonList(boardDto);
-        } else {
-            return Collections.emptyList();
+//    public List<BoardDto> getLikedPost(Optional<Board> likeBoard) {
+//        if (likeBoard.isPresent()) {
+//            Board board = likeBoard.get();
+//            BoardDto boardDto = convertToBoardDto(board);
+//            return Collections.singletonList(boardDto);
+//        } else {
+//            return Collections.emptyList();
+//        }
+//    }
+
+
+
+
+
+
+    public Long findTokenMemberId() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return memberRepository.findMemberByEmail(email).getMemberId();
+    }
+    public Member findTokenMember() {
+        String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return memberRepository.findMemberByEmail(email);
+    }
+
+    //현재 로그인한 회원정보 접근 시 회원 이메일/비밀번호 한번더 검증
+    public void verifyEmailPassword(String email, String password) {
+        String currentEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // 현재 로그인되어 있는 회원의 메일
+        Member member = memberRepository.findMemberByEmail(currentEmail); //현재 회원정보
+
+        String currentPassword = member.getPassword(); // 현재 로그인 되어있는 회원의 비밀번호
+
+        boolean matchEmail = email.equals(currentEmail); //실제 이메일과 입력한 이메일이 일치하는지
+        boolean matchPassword = password.equals(currentPassword); // 실제 비밀번호와 입력한 비밀번확 일치하는지
+        if(!matchEmail||!matchPassword){
+            throw new BusinessLogicException(ExceptionCode.VERIFY_FAILURE); // 둘 중하나라도 다르다면 인증 실
         }
     }
-    private BoardDto convertToBoardDto(Board board) {
-        BoardDto boardDto = new BoardDto();
-        boardDto.setBoardId(board.getBoardId());
-        boardDto.setLikeCount(board.getLikeCount());
-        return boardDto;
-    }
-
-
-    //작성한 게시물 조회
-    public List<BoardDto> getPostsByUser(Optional<Board> board) {
-        if (board.isPresent()) {
-            Board userBoard = board.get();
-            BoardDto boardDto = convertToBoardDto(userBoard);
-            return Collections.singletonList(boardDto);
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    //작성한 댓글 조회
-    public List<CommentDto> getCommentsByUser(Optional<Comment> comment) {
-        if (comment.isPresent()) {
-            Comment userComment = comment.get();
-
-            List<CommentDto> userComments = convertToCommentDto(userComment);
-            return userComments;
-        } else {
-            return Collections.emptyList();
-        }
-    }
-    private List<CommentDto> convertToCommentDto(Comment comment) {
-        List<CommentDto> commentDtos = new ArrayList<>();
-
-        CommentDto commentDto = new CommentDto();
-        commentDto.setCommentId(comment.getCommentId());
-        commentDto.setContent(comment.getContent());
-        // 필요한 다른 속성들을 설정
-        commentDtos.add(commentDto);
-        return commentDtos;
-    }
-
-
 }

@@ -36,6 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     // Logback 의존성 추가
     implementation 'ch.qos.logback:logback-classic:1.2.6'
     // S3
@@ -43,6 +44,8 @@ dependencies {
     // Swagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
 

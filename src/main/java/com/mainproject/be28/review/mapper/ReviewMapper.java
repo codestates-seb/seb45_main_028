@@ -19,9 +19,9 @@ public interface ReviewMapper {
     Review ReviewPostDtoToReview(ReviewPostDto reviewPostDTO);
 
     Review reviewPatchDtoToReview(ReviewPatchDto reviewPatchDto);
-    @Mapping(source = "item.itemId", target ="itemId")
+    @Mapping(source = "item.name", target ="itemName")
     @Mapping(source = "member.memberId", target = "memberId")
-    @Mapping(source = "member.name", target = "name")
+    @Mapping(source = "member.name", target = "memberName")
     ReviewResponseDto reviewToReviewResponseDto(Review review);
 
 }

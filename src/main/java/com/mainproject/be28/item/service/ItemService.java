@@ -43,25 +43,24 @@ public class ItemService {
         this.beanUtils = beanUtils;
     }
 
-    public Item createItem(Item item, List<MultipartFile> itemImgFileList) throws IOException{
-        if(itemRepository.findItemByName(item.getName())!=null){
-            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);}
-        List<ItemImage> images = new ArrayList<>();
-        for(int i =0 ; i < itemImgFileList.size();i++){
-           MultipartFile file = itemImgFileList.get(i);
-            ItemImage image = itemImageService.uploadImage(file, item);
-            if(i==0){ image.setRepresentationImage("YES"); }
-            else { image.setRepresentationImage("NO");}
-            images.add(image);
+    /* *******************퍼블릭 메서드******************* */
+    public Item createItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
+        //todo: 관리자만 아이템 등록 권한 필요
+        if (itemRepository.findItemByName(item.getName()) != null) {
+            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
         }
-        item.setImages(images);
+        List<ItemImage> images = new ArrayList<>();
+        if (itemImgFileList != null){
+           images = saveImage(item, itemImgFileList);
+            item.setImages(images);
+        }
         itemRepository.save(item); // 저장 순서 중요.
-        itemImageRepository.saveAll(images);
+        if(images.size()>0){itemImageRepository.saveAll(images);}
         return item;
     }
 
     public Item updateItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
-        // 관리자만 수정 권한 기능 추가 필요
+        // todo: 관리자만 수정 권한 기능 추가 필요
        Item findItem = findItem(item.getItemId());
         Item updatedItem =
                 beanUtils.copyNonNullProperties(item, findItem);
@@ -114,7 +113,12 @@ public class ItemService {
 
         return new PageImpl<>(itemList, pageRequest, itemList.size());
     }
+    public void deleteItem(long itemId){
 
+        Item findItem = findItem(itemId);
+        // todo: 관리자만 권한삭제 기능 추가 필요
+        itemRepository.delete(findItem);
+    }
     private List<OnlyItemResponseDto> customSort(List<OnlyItemResponseDto> itemList, ItemSearchConditionDto condition) {
         if (condition.getSort() != null) { // 정렬기준이 있을 경우,
             itemList.sort((item1, item2) -> sortStandard(item1, item2, condition));
@@ -149,17 +153,23 @@ public class ItemService {
         score = (double)Math.round(score*100)/100;
         return score;
     }
-
-    public void deleteItem(long itemId){
-
-        Item findItem = findItem(itemId);
-
-        /*
-        관리자만 권한삭제 기능 추가 필요
-         */
-
-       itemRepository.delete(findItem);
+    private List<ItemImage> saveImage(Item item,List<MultipartFile> itemImgFileList ) throws IOException {
+        List<ItemImage> images = new ArrayList<>();
+        for (int i = 0; i < itemImgFileList.size(); i++) {
+            MultipartFile file = itemImgFileList.get(i);
+            ItemImage image = itemImageService.uploadImage(file, item);
+            if (i == 0) {
+                image.setRepresentationImage("YES");
+            } else {
+                image.setRepresentationImage("NO");
+            }
+            images.add(image);
+        }
+        return images;
     }
+
+
+
 /*  관리자 검증 메서드
 
     public boolean isAdmin (long tokenMemberId){
