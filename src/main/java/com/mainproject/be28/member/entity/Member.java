@@ -24,10 +24,10 @@ import java.util.List;
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
+    @Column( nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -36,15 +36,26 @@ import java.util.List;
     @Column(nullable = false)
     private String address;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles = new ArrayList<>();
+   @ElementCollection(fetch = FetchType.EAGER)
+   private List<String> roles = new ArrayList<>();
 
+
+    // 회원 상태
+    @Column(nullable = false)
+    private MemberStatus status;
+
+    public enum MemberStatus {
+        ACTIVE,    // 활성 상태
+        SUSPENDED, // 정지 상태
+        INACTIVE,  // 비활성 상태
+        DELETED    // 삭제 상태
+    }
 
 //
 //   @Column()
 //    private Long reportCount;
 
-    public Member(Long memberId) {
-    }
+   public Member(Long memberId) {
+   }
 
 }

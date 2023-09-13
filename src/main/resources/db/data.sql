@@ -1,8 +1,8 @@
 
 --MEMBER 테이블 데이터
-INSERT INTO MEMBER VALUES (101, 'test1@test.com', '{noop}test1', '테스트1', '010-1234-5678', '서울시 ㅇㅇ구 ㅇㅇ동', 37,'active');
-INSERT INTO MEMBER VALUES (102, 'test2@test.com','{noop}test2',  '테스트2', '010-7654-3210', '경기도 xx시 xx구 xx동', 0,'active');
-INSERT INTO MEMBER VALUES  (103, 'test3@test.com','{noop}test3',  '테스트3', '010-7777-7777', '인천시 ㅁㅁ구 ㅁㅁ동', 5,'active');
+INSERT INTO MEMBER VALUES (101, 'test1@test.com', '{noop}test1', '테스트1', '010-1234-5678', '서울시 ㅇㅇ구 ㅇㅇ동', 37);
+INSERT INTO MEMBER VALUES (102, 'test2@test.com','{noop}test2',  '테스트2', '010-7654-3210', '경기도 xx시 xx구 xx동', 0);
+INSERT INTO MEMBER VALUES  (103, 'test3@test.com','{noop}test3',  '테스트3', '010-7777-7777', '인천시 ㅁㅁ구 ㅁㅁ동', 5);
 
 -- BOARD 테이블 데이터
 INSERT INTO BOARD VALUES (101, '첫 번째 게시물', 101, '첫 번째 게시물 내용입니다.', 100, 50, '자유게시판', NOW(),NOW());
@@ -46,6 +46,20 @@ INSERT INTO COMPLAIN VALUES (103, 102, 102, '제목','이거 언제 입고 되�
 -- MESSAGE 테이블 데이터
 INSERT INTO MESSAGE VALUES (101, '안녕하세요. 문의드립니다.', NOW(), 101,102);
 INSERT INTO MESSAGE VALUES (102, '안녕하세요. 답변드립니다.', NOW(), 102, 101);
+
+--
+-- orders 테이블에 주문 정보 삽입
+INSERT INTO orders VALUES (101, '202309120001', 50000, 1, 101,NOW(),NOW());
+INSERT INTO orders VALUES (102, '202309130002', 50000, 1, 102,NOW(),NOW());
+INSERT INTO orders VALUES (103, '202309140001', 1000, 1, 103,NOW(),NOW());
+
+
+-- pay_info 테이블에 결제 정보 삽입
+INSERT INTO pay_info VALUES (1, 'PaymentIdentifier123', 101);
+
+INSERT INTO order_item VALUES(101, 1, 150000, 101, 101);
+INSERT INTO order_item VALUES(102, 2, 2500000,102, 102);
+INSERT INTO order_item VALUES(103,  2, 5000000, 103, 103);
 
 
 

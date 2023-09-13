@@ -19,7 +19,14 @@ public enum ExceptionCode {
     ITEM_REGIST_ERROR(0,"상품 등록 중 알 수 없는 에러가 발생하였습니다."),
     INCORRECT_PASSWORD(401,"비밀번호가 일치하지 않습니다."),
     IMAGE_NOT_CONVERTED(500, "이미지 변환 실패"),
-    IMAGE_NOT_UPLOADED(500, "이미지 업로드 실패") ;
+    IMAGE_NOT_UPLOADED(500, "이미지 업로드 실패"),
+    INVALID_ORDER_DATA(500,"주문 불가"),
+    ORDER_ITME_NO_FOUND(404,"ORDER_ITME_NO_FOUND"),
+    ORDER_NOT_FOUND(404,"주문을 찾을 수 없습니다"),
+    NOT_ORDER_HOLDER(401, "주문자와 로그인정보가 다릅니다."),
+    ALREADY_APPLIED_REFUND(404,"이미 환불이 된 주문입니다"),
+    ALREADY_CANCELED(404, "이미 취소된 주문입니다"),
+    NOT_YET_PAID(404,"아직 결제가 안된 주문입니다");
     @Getter
     private final int status;
 

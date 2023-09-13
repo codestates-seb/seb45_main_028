@@ -7,8 +7,7 @@ CREATE TABLE MEMBER
     NAME VARCHAR (30) not null  unique,
     PHONE VARCHAR (30) not null  unique,
     ADDRESS VARCHAR (50) not null,
-    REPORT_COUNT BIGINT
-);
+    REPORT_COUNT BIGINT);
 
 CREATE TABLE MEMBER_ROLES (
                               id  BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -119,29 +118,33 @@ CREATE TABLE MESSAGE (
                          FOREIGN KEY (SENDER_MEMBER_ID) REFERENCES MEMBER(MEMBER_ID),
                          FOREIGN KEY (RESPONSE_MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
 );
--- Order 테이블
-CREATE TABLE ORDERS (
-                    ORDER_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
-                    MEMBER_ID BIGINT NOT NULL,
-                    ORDER_DATE TIMESTAMP,
-                    ORDER_STATUS VARCHAR(255),
-                    TOTAL_PRICE BIGINT,
-                    CREATED_AT TIMESTAMP,
-                    LAST_MODIFIED_AT TIMESTAMP,
-                    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(MEMBER_ID)
-
+-- orders 테이블 생성
+CREATE TABLE orders (
+                        order_id INT AUTO_INCREMENT PRIMARY KEY,
+                        order_number VARCHAR(255) NOT NULL UNIQUE,
+                        total_price INT,
+                        status INT,
+                        member_id INT,
+                        CREATED_AT TIMESTAMP,
+                        LAST_MODIFIED_AT TIMESTAMP,
+                        FOREIGN KEY (member_id) REFERENCES member (member_id)
 );
 
---OrderDetail 테이블
-CREATE TABLE ORDER_ITEM(
-                ORDER_ITEM_ID BIGINT PRIMARY KEY AUTO_INCREMENT,
-                ORDER_ID BIGINT NOT NULL,
-                ITEM_ID BIGINT NOT NULL,
-                PRICE BIGINT ,
-                COUNT BIGINT NOT NULL,
-                CREATED_AT TIMESTAMP,
-                LAST_MODIFIED_AT TIMESTAMP,
-                FOREIGN KEY (ITEM_ID) REFERENCES ITEM(ITEM_ID),
-                FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID)
+-- order_item 테이블 생성
+CREATE TABLE order_item (
+                            order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+                            quantity LONG,
+                            price LONG,
+                            item_id INT,
+                            order_id INT,
+                            FOREIGN KEY (item_id) REFERENCES item (item_id),
+                            FOREIGN KEY (order_id) REFERENCES orders (order_id)
+);
 
+-- pay_info 테이블 생성
+CREATE TABLE pay_info (
+                          payment_Id INT AUTO_INCREMENT PRIMARY KEY,
+                          imp_Uid varchar(250),
+                          order_id INT,
+                          FOREIGN KEY (order_id) REFERENCES orders (order_id)
 );
