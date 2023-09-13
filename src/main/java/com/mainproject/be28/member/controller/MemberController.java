@@ -72,9 +72,9 @@ public class MemberController {
     }
 
     // 회원 정보 조회
-    @GetMapping("/myPage/{memberId}")
-    public ResponseEntity<MemberResponseDto> getMember(@PathVariable("memberId") Long memberId) {
-        Member response = memberService.findMember(memberId);
+    @GetMapping("/myPage")
+    public ResponseEntity<MemberResponseDto> getMember() {
+        Member response = memberService.findTokenMember();
 
         return new ResponseEntity<>(mapper.memberToMemberResponse(response),HttpStatus.OK);
     }

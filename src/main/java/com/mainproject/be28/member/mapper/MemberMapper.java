@@ -38,8 +38,6 @@ public interface MemberMapper {
 
     default MemberResponseDto memberToMemberResponse(Member member){
         MemberResponseDto response = new MemberResponseDto(
-                member.getMemberId(),
-                member.getPassword(),
                 member.getEmail(),
                 member.getName(),
                 member.getPhone(),
