@@ -22,4 +22,9 @@ public class BoardDto {
     private Long likeCount;
     @NotNull
     private String boardCategory;
+    @NotNull
+    private boolean isPinned = false;
+    public boolean isPinned() {
+        return this.isPinned;
+    }
 }

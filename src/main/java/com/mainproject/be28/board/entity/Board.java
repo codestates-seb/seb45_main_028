@@ -41,6 +41,10 @@ public class Board extends Auditable {
     @Column(nullable = false)
     private String boardCategory;
 
+    @Column
+    private boolean isPinned = false;
+
+
     //@OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
    // private List<Comment> comments;
 

@@ -70,4 +70,26 @@ public class BoardService {
         return boardRepository.findByBoardCategoryOrderByCreatedAtDesc("공지사항");
     }
 
+    public List<Board> getTopPinnedBoards() {
+        return boardRepository.findByIsPinnedTrueOrderByCreatedAtDesc();
+    }
+
+    public List<Board> getBoardsExcludePinned() {
+        return boardRepository.findByIsPinnedFalseOrderByCreatedAtDesc();
+    }
+
+    public Board pinBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
+        board.setPinned(true);
+        return boardRepository.save(board);
+    }
+
+    public Board unpinBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
+        board.setPinned(false);
+        return boardRepository.save(board);
+    }
+
 }

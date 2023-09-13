@@ -71,6 +71,27 @@ public class BoardController {
     public List<Board> getNoticeBoards(){
         return boardService.getNoticeBoards();
     }
+    @GetMapping("/pinned")
+    public List<Board> getTopPinnedBoards() {
+        return boardService.getTopPinnedBoards();
+    }
+
+    @GetMapping("/not-pinned")
+    public List<Board> getBoardsExcludePinned() {
+        return boardService.getBoardsExcludePinned();
+    }
+
+    @PatchMapping("/{boardId}/pin")
+    public ResponseEntity<Board> pinBoard(@PathVariable Long boardId) {
+        Board board = boardService.pinBoard(boardId);
+        return ResponseEntity.ok(board);
+    }
+
+    @PatchMapping("/{boardId}/unpin")
+    public ResponseEntity<Board> unpinBoard(@PathVariable Long boardId) {
+        Board board = boardService.unpinBoard(boardId);
+        return ResponseEntity.ok(board);
+    }
     @PatchMapping("/{boardId}")
     public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);
