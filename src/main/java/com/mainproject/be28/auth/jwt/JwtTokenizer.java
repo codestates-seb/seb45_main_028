@@ -24,7 +24,6 @@ import static java.util.Calendar.MINUTE;
 @Component
 public class JwtTokenizer {
 
-    //todo: 환경변수처리
     @Getter
     private String secretKey = "rodnfrkdpdhfcoddlgksakflRHanfRHanfgodjaclekdkvekflrkTNrenltekflrkTNrvkfWKrvkfWKrornflehoTsp";
 
@@ -40,6 +39,7 @@ public class JwtTokenizer {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
+    //jwt 생성
     public String generateAccessToken(Map<String, Object> claims,
                                       String subject,
                                       Date expiration,
@@ -48,7 +48,7 @@ public class JwtTokenizer {
         Key key = getKeyFromBase64SecretKey(encodedBase64SecretKey);
 
         return Jwts.builder()
-                .setClaims(claims)
+                .setClaims(claims)//인증된 사용자와 관련된 정보 추가
                 .setSubject(subject)
                 .setExpiration(expiration)
                 .signWith(key)
@@ -78,6 +78,7 @@ public class JwtTokenizer {
 
     }
 
+    // 검증 후, Claims을 반환하는 용도
     public Jws<Claims> getClaims(String jws, String encodedBase64SecretKey) {
         Key key = getKeyFromBase64SecretKey(encodedBase64SecretKey);
 
@@ -87,6 +88,7 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
+    // 단순히 검증만 하는 용도로 쓰일 경우
     public void verifySignature(String jws, String encodedBase64SecretKey) {
         Key key = getKeyFromBase64SecretKey(encodedBase64SecretKey);
 
@@ -96,6 +98,7 @@ public class JwtTokenizer {
                 .parseClaimsJws(jws);
     }
 
+    //secret Key 생성
     private Key getKeyFromBase64SecretKey(String base64EncodedSecretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(base64EncodedSecretKey);
         // Ensure the key size is at least 256 bits (32 bytes)

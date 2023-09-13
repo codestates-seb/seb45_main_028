@@ -71,7 +71,7 @@ public class MemberController {
     }
 
 
-      //회원탈퇴
+    //회원탈퇴
     @DeleteMapping("/myPage/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId){
         memberService.deleteMember(memberId);
@@ -121,5 +121,3 @@ public class MemberController {
         return ResponseEntity.ok(myComments);
     }
 }
-
-

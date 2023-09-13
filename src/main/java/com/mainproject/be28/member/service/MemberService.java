@@ -1,5 +1,6 @@
 package com.mainproject.be28.member.service;
 
+import com.mainproject.be28.auth.userdetails.MemberAuthority;
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.comment.dto.CommentDto;
@@ -30,6 +31,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberAuthority memberAuthority;
 
 
 
@@ -37,6 +39,13 @@ public class MemberService {
     public Member createMember(Member member){
         String password = "{noop}" + member.getPassword();
         member.setPassword(password);
+        // 패스워드 암호화
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword);
+        // 권한 추가
+        List<String> roles = memberAuthority.createRoles(member.getEmail());
+        member.setRoles(roles);
+
         return memberRepository.save(member);
     }
 

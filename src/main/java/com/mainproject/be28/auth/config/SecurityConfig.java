@@ -1,15 +1,14 @@
 package com.mainproject.be28.auth.config;
 
-import com.mainproject.be28.auth.handler.MemberAuthenticationEntryPoint;
-import com.mainproject.be28.auth.handler.MemberAuthenticationFailureHandler;
-import com.mainproject.be28.auth.handler.MemberAuthenticationSuccessHandler;
-import com.mainproject.be28.auth.handler.MemberDeniedHandler;
+import com.mainproject.be28.auth.handler.*;
 import com.mainproject.be28.auth.jwt.JwtAuthenticationFilter;
 import com.mainproject.be28.auth.jwt.JwtTokenizer;
 import com.mainproject.be28.auth.jwt.JwtVerificationFilter;
 import com.mainproject.be28.auth.refresh.RefreshTokenRepository;
 import com.mainproject.be28.auth.userdetails.MemberAuthority;
 import com.mainproject.be28.member.repository.MemberRepository;
+import com.mainproject.be28.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,12 +18,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 //import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 //import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -43,11 +46,11 @@ public class SecurityConfig {
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
 
-//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-//    private String clientId;
-//
-//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-//    private String clientSecret;
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String clientId;
+
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    private String clientSecret;
 
     public SecurityConfig(JwtTokenizer jwtTokenizer,MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository) {
         this.jwtTokenizer = jwtTokenizer;
@@ -76,28 +79,27 @@ public class SecurityConfig {
 //                .oauth2Client(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.GET, "/member/myPage/**").permitAll()
-                .anyRequest().permitAll());
-//               .and()
-//                .oauth2Login(oauth2 -> oauth2
-//                        .successHandler(new oAuth2SuccessHandler(jwtTokenizer,memberAuthority,memberRepository))
-//                );
+                .anyRequest().permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer,memberAuthority, (MemberService) memberRepository))
+                );
 
         return http.build();
     }
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository(){
-//        var clientRegistration = clientRegistration();
-//
-//        return new InMemoryClientRegistrationRepository(clientRegistration);
-//    }
-////    private ClientRegistration clientRegistration(){
-////        return CommonOAuth2Provider
-////                .GOOGLE
-////                .getBuilder("google")
-////                .clientId(clientId)
-////                .clientSecret(clientSecret)
-////                .build();
-////    }
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository(){
+        var clientRegistration = clientRegistration();
+
+        return new InMemoryClientRegistrationRepository(clientRegistration);
+    }
+    private ClientRegistration clientRegistration(){
+        return CommonOAuth2Provider
+                .GOOGLE
+                .getBuilder("google")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .build();
+    }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
