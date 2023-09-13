@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import QuestionList from "./pages/QuestionList";
+import "./css/input.css";
+import ReviewList from "./pages/ReviewList";
+import ProductWrite from "./pages/ProductWrite";
+import QuestionWrite from "./pages/QuestionWrite";
+import ProductList from "./pages/ProductList";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import QandAwrite from "./pages/QuestionWrite";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React 
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div classname="App">
+        <Routes>
+          <Route path="/questionlist" element={<QuestionList />} />
+          <Route path="/reviewlist" element={<ReviewList />} />
+          <Route path="/productwrite" element={<ProductWrite />} />
+          <Route path="/questionwrite" element={<QuestionWrite />} />
+          <Route path="/productlist" element={<ProductList />} />
+          <Route path="/qandawrite" element={<QandAwrite />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
