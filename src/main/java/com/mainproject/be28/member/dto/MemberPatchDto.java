@@ -10,9 +10,8 @@ import javax.persistence.Id;
 @Setter
 @AllArgsConstructor
 public class MemberPatchDto {
-    @Id
-    private Long memberId;
+    private String email;
+    private String password;
     private String phone;
     private String address;
-
 }

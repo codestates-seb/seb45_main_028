@@ -10,9 +10,6 @@ import javax.persistence.Id;
 @Setter
 @AllArgsConstructor
 public class MemberResponseDto {
-    @Id
-    private Long MemberId;
-    private String password;
     private String email;
     private String name;
     private String phone;
