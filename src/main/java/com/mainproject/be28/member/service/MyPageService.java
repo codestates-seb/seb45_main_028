@@ -4,6 +4,10 @@ import com.mainproject.be28.comment.dto.CommentDto;
 import com.mainproject.be28.comment.entity.Comment;
 import com.mainproject.be28.comment.mapper.CommentMapper;
 import com.mainproject.be28.comment.repository.CommentRepository;
+import com.mainproject.be28.complain.dto.ComplainResponseDto;
+import com.mainproject.be28.complain.entity.Complain;
+import com.mainproject.be28.complain.mapper.ComplainMapper;
+import com.mainproject.be28.complain.repository.ComplainRepository;
 import com.mainproject.be28.member.dto.PasswordPatchDto;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
@@ -36,6 +40,8 @@ public class MyPageService {
     private final CustomBeanUtils<Member> beanUtils;
     private final ReviewRepository reviewRepository;
     private final ReviewMapper reviewMapper;
+    private final ComplainRepository complainRepository;
+    private final ComplainMapper complainMapper;
     public Member updateProfile(Member member) {  // 주소, 핸드폰번호 변경
         long memberId = memberService.findTokenMemberId();
         Member findMember = memberService.findVerifiedMember(memberId);
@@ -79,5 +85,15 @@ public class MyPageService {
             myCommentsDto.add(commentMapper.commentToCommentDto(comment));
         }
       return myCommentsDto;
+    }
+
+    //작성한 문의 조회
+    public List<ComplainResponseDto> getMyComplains(long memberId) {
+        List<Complain> myComplains = complainRepository.findAllByMember_MemberId(memberId);
+        List<ComplainResponseDto> myComplainsDto = new ArrayList<>();
+        for (Complain complain : myComplains) {
+            myComplainsDto.add(complainMapper.complainToComplainResponseDto(complain));
+        }
+        return myComplainsDto;
     }
 }

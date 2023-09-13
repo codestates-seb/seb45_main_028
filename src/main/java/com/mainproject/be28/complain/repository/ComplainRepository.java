@@ -9,10 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface ComplainRepository extends JpaRepository<Complain, Long> {
     Page<Complain> findAllByComplainStatus(Pageable pageable, Complain.ComplainStatus complainStatus);
+
+    List<Complain> findAllByMember_MemberId(long memberId);
 }
 
 

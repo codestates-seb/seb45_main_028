@@ -5,6 +5,7 @@ import com.mainproject.be28.board.repository.BoardRepository;
 import com.mainproject.be28.comment.dto.CommentDto;
 import com.mainproject.be28.comment.entity.Comment;
 import com.mainproject.be28.comment.repository.CommentRepository;
+import com.mainproject.be28.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.member.dto.MemberPatchDto;
 import com.mainproject.be28.member.dto.MemberPostDto;
 import com.mainproject.be28.member.dto.MemberResponseDto;
@@ -61,7 +62,7 @@ public class MemberController {
         }
     }
 
-    //회원 비밀번호 수정
+    //회원 비밀번호 수
     @PatchMapping("/myPage/pw")
     public ResponseEntity<MemberResponseDto> patchPassword(@RequestBody PasswordPatchDto requestBody) {
         memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
@@ -126,7 +127,13 @@ public class MemberController {
         List<CommentDto> myComments = mypageService.getMyComments(memberId);
         return ResponseEntity.ok(myComments);
     }
-
+    //작성한  문의 조회
+    @GetMapping("/myPage/myComplain")
+    public ResponseEntity<List<ComplainResponseDto>> getMyComplains() {
+        long memberId = memberService.findTokenMemberId();
+        List<ComplainResponseDto> myComplains = mypageService.getMyComplains(memberId);
+        return ResponseEntity.ok(myComplains);
+    }
 }
 
 
