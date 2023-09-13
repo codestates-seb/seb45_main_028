@@ -47,5 +47,19 @@ INSERT INTO COMPLAIN VALUES (103, 102, 102, '제목','이거 언제 입고 되�
 INSERT INTO MESSAGE VALUES (101, '안녕하세요. 문의드립니다.', NOW(), 101,102);
 INSERT INTO MESSAGE VALUES (102, '안녕하세요. 답변드립니다.', NOW(), 102, 101);
 
+--
+-- orders 테이블에 주문 정보 삽입
+INSERT INTO orders VALUES (101, '202309120001', 50000, 1, 101,NOW(),NOW());
+INSERT INTO orders VALUES (102, '202309130002', 50000, 1, 102,NOW(),NOW());
+INSERT INTO orders VALUES (103, '202309140001', 1000, 1, 103,NOW(),NOW());
+
+
+-- pay_info 테이블에 결제 정보 삽입
+INSERT INTO pay_info VALUES (1, 'PaymentIdentifier123', 101);
+
+INSERT INTO order_item VALUES(101, 1, 150000, 101, 101);
+INSERT INTO order_item VALUES(102, 2, 2500000,102, 102);
+INSERT INTO order_item VALUES(103,  2, 5000000, 103, 103);
+
 
 
