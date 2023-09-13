@@ -22,7 +22,7 @@ public class MemberAuthority {
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
     }
-
+    // DB 저장 용
     public List<String> createRoles(String username) {
         if (username.equals(admin)) {
             return ADMIN_ROLES;

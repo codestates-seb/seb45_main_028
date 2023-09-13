@@ -13,6 +13,7 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -132,16 +133,16 @@ public class MemberService {
     }
 
 
-    //작성한 게시물 조회
-    public List<BoardDto> getPostsByUser(Optional<Board> board) {
-        if (board.isPresent()) {
-            Board userBoard = board.get();
-            BoardDto boardDto = convertToBoardDto(userBoard);
-            return Collections.singletonList(boardDto);
-        } else {
-            return Collections.emptyList();
-        }
-    }
+//    //작성한 게시물 조회
+//    public List<BoardDto> getPostsByUser(Optional<Board> board) {
+//        if (board.isPresent()) {
+//            Board userBoard = board.get();
+//            BoardDto boardDto = convertToBoardDto(userBoard);
+//            return Collections.singletonList(boardDto);
+//        } else {
+//            return Collections.emptyList();
+//        }
+//    }
 
     //작성한 댓글 조회
     public List<CommentDto> getCommentsByUser(Optional<Comment> comment) {
@@ -163,6 +164,15 @@ public class MemberService {
         // 필요한 다른 속성들을 설정
         commentDtos.add(commentDto);
         return commentDtos;
+    }
+
+    // 토큰으로 멤버객체 찾기
+    public Optional<Member> findMemberFromToken() {
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Member> optionalMember = memberRepository.findByEmail(username);
+
+        return optionalMember;
     }
 
 

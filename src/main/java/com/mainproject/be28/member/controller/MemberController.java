@@ -103,14 +103,14 @@ public class MemberController {
         return ResponseEntity.ok(likedPosts);
     }
 
-    //작성한 게시물 조회
-    @GetMapping("/myPage/myPost/{boardId}")
-    public ResponseEntity<List<BoardDto>> getMyPosts(@PathVariable("boardId") Long boardId) {
-        Optional<Board> user = boardRepository.findById(boardId);
-
-        List<BoardDto> myPosts = memberService.getPostsByUser(user);
-        return ResponseEntity.ok(myPosts);
-    }
+//    //작성한 게시물 조회
+//    @GetMapping("/myPage/myPost/{boardId}")
+//    public ResponseEntity<List<BoardDto>> getMyPosts(@PathVariable("boardId") Long boardId) {
+//        Optional<Board> user = boardRepository.findById(boardId);
+//
+//        List<BoardDto> myPosts = memberService.getPostsByUser(user);
+//        return ResponseEntity.ok(myPosts);
+//    }
 
     //작성한 댓글 조회
     @GetMapping("/myPage/myComment/{commentId}")

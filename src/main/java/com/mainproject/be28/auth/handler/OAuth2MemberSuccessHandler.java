@@ -2,6 +2,7 @@ package com.mainproject.be28.auth.handler;
 
 import com.mainproject.be28.auth.jwt.JwtTokenizer;
 import com.mainproject.be28.auth.userdetails.MemberAuthority;
+import com.mainproject.be28.member.dto.Stamp;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import io.jsonwebtoken.io.IOException;

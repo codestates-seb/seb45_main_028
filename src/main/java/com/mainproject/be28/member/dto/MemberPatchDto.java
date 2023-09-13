@@ -12,7 +12,6 @@ import javax.persistence.Id;
 public class MemberPatchDto {
     @Id
     private Long memberId;
-    private String password;
     private String phone;
     private String address;
 

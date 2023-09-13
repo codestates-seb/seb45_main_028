@@ -18,4 +18,10 @@ public class MemberResponseDto {
     private String phone;
     private String address;
 
+    private Stamp stamp;
+
+    public int getStamp() {
+        return stamp.getStampCount();
+    }
+
 }
