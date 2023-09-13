@@ -8,15 +8,24 @@
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.15",
     "axios": "^1.5.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
     "date-fns": "^2.30.0",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "npm": "^10.1.0",
     "postcss": "^8.4.29",
     "react": "^18.2.0",
     "react-datepicker": "^4.16.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.0.0",
     "react-scripts": "5.0.1",
+    "semver": "^7.5.4",
+    "stream-browserify": "^3.0.0",
     "switch": "^0.0.0",
     "tailwindcss": "^3.3.3",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -45,6 +54,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }

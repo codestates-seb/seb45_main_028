@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-/*  axios로 api 주소 받아오는 로직*/
+/*import jwt from 'jsonwebtoken';*/
 import axios from 'axios';
+
 
 
 const Login = () => {
@@ -29,7 +30,13 @@ const Login = () => {
       const response = await axios.post('http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/member/login', {
         email: email,
         password: password,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // JWT 토큰을 헤더에 추가합니다.
+        },
       });
+
       console.log(response.data);
       return response.data; // 백엔드에서 반환된 데이터를 반환합니다.
     } catch (error) {
@@ -42,6 +49,10 @@ const Login = () => {
 const handleLogin = async () => {
   try {
     const response = await getLogin(username, password);
+    const token = response.token;
+
+    localStorage.setItem('token', token);
+
     console.log(response);
     // 로그인 성공 후의 처리를 여기에 추가하세요
     setIsLoggedIn(true);
@@ -53,9 +64,10 @@ const handleLogin = async () => {
 
 
 const handleLogout = () => {
+  // 클라이언트에서 JWT 토큰을 삭제합니다.
+  localStorage.removeItem('token');
   setIsLoggedIn(false);
 };
-
 
 return (
   <div className="flex justify-center items-center h-screen">
