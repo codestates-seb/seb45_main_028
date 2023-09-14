@@ -5,10 +5,7 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.order.data.OrderStatus;
 import com.mainproject.be28.orderItem.entity.OrderItem;
 import com.mainproject.be28.payment.entity.PayInfo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,6 +22,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table (name = "orders")
 public class Order extends Auditable {
     @Id

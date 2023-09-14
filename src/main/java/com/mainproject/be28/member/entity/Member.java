@@ -54,6 +54,10 @@ import java.util.List;
         if (order.getMember() != this) {
             order.addMember(this);
         }
+    }
+    public boolean isSameMemberId(long memberId){
+           return this.memberId == memberId;
+        }
 
         // 회원 상태
 //    @Column(nullable = false)
@@ -74,4 +78,3 @@ import java.util.List;
 //        }
 
     }
-}

@@ -1,8 +1,6 @@
 package com.mainproject.be28.order.service;
 
 
-import com.mainproject.be28.cartItem.dto.CartItemResponseDto;
-import com.mainproject.be28.cartItem.entity.CartItem;
 import com.mainproject.be28.cartItem.repository.CartItemRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
@@ -13,26 +11,19 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.order.data.OrderStatus;
-import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.dto.OrderPatchStatusDto;
 import com.mainproject.be28.order.dto.OrderPostDto;
-import com.mainproject.be28.order.dto.OrderRequestDto;
 import com.mainproject.be28.order.entity.Order;
-import com.mainproject.be28.order.mapper.OrderMapper;
 import com.mainproject.be28.order.repository.OrderRepository;
 import com.mainproject.be28.orderItem.dto.OrderItemPostDto;
 import com.mainproject.be28.orderItem.entity.OrderItem;
 import com.mainproject.be28.orderItem.repository.OrderItemRepository;
-import com.mainproject.be28.utils.CustomBeanUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,14 +41,17 @@ public class OrderService {
 
     //주문생성
     public Order createOrder(Order order, OrderPostDto orderPostDto, long memberId) throws IOException /*IamportResponseException,*/  {
+        validation(order, orderPostDto);
+        Order orderBuilder = Order.builder()
+                .member(memberService.findVerifiedMember(memberId)).build();
         order.makeOrderNumber();
 
-        Member member = memberService.findVerifiedMember(memberId);
-
-        order.addMember(member);
         orderRepository.save(order);
+        // paymentService.postPrepare(order.getOrderNumber(), order.getTotalPrice());
+        return order;
+    }
 
-
+    private void validation(Order order, OrderPostDto orderPostDto) {
         if (orderPostDto != null && orderPostDto.getOrderItems() != null) {
             OrderItemPostDtoToOrdersItem(orderPostDto.getOrderItems(), order);
         }
@@ -69,8 +63,6 @@ public class OrderService {
             // 주문 아이템이나 주문 정보가 유효하지 않은 경우 예외 처리 또는 기본 로직 추가
             throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_DATA);
         }
-        // paymentService.postPrepare(order.getOrderNumber(), order.getTotalPrice());
-        return order;
     }
 
     //// ItemId 와 quantity, member로 OrdersItem를 저장
@@ -119,8 +111,7 @@ public class OrderService {
     }
     // 로그인한 유저가 주문자인지 확인
     public void checkOrderHolder(Order order, long memberId) {
-        long orderHolderId = order.getMember().getMemberId();
-        if (orderHolderId != memberId) {
+        if (!order.getMember().isSameMemberId(memberId)) {
             throw new BusinessLogicException(ExceptionCode.NOT_ORDER_HOLDER);
         }
     }
@@ -140,7 +131,8 @@ public class OrderService {
     public void cancelOrder(String orderNumber) {
         Order order = findByOrderNumber(orderNumber);
         int index = order.getStatus().getIndex();
-        if (index == 4 || index == 3) {
+        if (index == OrderStatus.DELIVERY_COMPLETED.getIndex()
+                || index == OrderStatus.DELIVERY_IN_PROGRESS.getIndex()) {
             order.applyRefund();
         } else if (index == 1) {
             // 주문 취소 메서드 필요 (아임포트)
