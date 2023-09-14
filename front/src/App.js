@@ -1,16 +1,23 @@
-import "./App.css";
+
 import QuestionList from "./pages/QuestionList";
 import "./css/input.css";
 import ReviewList from "./pages/ReviewList";
 import ProductWrite from "./pages/ProductWrite";
 import QuestionWrite from "./pages/QuestionWrite";
 import ProductList from "./pages/ProductList";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProductUpdate from "./pages/ProductUpdate";
+import React from 'react';
+import './App.css';
+import '../src/css/input.css';
+import Login from './components/Login';
+import SignUp from './components/Signup';
+//import ShoppingCart from './pages/ShoppingCart';
+import OAuth from './components/OAuth'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-
-function App() {
+const App = () => {
   return (
+
     <BrowserRouter>
       <div classname="App">
         <Routes>
@@ -24,6 +31,6 @@ function App() {
       </div>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

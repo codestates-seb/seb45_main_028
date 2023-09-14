@@ -3,21 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.0",
+
+    "@react-oauth/google": "^0.11.1",
+    "date-fns": "^2.30.0",
+    "google-auth-library": "^9.0.0",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "npm": "^10.1.0",
+    "postcss": "^8.4.29",
+
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
+    "react-datepicker": "^4.16.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0",
+    "react-oauth": "^0.0.1",
+    "react-router-dom": "^6.0.0",
     "react-scripts": "5.0.1",
+
+    "semver": "^7.5.4",
+    "switch": "^0.0.0",
+    "tailwindcss": "^3.3.3",
+    "util": "^0.12.5",
+
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "build-css": "tailwindcss build src/style.css -o dist/style.css"
   },
@@ -40,11 +60,24 @@
     ]
   },
   "devDependencies": {
+
     "autoprefixer": "^10.4.15",
     "css-loader": "^6.8.1",
     "postcss": "^8.4.29",
     "postcss-loader": "^7.3.3",
     "style-loader": "^3.3.3",
-    "tailwindcss": "^3.3.3"
+
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
   }
 }
