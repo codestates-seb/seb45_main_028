@@ -11,15 +11,10 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComplainResponsesDto {
-    @Positive
-    private Long complainId;
-    @Positive
-    private Long ItemId;
-    @Positive
-    private Long memberId;
+
 
     private String name;
-    private String itemname;
+    private String itemName;
 
     private String title;
 

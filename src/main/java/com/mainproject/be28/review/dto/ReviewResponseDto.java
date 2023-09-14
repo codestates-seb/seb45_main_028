@@ -10,9 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ReviewResponseDto {
-    private Long reviewId;
     private String itemName;
-    private Long memberId;
     private String memberName;
     private String content;
     private  int score;

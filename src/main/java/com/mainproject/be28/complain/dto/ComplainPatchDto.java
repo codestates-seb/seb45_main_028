@@ -12,12 +12,7 @@ import javax.validation.constraints.Positive;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComplainPatchDto {
-            @Positive
-            private Long memberId;
-            @Positive
             private Long complainId;
-            @Positive
-            private Long itemId;
             private String title;
 
             private String content;
