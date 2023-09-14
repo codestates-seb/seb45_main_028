@@ -41,7 +41,8 @@ public interface MemberMapper {
                 member.getEmail(),
                 member.getName(),
                 member.getPhone(),
-                member.getAddress()
+                member.getAddress(),
+                member.getStamp()
         );
         return response;
     }

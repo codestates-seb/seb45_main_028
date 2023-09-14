@@ -34,6 +34,19 @@ spring:
       schema-locations: classpath*:db/schema.sql #h2 테이블 위치
       data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
 
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          url : http://localhost:8080/login/oauth2/code/google
+          clientId: 43519252390-qotnkln7fj16ngr8orjumtm4s35hr9on.apps.googleusercontent.com
+          clientSecret: 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
+          scope:
+            - email
+            - profile
+
+
 logging:
   level:
     org:
@@ -44,6 +57,11 @@ server:                   # 모든 response 에 대해 지정된 인코딩 적�
   servlet:
     encoding:
       force-response: true
+
+jwt:
+  access-token-expiration-minutes: 60
+  refresh-token-expiration-minutes: 120
+
 cloud:
   aws:
     credentials.access-key: ${S3_ACCESS_KEY}

@@ -38,7 +38,16 @@ h2:
 jwt:
   access-token-expiration-minutes: 60
   refresh-token-expiration-minutes: 120
-
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          clientId: 43519252390-qotnkln7fj16ngr8orjumtm4s35hr9on.apps.googleusercontent.com
+          clientSecret: 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
+          scope:
+            - email
+            - profile
 cloud:
   aws:
     credentials.access-key: ${S3_ACCESS_KEY}
