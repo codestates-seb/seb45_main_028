@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,7 +74,7 @@ public class Order extends Auditable {
     public void paid() {
         this.status = OrderStatus.ORDER_COMPLETED;
     }
-//주문취소
+    //주문취소
     public void cancelOrder() {
         this.status = OrderStatus.ORDER_CANCELED;
     }
@@ -86,6 +87,18 @@ public class Order extends Auditable {
     public void makeOrderNumber() {
         String date = ZonedDateTime.now(ZoneId.of("UTC")).plusHours(9).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         this.orderNumber = date + RandomStringUtils.randomNumeric(6);
+    }
+
+    public static Order createOrder(Member member, List<OrderItem> orderItemList) {
+
+        Order order = new Order();
+        order.setMember(member);
+        for (OrderItem orderItem : orderItemList) {
+            order.addOrderItem(orderItem);
+        }
+        order.setCreatedAt(LocalDateTime.now());
+        order.setStatus(OrderStatus.NOT_PAID);
+        return order;
     }
 
 

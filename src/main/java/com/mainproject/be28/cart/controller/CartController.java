@@ -8,6 +8,8 @@ import com.mainproject.be28.cartItem.dto.CartItemDto;
 import com.mainproject.be28.cartItem.entity.CartItem;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
+import com.mainproject.be28.order.dto.CartOrderDto;
+import com.mainproject.be28.order.entity.Order;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,4 +66,19 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
+    // 장바구니 상품(들) 주문
+    @PostMapping(value = "/orders/{memberId}")
+    @ResponseBody
+    public ResponseEntity orders(@RequestBody CartOrderDto cartOrderDto, @PathVariable("memberId") @Positive Long memberId ) {
+
+    List<CartOrderDto> orderDtoList = cartOrderDto.getCartOrderItemList();
+
+        if (orderDtoList == null || orderDtoList.size() == 0) {
+            return new ResponseEntity<String>("주문할 상품을 선택해주세요.", HttpStatus.BAD_REQUEST);
+        }
+        Order order = new Order();
+        Long orderId = cartService.orderCartItem(order,orderDtoList, memberId);
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
+
 }
