@@ -7,7 +7,7 @@ import SignUp from './components/Signup';
 import OAuth from './components/OAuth'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-const App = () => {
+/*const App = () => {
   return (
     <Router>
         <Routes>
@@ -19,4 +19,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default App;*/
