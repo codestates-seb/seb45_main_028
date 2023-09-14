@@ -70,8 +70,8 @@ public class ItemController {
 
         return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
-    @PostMapping( "/search")
-    public ResponseEntity getItems(@Valid @RequestBody ItemSearchConditionDto itemSearchConditionDto){
+    @GetMapping( "/search")
+    public ResponseEntity getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
         return new ResponseEntity<>( new SingleResponseDto<>(items), HttpStatus.OK);
     }
