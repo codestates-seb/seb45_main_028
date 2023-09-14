@@ -7,6 +7,12 @@ const announcements = [
     title: '개발자들 사용 전 필수공지 안내 드립니다.',
     author: '관리자',
   },
+  {
+    id: 2,
+    category: '[공지사항]',
+    title: '주문 배송 지연 관련 공지사항',
+    author: '관리자'
+  }
 ];
 
 function Annoucement() {

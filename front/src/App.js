@@ -15,19 +15,27 @@ import SignUp from './components/SignUp';
 import OAuth from './components/OAuth'
 import UserProfile from './components/UserProfile';
 import ViewProfile from './components/ViewProfile';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Main from './pages/Main';
+import About from './pages/About';
+import Announcement from './pages/Announcement';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 const App = () => {
   return (
-
     <Router>
-      <div className="App">
+      <div>
+        
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/user-profile" element={<UserProfile/>} />
-          <Route path="/view-profile" element={<ViewProfile />} />
+          <Route path="/SignUp" element={<SignUp />} />
+          <Route path="/Main" element={<Main />} />
+          <Route path="/About" element={<About />} />
+          <Route path="/Announcement" element={<Announcement />} />
         </Routes>
+        <Footer/>
       </div>
     </Router>
   );

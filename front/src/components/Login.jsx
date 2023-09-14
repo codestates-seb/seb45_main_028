@@ -24,6 +24,7 @@ const Login = () => {
   const handleSignUp = () => {
     useNavigate('/signup');
   };
+  
 
 
   const getLogin = async (email, password) => {
@@ -57,6 +58,7 @@ const handleLogin = async () => {
     localStorage.setItem('token', token);
 
     console.log(response);
+      navigate('./pages/Main');
     // 로그인 성공 후의 처리를 여기에 추가하세요
     setIsLoggedIn(true);
   } catch (error) {
