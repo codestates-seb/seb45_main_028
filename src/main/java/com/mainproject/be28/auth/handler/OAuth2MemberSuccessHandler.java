@@ -2,7 +2,6 @@ package com.mainproject.be28.auth.handler;
 
 import com.mainproject.be28.auth.jwt.JwtTokenizer;
 import com.mainproject.be28.auth.userdetails.MemberAuthority;
-import com.mainproject.be28.member.dto.Stamp;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import io.jsonwebtoken.io.IOException;
@@ -17,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
-import javax.servlet.ServletException;
 import java.rmi.ServerException;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -44,7 +42,6 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     private void saveMember(String email){
         Member member = new Member(email);
-        member.setStamp(new Stamp());
         member.setPassword(generateRandomPassword());
         memberService.createMember(member);
     }
