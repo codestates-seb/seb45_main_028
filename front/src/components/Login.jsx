@@ -22,7 +22,7 @@ const Login = () => {
 
 
   const handleSignUp = () => {
-    navigate('/signup');
+    useNavigate('/signup');
   };
 
 

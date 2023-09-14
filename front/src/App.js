@@ -15,22 +15,25 @@ import SignUp from './components/Signup';
 import OAuth from './components/OAuth'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-/*const App = () => {
+const App = () => {
   return (
 
-    <BrowserRouter>
-      <div classname="App">
+    <Router>
+      <div className="App">
         <Routes>
-          <Route path="/questionlist" element={<QuestionList />} />
-          <Route path="/reviewlist" element={<ReviewList />} />
-          <Route path="/productwrite" element={<ProductWrite />} />
-          <Route path="/questionwrite" element={<QuestionWrite />} />
-          <Route path="/productlist" element={<ProductList />} />
-          <Route path="/productupdate" element={<ProductUpdate />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<SignUp />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 };
 
-export default App;*/
+export default App;
+
+/*<Route path="/questionlist" element={<QuestionList />} />
+<Route path="/reviewlist" element={<ReviewList />} />
+<Route path="/productwrite" element={<ProductWrite />} />
+<Route path="/questionwrite" element={<QuestionWrite />} />
+<Route path="/productlist" element={<ProductList />} />
+<Route path="/productupdate" element={<ProductUpdate />} />*/

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import axios from "axios";
-import { navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Complain = ({ question }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ const Complain = ({ question }) => {
       )
       .then((res) => {
         alert("수정되었습니다.");
-        navigate("/questionlist");
+        useNavigate("/questionlist");
       });
   };
 
@@ -31,7 +31,7 @@ const Complain = ({ question }) => {
       )
       .then((res) => {
         alert("삭제되었습니다.");
-        navigate("/questionlist");
+        useNavigate("/questionlist");
       });
   };
 
