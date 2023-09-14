@@ -35,7 +35,7 @@ public class ItemController {
     @PostMapping(value = "/new"
             , consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity postItem(@Valid @RequestPart ItemDto.Post requestBody
-                                   , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) throws IOException {
+                                   , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) {
 
         Item itemMapper = mapper.itemPostDtoToItem(requestBody);
         Item item;
@@ -70,7 +70,7 @@ public class ItemController {
 
         return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
-    @PostMapping( "/search")
+    @GetMapping( "/search")
     public ResponseEntity getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
         return new ResponseEntity<>( new SingleResponseDto<>(items), HttpStatus.OK);

@@ -13,11 +13,18 @@ import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import com.mainproject.be28.member.service.MemberService;
+import com.mainproject.be28.order.dto.CartOrderDto;
+import com.mainproject.be28.order.dto.OrderPostDto;
+import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.order.service.OrderService;
+import com.mainproject.be28.orderItem.dto.OrderItemPostDto;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,10 +36,11 @@ public class CartService {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final CustomBeanUtils<Cart> beanUtils;
+    private final OrderService orderService;
 
     public CartService(MemberService memberService
-            , MemberRepository memberRepository,CartRepository cartRepository, ItemRepository itemRepository, CartItemRepository cartItemRepository
-            , ItemService itemService, CustomBeanUtils<Cart> beanUtils) {
+            , MemberRepository memberRepository, CartRepository cartRepository, ItemRepository itemRepository, CartItemRepository cartItemRepository
+            , ItemService itemService, CustomBeanUtils<Cart> beanUtils, OrderService orderService) {
         this.memberService = memberService;
         this.memberRepository = memberRepository;
         this.itemRepository = itemRepository;
@@ -40,6 +48,7 @@ public class CartService {
         this.cartItemRepository = cartItemRepository;
         this.itemService = itemService;
         this.beanUtils = beanUtils;
+        this.orderService = orderService;
     }
 @Transactional
     public CartItem addCart(CartItemDto cartItemDto, long memberId) {
@@ -86,5 +95,36 @@ public class CartService {
         Cart cart = findCartByMemberId(memberId);
         cartRepository.delete(cart);
     }
+
+    // 장바구니 상품(들) 주문
+    public Long orderCartItem(Order order, List<CartOrderDto> cartOrderDtoList, Long memberId) {
+        List<OrderItemPostDto> orderDtoList = new ArrayList<>();
+
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
+
+            // CartOrderDto를 OrderItemPostDto로 변환
+            OrderItemPostDto orderDto = new OrderItemPostDto();
+            orderDto.setItemId(cartItem.getItem().getItemId());
+            orderDto.setQuantity(cartItem.getCount());
+
+            // OrderItemPostDto를 리스트에 추가
+            orderDtoList.add(orderDto);
+        }
+
+        // 주문 생성 메서드 호출
+        Long orderId = orderService.orders(order, orderDtoList, memberId);
+
+        // 주문한 장바구니 상품을 제거
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
+            cartItemRepository.delete(cartItem);
+        }
+
+        return orderId;
+    }
+
 
 }

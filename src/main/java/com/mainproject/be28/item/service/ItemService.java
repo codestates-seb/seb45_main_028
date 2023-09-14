@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -109,8 +106,6 @@ public class ItemService {
             onlyItemResponseDto.setScore(updateScore(item));
         }
 
-        itemList = customSort(itemList, condition);
-
         return new PageImpl<>(itemList, pageRequest, itemList.size());
     }
     public void deleteItem(long itemId){
@@ -119,29 +114,7 @@ public class ItemService {
         // todo: 관리자만 권한삭제 기능 추가 필요
         itemRepository.delete(findItem);
     }
-    private List<OnlyItemResponseDto> customSort(List<OnlyItemResponseDto> itemList, ItemSearchConditionDto condition) {
-        if (condition.getSort() != null) { // 정렬기준이 있을 경우,
-            itemList.sort((item1, item2) -> sortStandard(item1, item2, condition));
-        } else {
-            if (condition.getOrder() != null && condition.getOrder().equals("asc")) { // 정렬 기준은 없고, 오름차순만 요구할 경우, Item ID 기준 오름차순 정렬
-                itemList.sort(Comparator.comparing(OnlyItemResponseDto::getItemId));
-            }
-        }
-        return itemList;
-    }
 
-    private int sortStandard(OnlyItemResponseDto o1, OnlyItemResponseDto o2, ItemSearchConditionDto condition){
-        int result = 0;
-        if(condition.getOrder()==null){condition.setOrder( "desc");}
-        switch(condition.getSort()){
-            case "name": result = o1.getName().compareTo(o2.getName()); break;
-            case "price": result = o1.getPrice().compareTo(o2.getPrice()); break;
-            case "review": result = o1.getReviewCount().compareTo(o2.getReviewCount()); break;
-            case "score": result = o1.getScore().compareTo(o2.getScore()); break;
-            default : break;
-        }
-        return condition.getOrder().equals("asc") ? result:result*-1;
-    }
     private Double updateScore(Item item){
         if(item.getScore()==null){item.setScore(0.0);}
         List<Review> itemList = item.getReviews();

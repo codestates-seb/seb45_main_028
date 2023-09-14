@@ -43,11 +43,11 @@ public class ComplainController {
         return new ResponseEntity<>(complainResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/") //문의사항 목록보기
-    public ResponseEntity getQuestions(@RequestParam(name = "page", defaultValue = "0") int page,
+    @GetMapping("") //문의사항 목록보기
+    public ResponseEntity getComplains(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "10") int size
     ){
-
+        page = Math.max(page - 1, 0); // 페이지가 0이 되지 않도록
         Page<Complain> pageComplains = complainService.findComplains(page,size);
 
         List<Complain> complains = pageComplains.getContent();

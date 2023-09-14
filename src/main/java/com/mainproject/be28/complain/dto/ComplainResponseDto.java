@@ -14,19 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComplainResponseDto {
-        @Positive
-        private Long complainId;
-        @Positive
-        private Long memberId;
-        @Positive
-        private Long ItemId;
+
 
         private String title;
 
         private String content;
 
         private String name;
-        private String itemname;//추가
+        private String itemName;//추가
         private LocalDateTime modifiedAt;
         private LocalDateTime createdAt;
 

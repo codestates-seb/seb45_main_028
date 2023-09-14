@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +44,18 @@ public class OrderItem {
             order.addOrderItem(this);
         }
     }
+    public static OrderItem createOrderItem(Item item, long quantity) {
 
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setQuantity(quantity);
+        orderItem.setPrice(item.getPrice());
 
-    public void setName(String name) {
-        item.setName(name);
+        return orderItem;
     }
 
+
+    public String setName(String name) {
+        return item.getName();
+    }
 }
