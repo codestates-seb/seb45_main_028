@@ -2,16 +2,13 @@ package com.mainproject.be28.item.repository;
 
 import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
-import com.mainproject.be28.item.entity.QItem;
-
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +19,7 @@ import static com.mainproject.be28.review.entity.QReview.review;
 
 @RequiredArgsConstructor
 @Repository
+@Slf4j
 public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
     @Override
@@ -32,6 +30,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                        ,item.itemId ,item.name,item.price,item.detail,item.status, item.color,item.brand ,item.category)
                 )
                 .from(item)
+                .leftJoin(item.reviews, review)
                 .where(
                         equalsCategory(condition.getCategory()), // 동적 쿼리 조건문
                         equalsBrand(condition.getBrand()),
@@ -43,6 +42,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                 .where(
                         nameLike(condition.getName())
                 )
+                .groupBy(item)
                 .orderBy(sortCondition(condition))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -80,23 +80,9 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
                     case "name": return new OrderSpecifier<>(direction,item.name);
                     case "price": return new OrderSpecifier<>(direction,item.price);
                     case "review": return new OrderSpecifier<>(direction, item.reviews.size());
-                    case "score":
-                        double scoreAvg = updateScore();
-                        NumberExpression<Double> score = Expressions.numberPath(Double.class, String.valueOf(scoreAvg));
-                        return new OrderSpecifier<>(direction, score);
-                    default:
-                        return new OrderSpecifier<>(direction, item.itemId);
+                    case "score": return new OrderSpecifier<>(direction, review.Score.avg());
                 }
             }
         return new OrderSpecifier<>(direction, item.itemId);
     }
-
-    private Double updateScore() {
-        return queryFactory
-                .select(review.Score.avg())
-                .from(review)
-                .where(QItem.item.itemId.eq(review.item.itemId))
-                .fetchOne();
-    }
 }
-
