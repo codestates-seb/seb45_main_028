@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# .gitignore
+.DS_Store
+.prettierrc.json
+
 # testing
 /coverage
 
