@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-/*import jwt from 'jsonwebtoken';*/
+import jwt from 'jsonwebtoken';
 import axios from 'axios';
+/*import { GoogleLogin } from 'react-oauth/google-login';*/
 
 
 
@@ -33,7 +34,7 @@ const Login = () => {
       },
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // JWT 토큰을 헤더에 추가합니다.
+          Authorization: `Bearer ${localStorage.getItem('token')}`, // JWT 토큰을 헤더에 추가합니다. 쿠키 설정시 headers 에 담는 로컬스토리지 코드 삭제.
         },
       });
 
@@ -44,7 +45,9 @@ const Login = () => {
       throw error; // 에러를 다시 던집니다.
     }
   };
-  
+
+// 보안적으로 취약.
+// 
 
 const handleLogin = async () => {
   try {

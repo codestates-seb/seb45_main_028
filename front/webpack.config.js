@@ -1,4 +1,4 @@
-const path = require('path');
+/*const path = require('path');
 
 module.exports = {
   // ... 다른 설정
@@ -8,4 +8,4 @@ module.exports = {
       "stream": require.resolve("stream-browserify")
     }
   }
-};
+}; */
