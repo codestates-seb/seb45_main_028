@@ -39,15 +39,17 @@ public class Item extends Auditable {
     @Column(length = 100)
     private String category;
 
-    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<ItemImage> Images = new ArrayList<>();
-
     @Transient
     private Double score;
 
     @Transient
     private long reviewCount;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<ItemImage> Images = new ArrayList<>();
+
+
 }
