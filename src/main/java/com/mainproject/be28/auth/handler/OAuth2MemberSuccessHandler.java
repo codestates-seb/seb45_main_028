@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import javax.servlet.ServletException;
 import java.rmi.ServerException;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +45,20 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private void saveMember(String email){
         Member member = new Member(email);
         member.setStamp(new Stamp());
+        member.setPassword(generateRandomPassword());
         memberService.createMember(member);
+    }
+
+    private String generateRandomPassword() {
+        int length = 10;
+        String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
+        SecureRandom random = new SecureRandom();
+        String password = random
+                .ints(length, 0, charset.length())
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+        return password;
     }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> authorities) throws IOException, java.io.IOException {
@@ -87,9 +101,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("localhost")
-//                .port(80)
-                .path("/receive-token.html")
+                .host("ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com")
+                .port(80)
+                .path("/")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

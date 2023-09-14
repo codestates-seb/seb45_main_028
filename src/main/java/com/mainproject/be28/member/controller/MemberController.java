@@ -1,5 +1,6 @@
 package com.mainproject.be28.member.controller;
 
+import com.mainproject.be28.auth.dto.LoginDto;
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.repository.BoardRepository;
 import com.mainproject.be28.comment.dto.CommentDto;
