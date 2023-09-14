@@ -13,6 +13,8 @@ import Login from './components/Login';
 import SignUp from './components/Signup';
 //import ShoppingCart from './pages/ShoppingCart';
 import OAuth from './components/OAuth'
+import UserProfile from './components/UserProfile';
+import ViewProfile from './components/ViewProfile';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const App = () => {
@@ -22,7 +24,9 @@ const App = () => {
       <div className="App">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/login" element={<SignUp />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/user-profile" element={<UserProfile/>} />
+          <Route path="/view-profile" element={<ViewProfile />} />
         </Routes>
       </div>
     </Router>

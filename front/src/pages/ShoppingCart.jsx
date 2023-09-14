@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const ShoppingCart = () => {
   const [products] = useState([
-    { id: 1, name: '소이와 데이트권', price: 100000 },
-    { id: 2, name: '다연이와 식데권 ', price: 200000 },
+    { id: 1, name: '소이', price: 100000 },
+    { id: 2, name: '다연 ', price: 200000 },
     { id: 3, name: '성환이의 사랑', price: 371019247301 },
   ]);
   const [cart, setCart] = useState([]);
