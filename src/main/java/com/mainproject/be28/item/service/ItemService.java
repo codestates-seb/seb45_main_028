@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -80,6 +81,7 @@ public class ItemService {
             updatedItem.setImages(images);
             itemImageRepository.saveAll(images);
         }
+        item.setModifiedAt(LocalDateTime.now());
         itemRepository.save(updatedItem);
 
         return updatedItem;

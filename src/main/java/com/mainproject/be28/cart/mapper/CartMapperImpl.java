@@ -3,14 +3,10 @@ package com.mainproject.be28.cart.mapper;
 import com.mainproject.be28.cart.dto.CartDto;
 import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.cart.service.CartService;
-import com.mainproject.be28.cartItem.dto.CartItemDto;
 import com.mainproject.be28.cartItem.dto.CartItemResponseDto;
 import com.mainproject.be28.cartItem.entity.CartItem;
 import com.mainproject.be28.cartItem.repository.CartItemRepository;
-import com.mainproject.be28.exception.BusinessLogicException;
-import com.mainproject.be28.exception.ExceptionCode;
-import com.mainproject.be28.member.entity.Member;
-import com.mainproject.be28.member.repository.MemberRepository;
+import com.mainproject.be28.member.service.MemberService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,18 +15,18 @@ import java.util.List;
 @Component
 public class CartMapperImpl implements CartMapper{
     public final CartItemRepository cartItemRepository;
-    public final MemberRepository memberRepository;
+    public final MemberService memberService;
     public final CartService cartService;
 
-    public CartMapperImpl(CartItemRepository cartItemRepository, MemberRepository memberRepository, CartService cartService) {
+    public CartMapperImpl(CartItemRepository cartItemRepository, MemberService memberService, CartService cartService) {
         this.cartItemRepository = cartItemRepository;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
         this.cartService = cartService;
     }
 
-    public CartDto.Response cartToCartResponseDto(Cart cart,Member member) {
+    public CartDto.Response cartToCartResponseDto(Cart cart) {
         if (cart == null) {
-            Cart.createCart(member);
+            Cart.createCart(memberService.findTokenMember());
         }
         List<CartItemResponseDto> cartItemResponseDtos = getCartItemsResponseDto(cart);
         long price = getTotalPrice(cartItemResponseDtos);

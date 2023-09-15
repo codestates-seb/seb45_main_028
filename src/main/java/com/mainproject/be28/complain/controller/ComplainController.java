@@ -3,7 +3,6 @@ package com.mainproject.be28.complain.controller;
 import com.mainproject.be28.complain.dto.ComplainPatchDto;
 import com.mainproject.be28.complain.dto.ComplainPostDto;
 import com.mainproject.be28.complain.dto.ComplainResponseDto;
-import com.mainproject.be28.complain.dto.ComplainResponsesDto;
 import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.service.ComplainService;
@@ -45,7 +44,7 @@ public class ComplainController {
     }
 
     @GetMapping("") //문의사항 목록보기
-    public ResponseEntity getComplains(@RequestParam(name = "page", defaultValue = "1") int page,
+    public MultiResponseDto getComplains(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "10") int size
     ){
         page = Math.max(page - 1, 0); // 페이지가 0이 되지 않도록
@@ -53,9 +52,9 @@ public class ComplainController {
 
         List<Complain> complains = pageComplains.getContent();
 
-        return new ResponseEntity<>(new MultiResponseDto<>(
+        return new MultiResponseDto<>(
                 mapper.complainsToComplainResponsesDto(complains),
-                pageComplains),HttpStatus.OK);
+                pageComplains, HttpStatus.OK);
 
     }
 

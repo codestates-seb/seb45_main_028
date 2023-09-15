@@ -1,19 +1,10 @@
 package com.mainproject.be28.member.service;
 
-import com.mainproject.be28.board.dto.BoardDto;
-import com.mainproject.be28.board.entity.Board;
-import com.mainproject.be28.board.repository.BoardRepository;
-import com.mainproject.be28.comment.dto.CommentDto;
-import com.mainproject.be28.comment.entity.Comment;
 import com.mainproject.be28.comment.repository.CommentRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
-import com.mainproject.be28.review.dto.ReviewResponseDto;
-import com.mainproject.be28.review.entity.Review;
-import com.mainproject.be28.review.mapper.ReviewMapper;
-import com.mainproject.be28.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,7 +39,7 @@ public class MemberService {
         Optional<Member> optionalMember =
                 memberRepository.findById(memberId);
         Member findMember =
-                optionalMember.orElseThrow();
+                optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
         return findMember;
     }
 

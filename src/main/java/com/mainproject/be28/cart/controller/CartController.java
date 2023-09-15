@@ -1,15 +1,13 @@
 package com.mainproject.be28.cart.controller;
 
-import com.mainproject.be28.cart.dto.CartDto;
 import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.cart.mapper.CartMapper;
 import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemDto;
-import com.mainproject.be28.cartItem.entity.CartItem;
-import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,27 +30,25 @@ public class CartController {
     private final CartMapper mapper;
 
 
-    @PostMapping("{memberId}")
-    public ResponseEntity addCart(@RequestBody @Valid CartItemDto cartItemDto,@PathVariable("memberId")long memberId){
+    @PostMapping
+    public SingleResponseDto addCart(@RequestBody @Valid CartItemDto cartItemDto){
 // 전달받은 인증된 회원의 인증 토큰만 담기면,  생성된 Cart 객체에 Id와  담긴 회원 정보의 memberId만 추가해 넘겨주면 된다.
 
-        cartService.addCart(cartItemDto,memberId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Cart cart = cartService.addCart(cartItemDto);
+        return new SingleResponseDto<>(mapper.cartToCartResponseDto(cart), HttpStatus.OK);
     }
-    @PostMapping("/reduce/{memberId}")
-    public ResponseEntity reduceCart(@RequestBody @Valid CartItemDto cartItemDto,@PathVariable("memberId")long memberId){
+    @PostMapping("/reduce")
+    public SingleResponseDto reduceCart(@RequestBody @Valid CartItemDto cartItemDto){
 // 전달받은 인증된 회원의 인증 토큰만 담기면,  생성된 Cart 객체에 Id와  담긴 회원 정보의 memberId만 추가해 넘겨주면 된다.
         cartItemDto.setCount(cartItemDto.getCount()*-1);
-        cartService.addCart(cartItemDto,memberId);
+        Cart cart = cartService.addCart(cartItemDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new SingleResponseDto<>(mapper.cartToCartResponseDto(cart), HttpStatus.OK);
     }
-    @GetMapping("{memberId}")
-    public ResponseEntity getCart(@PathVariable("memberId")long memberId){
-        Member member = memberService.findMember(memberId);
-        Cart cart = cartService.findCartByMemberId(memberId);
-        CartDto.Response cartOrResponse = mapper.cartToCartResponseDto(cart, member);
-        return new ResponseEntity<>(cartOrResponse, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity getCart(){
+        Cart cart = cartService.findCartByMember();
+        return new ResponseEntity<>(new SingleResponseDto<>(mapper.cartToCartResponseDto(cart)), HttpStatus.OK);
     }
     @DeleteMapping("/delete/{cartItemId}")
     public ResponseEntity deleteCartItem(@PathVariable("cartItemId") long cartItemId) {
@@ -60,9 +56,9 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity deleteAll(@PathVariable("memberId") @Positive long memberId) {
-        cartService.deleteCarts(memberId);
+    @DeleteMapping
+    public ResponseEntity deleteAll() {
+        cartService.deleteCarts();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
