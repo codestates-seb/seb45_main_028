@@ -27,7 +27,8 @@ public enum ExceptionCode {
     ALREADY_APPLIED_REFUND(404,"이미 환불이 된 주문입니다"),
     ALREADY_CANCELED(404, "이미 취소된 주문입니다"),
     NOT_YET_PAID(404,"아직 결제가 안된 주문입니다"),
-    VERIFY_FAILURE(401,"ID 혹은 PW가 일치하지 않습니다.");
+    VERIFY_FAILURE(401,"ID 혹은 PW가 일치하지 않습니다."),
+    USER_EXIST(409,"존재하는 사용자 입니다." );
 
     @Getter
     private final int status;
