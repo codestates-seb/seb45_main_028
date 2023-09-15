@@ -1,5 +1,7 @@
 package com.mainproject.be28.member.service;
 
+
+import com.mainproject.be28.auth.userdetails.MemberAuthority;
 import com.mainproject.be28.comment.repository.CommentRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
@@ -21,14 +23,30 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberAuthority memberAuthority;
 
 
     //회원생성
-    public Member createMember(Member member){
-        String password = "{noop}" + member.getPassword();
-        member.setPassword(password);
-        return memberRepository.save(member);
+    public Member createMember(Member member) {
+        verifyExistsEmail(member.getEmail());
+        String encryptedPassword = passwordEncoder.encode(member.getPassword());
+        passwordEncoder.encode(member.getPassword());
+        passwordEncoder.encode(member.getAddress());
+        member.setPassword(encryptedPassword);
+        member.setRoles(memberAuthority.createRoles(member.getName()));
+
+        Member savedMember = memberRepository.save(member);
+
+        return savedMember;
     }
+
+    // 회원이 존재하는지 검사 , 존재하면 예외
+    private void verifyExistsEmail(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.USER_EXIST);
+        }
+    }
+
 
     public Member findMember(Long memberId) {
         return findVerifiedMember(memberId);
@@ -42,29 +60,6 @@ public class MemberService {
         return findMember;
     }
 
-//    //비밀번호 변경
-//    public Member updatePassword(String email, String password, String afterPassword) {
-//        // 회원이 존재하는지 검증
-//        log.info("### 회원이 존재하는지 검증합니다!");
-//        Optional<Member> findUserOpt = checkUserExist(email);
-//        log.info("### 검증 완료!");
-//
-//        // 회원이 존재하지 않을 경우 예외 처리
-//        Member findUser = findUserOpt.orElseThrow();
-//
-//        // 비밀번호가 일치하는지 검증
-//        log.info("### 비밀번호가 일치하는지 검증합니다!");
-//        if (passwordEncoder.matches(password, findUser.getPassword())) {
-//            // 비밀번호 변경
-//            findUser.setPassword(passwordEncoder.encode(afterPassword));
-//            memberRepository.save(findUser);
-//        } else {
-//            throw new BusinessLogicException(ExceptionCode.INCORRECT_PASSWORD);
-//        }
-//
-//        return findUser;
-//    }
-
     private Optional<Member> checkUserExist(String email) {
         // 이메일을 사용하여 회원을 찾음
         Optional<Member> user = memberRepository.findByEmail(email);
@@ -72,23 +67,6 @@ public class MemberService {
         // 회원이 존재하지 않을 경우 Optional.empty() 반환
         return user;
     }
-
-
-    //좋아요한 게시물
-//    public List<BoardDto> getLikedPost(Optional<Board> likeBoard) {
-//        if (likeBoard.isPresent()) {
-//            Board board = likeBoard.get();
-//            BoardDto boardDto = convertToBoardDto(board);
-//            return Collections.singletonList(boardDto);
-//        } else {
-//            return Collections.emptyList();
-//        }
-//    }
-
-
-
-
-
 
     public Long findTokenMemberId() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -33,8 +33,6 @@ import java.util.Optional;
 public class MemberController {
     private final MemberService memberService;
     private final MemberMapper mapper;
-    private final BoardRepository boardRepository;
-    private final CommentRepository commentRepository;
     private final MyPageService mypageService;
 
     //회원가입
@@ -63,7 +61,7 @@ public class MemberController {
         }
     }
 
-    //회원 비밀번호 수
+    //회원 비밀번호 수정
     @PatchMapping("/myPage/pw")
     public ResponseEntity<MemberResponseDto> patchPassword(@RequestBody PasswordPatchDto requestBody) {
         memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
@@ -89,29 +87,6 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
-//    @PutMapping("/myPage/changePassword/{memberId}")
-//    public ResponseEntity updatePassword(@AuthenticationPrincipal UserDetailService userDetails,
-//                                         @RequestBody @Valid PasswordPatchDto passwordPatchDto) {
-//        log.info("### PW PATCH 시작합니다!");
-//        String username = userDetails.getUsername(); // 사용자 이름 또는 ID
-//        String password = passwordPatchDto.getPassword();
-//        String afterPassword = passwordPatchDto.getAfterPassword();
-//        log.info("###PW = " + password + ", AFTER PW = " + afterPassword);
-//        memberService.updatePassword(username, password, afterPassword);
-//
-//        return ResponseEntity.ok().build();
-//    }
-
-
-    //좋아요한 게시물 조회
-//    @GetMapping("/myPage/likedPost/{likeCount}")
-//    public ResponseEntity<List<BoardDto>> getLikedPosts(@PathVariable("likeCount") Long likeCount) {
-//        Optional<Board> user = boardRepository.findById(likeCount);
-//
-//        List<BoardDto> likedPosts = memberService.getLikedPost(user);
-//        return ResponseEntity.ok(likedPosts);
-//    }
 
     //작성한 게시물 조회
     @GetMapping("/myPage/myReview")
