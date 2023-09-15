@@ -41,8 +41,8 @@ public class Board extends Auditable {
     @Column(nullable = false)
     private String boardCategory;
 
-    //@OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
-   // private List<Comment> comments;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<Comment> comments;
 
 
 }
