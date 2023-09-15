@@ -2,7 +2,6 @@ package com.mainproject.be28.member.service;
 
 
 import com.mainproject.be28.auth.userdetails.MemberAuthority;
-import com.mainproject.be28.comment.repository.CommentRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.member.entity.Member;
@@ -43,12 +42,13 @@ public class MemberService {
         return savedMember;
     }
 
-    public boolean isAdmin(List<String> roles){
-        boolean admin = false;
+    public void verifiyAdmin(){
+        Member member = findTokenMember();
+        List<String> roles = member.getRoles();
         for(String role : roles){
-            if(role.equals("ADMIN")){admin = true; break;}
+            if(role.equals("ADMIN")){return;}
         }
-        return admin;
+        throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
     }
 
     // 회원이 존재하는지 검사 , 존재하면 예외
