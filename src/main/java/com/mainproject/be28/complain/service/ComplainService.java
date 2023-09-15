@@ -8,10 +8,9 @@ import com.mainproject.be28.complain.repository.ComplainRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.item.entity.Item;
-import com.mainproject.be28.item.repository.ItemRepository;
+import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.member.entity.Member;
-import com.mainproject.be28.member.mapper.MemberMapper;
-import com.mainproject.be28.member.repository.MemberRepository;
+import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,15 +25,15 @@ import java.util.Optional;
 public class ComplainService {
     private final ComplainRepository complainRepository;
     private final CustomBeanUtils<Complain> beanUtils;
-    private final MemberRepository memberRepository;
-    private final ItemRepository itemRepository;
+    private final MemberService memberService;
+    private final ItemService itemService;
     private final ComplainMapper mapper;
 
-    public ComplainService(ComplainRepository complainRepository, CustomBeanUtils<Complain> beanUtils, MemberRepository memberRepository, ItemRepository itemRepository, ComplainMapper mapper) {
+    public ComplainService(ComplainRepository complainRepository, CustomBeanUtils<Complain> beanUtils, MemberService memberService, ItemService itemService, ComplainMapper mapper) {
         this.complainRepository = complainRepository;
         this.beanUtils = beanUtils;
-        this.memberRepository = memberRepository;
-        this.itemRepository = itemRepository;
+        this.memberService = memberService;
+        this.itemService = itemService;
         this.mapper = mapper;
     }
 
@@ -43,10 +41,8 @@ public class ComplainService {
     public Complain createComplain(ComplainPostDto complainPostDto) {
 
         Complain complain = mapper.complainPostDtoToComplain(complainPostDto);
-        Optional<Member> optionalMember = memberRepository.findById(complainPostDto.getMemberId());
-        Member member = optionalMember.get();
-        Optional<Item> optionalItem = itemRepository.findById(complainPostDto.getItemId());
-        Item item = optionalItem.get();
+        Member member = memberService.findMember(complainPostDto.getMemberId());
+        Item item = itemService.findItem(complainPostDto.getItemId());
         complain.setMember(member);
         complain.setItem(item);
 
