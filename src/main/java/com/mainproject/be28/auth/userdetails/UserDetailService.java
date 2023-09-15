@@ -1,5 +1,6 @@
 package com.mainproject.be28.auth.userdetails;
 
+import com.mainproject.be28.auth.config.PasswordEncoderConfig;
 import com.mainproject.be28.auth.jwt.JwtTokenizer;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
@@ -14,25 +15,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class UserDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
-    private final MemberAuthority memberAuthority;
-    private final JwtTokenizer jwtTokenizer;
     private String username;
 
-    public UserDetailService(MemberRepository memberRepository, MemberAuthority memberAuthority, JwtTokenizer jwtTokenizer) {
+    public UserDetailService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
-        this.memberAuthority = memberAuthority;
-        this.jwtTokenizer = jwtTokenizer;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

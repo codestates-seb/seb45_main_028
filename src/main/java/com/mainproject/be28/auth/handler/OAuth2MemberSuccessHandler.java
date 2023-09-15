@@ -2,7 +2,6 @@ package com.mainproject.be28.auth.handler;
 
 import com.mainproject.be28.auth.jwt.JwtTokenizer;
 import com.mainproject.be28.auth.userdetails.MemberAuthority;
-import com.mainproject.be28.member.dto.Stamp;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import io.jsonwebtoken.io.IOException;
@@ -17,7 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
-import javax.servlet.ServletException;
 import java.rmi.ServerException;
 import java.security.SecureRandom;
 import java.util.Date;
@@ -43,23 +41,23 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     }
 
     private void saveMember(String email){
-        Member member = new Member(email);
-        member.setStamp(new Stamp());
-        member.setPassword(generateRandomPassword());
+        Member member = new Member();
+        member.setEmail(email);
+        //member.setPassword(generateRandomPassword());
         memberService.createMember(member);
     }
 
-    private String generateRandomPassword() {
-        int length = 10;
-        String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-
-        SecureRandom random = new SecureRandom();
-        String password = random
-                .ints(length, 0, charset.length())
-                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-                .toString();
-        return password;
-    }
+//    private String generateRandomPassword() {
+//        int length = 10;
+//        String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+//
+//        SecureRandom random = new SecureRandom();
+//        String password = random
+//                .ints(length, 0, charset.length())
+//                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+//                .toString();
+//        return password;
+//    }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> authorities) throws IOException, java.io.IOException {
         String accessToken = delegateAccessToken(username, authorities);
@@ -102,7 +100,6 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                 .newInstance()
                 .scheme("http")
                 .host("ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com")
-                .port(80)
                 .path("/")
                 .queryParams(queryParams)
                 .build()
