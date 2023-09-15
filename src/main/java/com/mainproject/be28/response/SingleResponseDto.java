@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class SingleResponseDto<T> extends BaseResponse{
     private T data;
-
+    public SingleResponseDto(HttpStatus status) {
+        this.status = status.value();
+        this.message = status.getReasonPhrase();
+    }
     public SingleResponseDto(T data, HttpStatus status) {
         this.status = status.value();
         this.message = status.getReasonPhrase();
