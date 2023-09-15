@@ -35,6 +35,9 @@ import java.util.List;
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
+    public Member(String email) {
+        this.email = email;
+    }
 
 
     public Member() {
@@ -50,6 +53,10 @@ import java.util.List;
         this.order.add(order);
         if (order.getMember() != this) {
             order.addMember(this);
+        }
+    }
+    public boolean isSameMemberId(long memberId){
+           return this.memberId == memberId;
         }
 
         // 회원 상태
@@ -71,4 +78,3 @@ import java.util.List;
 //        }
 
     }
-}

@@ -8,6 +8,7 @@ import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.service.ComplainService;
 import com.mainproject.be28.response.MultiResponseDto;
+import com.mainproject.be28.response.SingleResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class ComplainController {
     @PostMapping ("/new") // 문의사항등록
     public ResponseEntity postComplain(@RequestBody @Valid ComplainPostDto complainPostDto) {
 
-        complainService.createComplain(mapper.complainPostDtoToComplain(complainPostDto));
-        return new ResponseEntity<> (HttpStatus.OK);
+        Complain response = complainService.createComplain(complainPostDto);
+        return new ResponseEntity<> (new SingleResponseDto<>(mapper.complainToComplainResponseDto(response)),HttpStatus.OK);
     }
 
     @GetMapping ("{complain-id}") // 문의사항 상세보기

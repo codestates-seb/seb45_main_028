@@ -1,13 +1,16 @@
 package com.mainproject.be28.complain.service;
 
+import com.mainproject.be28.complain.dto.ComplainPostDto;
 import com.mainproject.be28.complain.dto.ComplainResponsesDto;
 import com.mainproject.be28.complain.entity.Complain;
+import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.repository.ComplainRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
+import com.mainproject.be28.item.entity.Item;
+import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.member.entity.Member;
-import com.mainproject.be28.member.mapper.MemberMapper;
-import com.mainproject.be28.member.repository.MemberRepository;
+import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -15,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,16 +25,26 @@ import java.util.Optional;
 public class ComplainService {
     private final ComplainRepository complainRepository;
     private final CustomBeanUtils<Complain> beanUtils;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final ItemService itemService;
+    private final ComplainMapper mapper;
 
-    public ComplainService(ComplainRepository complainRepository, CustomBeanUtils<Complain> beanUtils, MemberRepository memberRepository) {
+    public ComplainService(ComplainRepository complainRepository, CustomBeanUtils<Complain> beanUtils, MemberService memberService, ItemService itemService, ComplainMapper mapper) {
         this.complainRepository = complainRepository;
         this.beanUtils = beanUtils;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
+        this.itemService = itemService;
+        this.mapper = mapper;
     }
 
     //complain 객체를 인자로 받아와서 데이터베이스에 저장한 뒤, 저장된 엔티티 객체를 반환
-    public Complain createComplain(Complain complain) {
+    public Complain createComplain(ComplainPostDto complainPostDto) {
+
+        Complain complain = mapper.complainPostDtoToComplain(complainPostDto);
+        Member member = memberService.findMember(complainPostDto.getMemberId());
+        Item item = itemService.findItem(complainPostDto.getItemId());
+        complain.setMember(member);
+        complain.setItem(item);
 
         return complainRepository.save(complain);
     }
