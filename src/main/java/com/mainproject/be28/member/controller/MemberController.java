@@ -14,6 +14,7 @@ import com.mainproject.be28.member.dto.PasswordPatchDto;
 import com.mainproject.be28.member.mapper.MemberMapper;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.member.service.MyPageService;
+import com.mainproject.be28.response.SingleResponseDto;
 import com.mainproject.be28.review.dto.ReviewResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,24 +38,24 @@ public class MemberController {
 
     //회원가입
     @PostMapping("/new")
-    public ResponseEntity<MemberResponseDto> postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
+    public ResponseEntity postMember(@Valid @RequestBody MemberPostDto memberPostDto) {
         Member member = mapper.memberPostToMember(memberPostDto);
         Member savedMember = memberService.createMember(member);
-        MemberResponseDto responseDto = mapper.memberToMemberResponse(savedMember);
+        SingleResponseDto responseDto = new SingleResponseDto<>(mapper.memberToMemberResponse(savedMember), HttpStatus.CREATED);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
 
     // 회원 개인정보(주소,전화번호) 수정
     @PatchMapping("/myPage")
-    public ResponseEntity<MemberResponseDto> patchProfile(@RequestBody MemberPatchDto requestBody) {
+    public ResponseEntity patchProfile(@RequestBody MemberPatchDto requestBody) {
         memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
 
         Member member = mapper.memberPatchToMember(requestBody);
         Member updatedMember = mypageService.updateProfile(member);
 
         if (updatedMember != null) {
-            MemberResponseDto responseDto = mapper.memberToMemberResponse(updatedMember);
+            SingleResponseDto responseDto = new SingleResponseDto(mapper.memberToMemberResponse(updatedMember));
             return ResponseEntity.ok(responseDto);
         } else {
             return ResponseEntity.notFound().build();
@@ -63,19 +64,19 @@ public class MemberController {
 
     //회원 비밀번호 수정
     @PatchMapping("/myPage/pw")
-    public ResponseEntity<MemberResponseDto> patchPassword(@RequestBody PasswordPatchDto requestBody) {
+    public ResponseEntity patchPassword(@RequestBody PasswordPatchDto requestBody) {
         memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
         Member member = mypageService.changePassword(requestBody);
-
-        return new ResponseEntity<>(mapper.memberToMemberResponse(member), HttpStatus.OK);
+        SingleResponseDto response = new SingleResponseDto(mapper.memberToMemberResponse(member));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // 회원 정보 조회
     @GetMapping("/myPage")
-    public ResponseEntity<MemberResponseDto> getMember() {
+    public ResponseEntity getMember() {
         Member response = memberService.findTokenMember();
-
-        return new ResponseEntity<>(mapper.memberToMemberResponse(response),HttpStatus.OK);
+        SingleResponseDto responseDto = new SingleResponseDto(mapper.memberToMemberResponse(response));
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
 
