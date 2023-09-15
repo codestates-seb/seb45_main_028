@@ -6,17 +6,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemSearchConditionDto {
-    @Positive
+    @Min(value =1 , message = "page 는 1 이상 입력되어야 합니다.")
     private int page;
-    @Positive
+    @Min(value = 1, message = "size 는 1 이상 입력되어야 합니다.")
     private int size;
     @Nullable
     private String category;

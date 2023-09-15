@@ -28,33 +28,38 @@ public class CartController {
     private final MemberService memberService;  // 회원 생성 시 권한 부여 목적.
     //    memberId를 param으로 받는 메서드는 모두 수정 필요!!
     private final CartMapper mapper;
-
+    private  final HttpStatus ok = HttpStatus.OK;
 
     @PostMapping
-    public SingleResponseDto addCart(@RequestBody @Valid CartItemDto cartItemDto){
+    public ResponseEntity addCart(@RequestBody @Valid CartItemDto cartItemDto){
 
         Cart cart = cartService.addCart(cartItemDto);
-        return new SingleResponseDto<>(mapper.cartToCartResponseDto(cart), HttpStatus.OK);
+
+        HttpStatus ok = HttpStatus.OK;
+        SingleResponseDto response = new SingleResponseDto<>(mapper.cartToCartResponseDto(cart),ok);
+        return new ResponseEntity(response, ok);
     }
 
     @PostMapping("/reduce")
-    public SingleResponseDto reduceCart(@RequestBody @Valid CartItemDto cartItemDto){
+    public ResponseEntity reduceCart(@RequestBody @Valid CartItemDto cartItemDto){
 // 전달받은 인증된 회원의 인증 토큰만 담기면,  생성된 Cart 객체에 Id와  담긴 회원 정보의 memberId만 추가해 넘겨주면 된다.
         cartItemDto.setCount(cartItemDto.getCount()*-1);
         Cart cart = cartService.addCart(cartItemDto);
 
-        return new SingleResponseDto<>(mapper.cartToCartResponseDto(cart), HttpStatus.OK);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.cartToCartResponseDto(cart),ok);
+        return new ResponseEntity(response, ok);
     }
     @GetMapping
-    public SingleResponseDto getCart(){
+    public ResponseEntity getCart(){
         Cart cart = cartService.findCartByMember();
-        return new SingleResponseDto<>(mapper.cartToCartResponseDto(cart), HttpStatus.OK);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.cartToCartResponseDto(cart),ok);
+        return new ResponseEntity(response, ok);
     }
 
     @DeleteMapping("/delete/{cartItemId}")
-    public SingleResponseDto deleteCartItem(@PathVariable("cartItemId") long cartItemId) {
+    public ResponseEntity deleteCartItem(@PathVariable("cartItemId") long cartItemId) {
         cartService.deleteCart(cartItemId);
-        return new SingleResponseDto<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping

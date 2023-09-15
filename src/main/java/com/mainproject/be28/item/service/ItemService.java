@@ -2,6 +2,7 @@ package com.mainproject.be28.item.service;
 
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
+import com.mainproject.be28.item.dto.ItemDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
@@ -57,11 +58,12 @@ public class ItemService {
         return item;
     }
 
-    public Item updateItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
+    public Item updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException {
         // todo: 관리자만 수정 권한 기능 추가 필요
-       Item findItem = findItem(item.getItemId());
+        Item newItem = mapper.itemPatchDtoToItem(requestBody);
+        Item findItem = findItem(newItem.getItemId());
         Item updatedItem =
-                beanUtils.copyNonNullProperties(item, findItem);
+                beanUtils.copyNonNullProperties(newItem, findItem);
         List<ItemImage> images = new ArrayList<>();
         //기존 상품에 이미지가 있다면 다시 등록
         if(findItem.getImages()!=null){ images = new ArrayList<>(findItem.getImages()); }
@@ -69,7 +71,7 @@ public class ItemService {
         //새로운 파일 이미지가 있다면, 새로 추가
         if (itemImgFileList != null) {
             for (MultipartFile image : itemImgFileList) {
-                ItemImage img = itemImageService.uploadImage(image, item);
+                ItemImage img = itemImageService.uploadImage(image, newItem);
                 images.add(img);
             }
             //대표 이미지 설정이 안되어있다면, 맨 첫번째 이미지 대표이미지로 설정
@@ -81,7 +83,7 @@ public class ItemService {
             updatedItem.setImages(images);
             itemImageRepository.saveAll(images);
         }
-        item.setModifiedAt(LocalDateTime.now());
+        newItem.setModifiedAt(LocalDateTime.now());
         itemRepository.save(updatedItem);
 
         return updatedItem;
