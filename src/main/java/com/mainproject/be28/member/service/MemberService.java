@@ -20,7 +20,6 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final CommentRepository commentRepository;
     private final PasswordEncoder passwordEncoder;
 
 

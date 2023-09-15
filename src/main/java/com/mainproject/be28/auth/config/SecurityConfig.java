@@ -29,6 +29,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -39,6 +40,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @Getter
+@Component
 public class SecurityConfig {
     private final JwtTokenizer jwtTokenizer;
     private final MemberAuthority memberAuthority;
