@@ -4,7 +4,6 @@ import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.cart.mapper.CartMapper;
 import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemDto;
-import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.entity.Order;
 import com.mainproject.be28.response.SingleResponseDto;
@@ -25,8 +24,6 @@ import java.util.List;
 public class CartController {
 
     private final CartService cartService;
-    private final MemberService memberService;  // 회원 생성 시 권한 부여 목적.
-    //    memberId를 param으로 받는 메서드는 모두 수정 필요!!
     private final CartMapper mapper;
     private  final HttpStatus ok = HttpStatus.OK;
 
@@ -58,13 +55,13 @@ public class CartController {
 
     @DeleteMapping("/delete/{cartItemId}")
     public ResponseEntity deleteCartItem(@PathVariable("cartItemId") long cartItemId) {
-        cartService.deleteCart(cartItemId);
+        cartService.removeItem(cartItemId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping
     public ResponseEntity deleteAll() {
-        cartService.deleteCarts();
+        cartService.removeAllItem();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }

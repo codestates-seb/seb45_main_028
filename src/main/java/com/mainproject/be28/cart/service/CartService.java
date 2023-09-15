@@ -16,7 +16,6 @@ import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.entity.Order;
 import com.mainproject.be28.order.service.OrderService;
 import com.mainproject.be28.orderItem.dto.OrderItemPostDto;
-import com.mainproject.be28.utils.CustomBeanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +31,10 @@ public class CartService {
     private final CartItemRepository cartItemRepository;
     private final CartItemService cartItemService;
     private final ItemService itemService;
-    private final CustomBeanUtils<Cart> beanUtils;
     private final OrderService orderService;
 
     public CartService(MemberService memberService, ItemService itemService, OrderService orderService, CartItemService cartItemService,
-                       CartRepository cartRepository, CartItemRepository cartItemRepository,
-                       CustomBeanUtils<Cart> beanUtils) {
+                       CartRepository cartRepository, CartItemRepository cartItemRepository) {
         this.memberService = memberService;
         this.itemService = itemService;
         this.orderService = orderService;
@@ -45,9 +42,6 @@ public class CartService {
 
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
-
-        this.beanUtils = beanUtils;
-
     }
 @Transactional
     public Cart addCart(CartItemDto cartItemDto) {
@@ -56,26 +50,25 @@ public class CartService {
 
     Item item = itemService.findItem(cartItemDto.getItemId());
     CartItem cartItem = cartItemService.findCartItem(cart, item);
+
     cartItem.addCount(cartItemDto.getCount());
     cartItem.setModifiedAt(LocalDateTime.now());
-    List<CartItem> cartItemList = new ArrayList<>();
-    cartItemList.add(cartItemRepository.save(cartItem));
-    cart.setCartItems(cartItemList);
+
+    addItemInCart(cart, cartItem);
     cartRepository.save(cart);
 
     return cart;
 }
-
     public Cart findCartByMember() {
         Member member = memberService.findTokenMember();
         return cartRepository.findCartByMember(member).orElseGet(() -> cartRepository.save(Cart.createCart(member)));
     }
 
-    public void deleteCart(long cartItemId) { // 장바구니 내 개별 상품 제거
+    public void removeItem(long cartItemId) { // 장바구니 내 개별 상품 제거
         CartItem cartItem = cartItemRepository.findByCartItemId(cartItemId);
         cartItemRepository.delete(cartItem);
     }
-    public void deleteCarts() { // 장바구니 전체 삭제
+    public void removeAllItem() { // 장바구니 전체 삭제
         Cart cart = findCartByMember();
         cartRepository.delete(cart);
     }
@@ -110,5 +103,9 @@ public class CartService {
         return orderId;
     }
 
-
+    private void addItemInCart(Cart cart, CartItem cartItem) {
+        List<CartItem> cartItemList = new ArrayList<>();
+        cartItemList.add(cartItemRepository.save(cartItem));
+        cart.setCartItems(cartItemList);
+    }
 }
