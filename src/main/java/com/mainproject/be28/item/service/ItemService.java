@@ -11,6 +11,7 @@ import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.itemImage.entity.ItemImage;
 import com.mainproject.be28.itemImage.repository.ItemImageRepository;
 import com.mainproject.be28.itemImage.service.ItemImageService;
+import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -33,16 +34,18 @@ public class ItemService {
     private final ItemImageService itemImageService;
     private  final ItemImageRepository itemImageRepository;
     private final CustomBeanUtils<Item> beanUtils;
+    private final MemberService memberService;
 
-    public ItemService(ItemRepository itemRepository, ItemMapper mapper, ItemImageService itemImageService, ItemImageRepository itemImageRepository, CustomBeanUtils<Item> beanUtils) {
+    public ItemService(ItemRepository itemRepository, ItemMapper mapper, ItemImageService itemImageService, ItemImageRepository itemImageRepository, CustomBeanUtils<Item> beanUtils, MemberService memberService) {
         this.itemRepository = itemRepository;
         this.mapper = mapper;
         this.itemImageService = itemImageService;
         this.itemImageRepository = itemImageRepository;
         this.beanUtils = beanUtils;
+        this.memberService = memberService;
     }
 
-    /* *******************퍼블릭 메서드******************* */
+    /* *******************public 메서드******************* */
     public Item createItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
         //todo: 관리자만 아이템 등록 권한 필요
         if (itemRepository.findItemByName(item.getName()) != null) {
@@ -115,10 +118,12 @@ public class ItemService {
     public void deleteItem(long itemId){
 
         Item findItem = findItem(itemId);
+        itemImageService.deleteImage(findItem);
         // todo: 관리자만 권한삭제 기능 추가 필요
         itemRepository.delete(findItem);
     }
 
+    /* *******************private 메서드******************* */
     private Double updateScore(Item item){
         if(item.getScore()==null){item.setScore(0.0);}
         List<Review> itemList = item.getReviews();
@@ -144,14 +149,4 @@ public class ItemService {
         }
         return images;
     }
-
-
-
-/*  관리자 검증 메서드
-
-    public boolean isAdmin (long tokenMemberId){
-
-        return tokenMemberId == adminId;
-}
-*/
 }
