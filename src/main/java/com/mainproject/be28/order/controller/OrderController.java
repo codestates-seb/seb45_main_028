@@ -28,20 +28,18 @@ public class OrderController {
     private final OrderMapper mapper;
 
     @PostMapping("/{memberId}")//주문생성(아이템아이디,개수)
-    public ResponseEntity<?> postOrder(@Valid @RequestBody OrderPostDto orderPostDto,
-                                       @PathVariable("memberId") long memberId) throws IOException {
-
-        Order order = new Order();
-        Order createdOrder = orderService.createOrder(order, orderPostDto, memberId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
+        Order order = mapper.orderPostDtoToOrders(orderPostDto);
+        Order createOrder = orderService.createOrder(order, orderPostDto);
+        OrderPageResponseDto response = mapper.ordersToOrderPageResponseDto(order);
+        return new ResponseEntity<>(response,HttpStatus.OK);
 
     }
 
     @GetMapping("/checkout/{order-id}")//특정 주문을 찾고, 해당 주문이 현재 사용자인지 확인
-    public ResponseEntity<?> getOrderToPay(@PathVariable("order-id") @PositiveOrZero long orderId,
-                                           @RequestParam("memberId") long memberId) { // 결제 창
+    public ResponseEntity<?> getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
         Order order = orderService.findOrder(orderId);
-        orderService.checkOrderHolder(order, memberId);
+        orderService.findOrder(orderId);
         OrderPageResponseDto response = mapper.ordersToOrderPageResponseDto(order);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -54,11 +52,10 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/{order-number}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("order-number") String orderNumber,
-                                         @RequestParam("memberId") long memberId) {
-        orderService.checkOrderHolder(orderNumber,memberId);
-        orderService.cancelOrder(orderNumber);
+    @DeleteMapping("/{order-id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable("order-id") long orderId) {
+        orderService.findOrder(orderId);
+        orderService.cancelOrder(orderId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

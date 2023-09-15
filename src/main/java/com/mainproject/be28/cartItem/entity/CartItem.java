@@ -30,6 +30,16 @@ public class CartItem extends Auditable {
         @JoinColumn(name = "ITEM_ID", nullable = false)
         private Item item;
 
+        public CartItem(long quantity, Item item) {
+                this.count = quantity;
+                this.item = item;
+        }
+
+
+        public CartItem() {
+
+        }
+
         public static CartItem createCartItem(Cart cart, Item item, long count) {
                 CartItem cartItem = new CartItem();
                 cartItem.setCart(cart);
@@ -40,5 +50,21 @@ public class CartItem extends Auditable {
 
         public void addCount(long count) {
                 this.count += count;
+        }
+
+        public String setName(String name) {
+                return item.getName();
+        }
+
+        public long setPrice(Long price) {
+                return item.getPrice();
+        }
+
+        public long getPrice() {
+                return item.getPrice();
+        }
+
+        public long getQuantity() {
+                return this.count;
         }
 }

@@ -1,6 +1,7 @@
 package com.mainproject.be28.order.entity;
 
 import com.mainproject.be28.auditable.Auditable;
+import com.mainproject.be28.cartItem.entity.CartItem;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.order.data.OrderStatus;
 import com.mainproject.be28.orderItem.entity.OrderItem;
@@ -32,7 +33,8 @@ public class Order extends Auditable {
     private String orderNumber; // 주문 번호
     private Long totalPrice; // 주문 총액
    private OrderStatus status = OrderStatus.NOT_PAID; // 주문 상태
-
+    @Transient
+    private List<CartItem> cartItemsDto = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Member_ID")
@@ -99,5 +101,7 @@ public class Order extends Auditable {
         return order;
     }
 
+   public void setTotalPrice(){
 
+   }
 }

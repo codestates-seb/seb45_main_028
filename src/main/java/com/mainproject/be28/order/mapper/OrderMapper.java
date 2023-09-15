@@ -4,10 +4,7 @@ import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
-import com.mainproject.be28.order.dto.OrderPageResponseDto;
-import com.mainproject.be28.order.dto.OrderPostDto;
-import com.mainproject.be28.order.dto.OrderRequestDto;
-import com.mainproject.be28.order.dto.OrderResponseDto;
+import com.mainproject.be28.order.dto.*;
 import com.mainproject.be28.order.entity.Order;
 
 import com.mainproject.be28.orderItem.dto.OrderItemPostDto;
@@ -27,7 +24,10 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-
+    @Mapping(source = "memberId",target = "member.memberId")
+    Order cartOrderPostDtoToOrders(CartOrderDto cartOrdertDto);
+    @Mapping(source = "memberId",target = "member.memberId")
+    Order orderPostDtoToOrders(OrderPostDto orderPostDto);
     default OrderPageResponseDto ordersToOrderPageResponseDto(Order order) {
         OrderPageResponseDto orderPageResponseDto = new OrderPageResponseDto();
         orderPageResponseDto.setOrderNumber(order.getOrderNumber());
@@ -46,7 +46,7 @@ public interface OrderMapper {
             orderResponseDto.setName(order.getMember().getName());
             orderResponseDto.setOrderNumber(order.getOrderNumber());
             orderResponseDto.setCreatedAt(order.getCreatedAt());
-            orderResponseDto.setOrderStatus(order.getStatus().getStatus());
+            orderResponseDto.setOrderStatus(order.getStatus());
             orderResponseDto.setTotalPrice(order.getTotalPrice());
 
             // 주문 상품 목록을 스트림으로 변환하고, 각 주문 상품을 OrderItemResponseDto로 변환
