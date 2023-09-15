@@ -35,7 +35,7 @@ public class MemberService {
         member.setPassword(encryptedPassword);
         member.setPhone(encryptedPhone);
         member.setAddress(encryptedAdress);
-        member.setRoles(memberAuthority.createRoles(member.getName()));
+        member.setRoles(memberAuthority.createRoles(member.getEmail()));
 //        isAdmin(member.getRoles());
         Member savedMember = memberRepository.save(member);
 
@@ -48,7 +48,7 @@ public class MemberService {
         for(String role : roles){
             if(role.equals("ADMIN")){return;}
         }
-        throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_AUTHORIZED);
+        throw new BusinessLogicException(ExceptionCode.ONLY_ADMIN_CAN);
     }
 
     // 회원이 존재하는지 검사 , 존재하면 예외
@@ -81,17 +81,18 @@ public class MemberService {
 
     public Long findTokenMemberId() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return memberRepository.findMemberByEmail(email).getMemberId();
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return member.getMemberId();
     }
     public Member findTokenMember() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return memberRepository.findMemberByEmail(email);
+        return memberRepository.findMemberByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)) ;
     }
 
     //현재 로그인한 회원정보 접근 시 회원 이메일/비밀번호 한번더 검증
     public void verifyEmailPassword(String email, String password) {
         String currentEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // 현재 로그인되어 있는 회원의 메일
-        Member member = memberRepository.findMemberByEmail(currentEmail); //현재 회원정보
+        Member member = memberRepository.findMemberByEmail(currentEmail).get(); //현재 회원정보
 
         String currentPassword = member.getPassword(); // 현재 로그인 되어있는 회원의 비밀번호
 
