@@ -3,10 +3,10 @@ CREATE TABLE MEMBER
 (
     MEMBER_ID  BIGINT primary key AUTO_INCREMENT,
     EMAIL VARCHAR (50) not null  unique,
-    PASSWORD VARCHAR (50) not null,
+    PASSWORD TEXT not null,
     NAME VARCHAR (30) not null  unique,
-    PHONE VARCHAR (30) not null  unique,
-    ADDRESS VARCHAR (50) not null,
+    PHONE VARCHAR (1000) not null  unique,
+    ADDRESS VARCHAR (1000) not null,
     REPORT_COUNT BIGINT);
 
 CREATE TABLE MEMBER_ROLES (

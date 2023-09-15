@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,14 +31,24 @@ public class MemberService {
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
         String encryptedPassword = passwordEncoder.encode(member.getPassword());
-        passwordEncoder.encode(member.getPassword());
-        passwordEncoder.encode(member.getAddress());
+        String encryptedPhone = passwordEncoder.encode(member.getPhone());
+        String encryptedAdress = passwordEncoder.encode(member.getAddress());
         member.setPassword(encryptedPassword);
+        member.setPhone(encryptedPhone);
+        member.setAddress(encryptedAdress);
         member.setRoles(memberAuthority.createRoles(member.getName()));
-
+//        isAdmin(member.getRoles());
         Member savedMember = memberRepository.save(member);
 
         return savedMember;
+    }
+
+    public boolean isAdmin(List<String> roles){
+        boolean admin = false;
+        for(String role : roles){
+            if(role.equals("ADMIN")){admin = true; break;}
+        }
+        return admin;
     }
 
     // 회원이 존재하는지 검사 , 존재하면 예외
