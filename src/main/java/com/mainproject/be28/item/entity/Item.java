@@ -6,8 +6,9 @@ import com.mainproject.be28.review.entity.Review;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter

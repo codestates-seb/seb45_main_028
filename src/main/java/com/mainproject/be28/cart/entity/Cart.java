@@ -3,7 +3,8 @@ package com.mainproject.be28.cart.entity;
 import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.cartItem.entity.CartItem;
 import com.mainproject.be28.member.entity.Member;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
