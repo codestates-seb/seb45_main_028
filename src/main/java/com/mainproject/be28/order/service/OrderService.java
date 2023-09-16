@@ -1,6 +1,7 @@
 package com.mainproject.be28.order.service;
 
 
+import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.cartItem.repository.CartItemRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
@@ -37,48 +38,45 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final OrderItemRepository orderItemRepository;
-    private final CartItemRepository cartItemRepository;
-
+    @Transactional
     //주문생성
     public Order createOrder(Order order, OrderPostDto orderPostDto)   {
         Member member = memberService.findMember(orderPostDto.getMemberId());
 
-        List<OrderItemPostDto> orderItemPostDtos = new ArrayList<>();
-        OrderItemPostDtoToOrdersItem(orderItemPostDtos,order);
+
 
         order.makeOrderNumber();
         order.setMember(member);
         order.setStatus(OrderStatus.NOT_PAID);
+
         orderRepository.save(order);
+
+        OrderItemPostDtoToOrdersItem(orderPostDto.getOrderItems(), order);
 
 
         return order;
     }
 
-
+    @Transactional
     //// ItemId 와 quantity, member로 OrdersItem를 저장
-    private void OrderItemPostDtoToOrdersItem(List<OrderItemPostDto> orderItemPostDtos, Order order) {
+    public void OrderItemPostDtoToOrdersItem(List<OrderItemPostDto> orderItemPostDtos, Order order) {
         List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
 
-        orderItemPostDtos.stream().forEach(orderItemPostDto -> { //orderItems 리스트에 추가
+        for (OrderItemPostDto orderItemPostDto : orderItemPostDtos) { // orderItems 리스트에 추가
             Item item = itemService.findItem(orderItemPostDto.getItemId());
             long quantity = orderItemPostDto.getQuantity();
 
-            OrderItem orderItem = new OrderItem(quantity, item);
+            OrderItem orderItem = new OrderItem(quantity, item); // 중복 생성을 방지하기 위해 생성자를 이용
             orderItem.addOrder(order);
-            orderItem.setName(item.getName());
             orderItem.setPrice(item.getPrice());
+            orderItem.setQuantity(quantity);
 
             orderItems.add(orderItem);
-        });
-
-        order.getOrderItems().addAll(orderItems);
+        }
 
         long totalPrice = getTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
 
-        // 저장
-        orderItemRepository.saveAll(orderItems);
     }
 
     //총합 가격
@@ -89,6 +87,7 @@ public class OrderService {
         }
         return price;
     }
+
 
     //주문아이디로 주문찾기
     public Order findOrder(long orderId) {
@@ -101,15 +100,29 @@ public class OrderService {
         Member member = memberService.findVerifiedMember(memberId);
         return orderRepository.findByMemberOrderByCreatedAtDesc(member);// creat_At을 기준으로 내림차순으로
     }
-    //주문번호 확인
+    //멤버토큰으로 주문찾기
+    public Order findOrderByMember() {
+        Member member = memberService.findTokenMember();
+        return orderRepository.findOrderByMember(member).orElseGet(()
+                -> orderRepository.save(Order.createOrder(member)));
+    }
 
-    //주문취소
+    //주문취소(상태만 바꿈)
     public void cancelOrder(long orderId) {
         Order order = findOrder(orderId);
-
-            orderRepository.delete(order);
-
+        if (order != null) {
+            order.setStatus(OrderStatus.ORDER_CANCELED);
+            orderRepository.save(order);
+        }
     }
+    //데이터배이스에서 삭제
+    public void deleteOrder(long orderId) {
+        Order order = findOrder(orderId);
+        if (order != null) {
+            orderRepository.delete(order);
+        }
+    }
+
 
 
 
