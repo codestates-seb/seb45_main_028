@@ -1,12 +1,10 @@
 package com.mainproject.be28.item.controller;
 
-import com.mainproject.be28.exception.BusinessLogicException;
-import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.item.dto.ItemDto;
+import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
-import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.response.MultiResponseDto;
 import com.mainproject.be28.response.SingleResponseDto;
@@ -37,17 +35,10 @@ public class ItemController {
     @PostMapping(value = "/new"
             , consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity postItem(@Valid @RequestPart ItemDto.Post requestBody
-                                   , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) {
+                                   , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) throws IOException{
 
-        Item itemMapper = mapper.itemPostDtoToItem(requestBody);
-        Item item;
-        try {
-            item = itemService.createItem(itemMapper, itemImgFileList);
-        } catch (BusinessLogicException e){
-            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
-        } catch (Exception e) {
-            throw new BusinessLogicException(ExceptionCode.ITEM_REGIST_ERROR);
-        }
+        Item item = itemService.createItem(requestBody, itemImgFileList);
+
         HttpStatus created = HttpStatus.CREATED;
         SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), created);
 
@@ -58,8 +49,10 @@ public class ItemController {
     public ResponseEntity patchItem(@PathVariable("item-id") @Positive long itemId,
                                         @Valid @RequestPart ItemDto.Patch requestBody, @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList)
             throws IOException {
+
         requestBody.setItemId(itemId);
-      Item item =itemService.updateItem(requestBody, itemImgFileList);
+        Item item =itemService.updateItem(requestBody, itemImgFileList);
+
         SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
         return new ResponseEntity<>(new SingleResponseDto<>(response),ok);
     }
@@ -72,6 +65,7 @@ public class ItemController {
         SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @PostMapping( "/search")
     public ResponseEntity getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
