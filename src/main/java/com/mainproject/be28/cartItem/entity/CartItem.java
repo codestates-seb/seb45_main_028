@@ -3,6 +3,7 @@ package com.mainproject.be28.cartItem.entity;
 import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.item.entity.Item;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,11 +31,11 @@ public class CartItem extends Auditable {
         @JoinColumn(name = "ITEM_ID", nullable = false)
         private Item item;
 
+
         public CartItem(long quantity, Item item) {
                 this.count = quantity;
                 this.item = item;
         }
-
 
         public CartItem() {
 
@@ -67,4 +68,6 @@ public class CartItem extends Auditable {
         public long getQuantity() {
                 return this.count;
         }
+
+
 }

@@ -71,13 +71,13 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
-    // 장바구니 상품(들) 주문
+    // 장바구니 상품 주문
     @PostMapping( "/orders")
-    public ResponseEntity postCartOrder(@Valid @RequestBody CartOrderDto cartOrdertDto){
-        Order order = Ordermapper.cartOrderPostDtoToOrders(cartOrdertDto);
-        Order createOrder = cartService.createOrder(order, cartOrdertDto);
-        OrderPageResponseDto response = Ordermapper.ordersToOrderPageResponseDto(order);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity postCartOrder(@Valid @RequestBody CartOrderDto cartOrderDto){
+        Order order = Ordermapper.cartOrderPostDtoToOrders(cartOrderDto);
+        Order createOrder = cartService.createCartOrder(order, cartOrderDto);
+        SingleResponseDto response = new SingleResponseDto<>(Ordermapper.ordersToOrderPageResponseDto(order),ok);
+        return new ResponseEntity<>(response,ok);
 
     }
 
