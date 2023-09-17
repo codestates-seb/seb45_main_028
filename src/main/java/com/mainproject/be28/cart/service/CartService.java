@@ -63,8 +63,10 @@ public class CartService {
         return cartRepository.findCartByMember(member).orElseGet(() -> cartRepository.save(Cart.createCart(member)));
     }
 
-    public void removeItem(long cartItemId) { // 장바구니 내 개별 상품 제거
-        CartItem cartItem = cartItemRepository.findByCartItemId(cartItemId);
+    public void removeItem(long itemId) { // 장바구니 내 개별 상품 제거
+        Member member = memberService.findTokenMember();
+        Cart cart = cartRepository.findCartByMember(member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
+        CartItem cartItem = cartItemRepository.findCartItemByCart_CartIdAndItem_ItemId(cart.getCartId(), itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_ITEM_NOT_FOUND));
         cartItemRepository.delete(cartItem);
     }
     public void removeAllItem() { // 장바구니 전체 삭제
