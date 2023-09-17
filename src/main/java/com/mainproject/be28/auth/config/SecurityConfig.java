@@ -49,11 +49,11 @@ public class SecurityConfig {
     private final MemberService memberService;
     private final UserDetailService userDetailService;
 
-    //@Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId = "43519252390-qotnkln7fj16ngr8orjumtm4s35hr9on.apps.googleusercontent.com";
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String clientId
 
-    //@Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret = "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";
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    private String clientSecret
 
     public SecurityConfig(JwtTokenizer jwtTokenizer,MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository, MemberService memberService, UserDetailService userDetailService) {
         this.jwtTokenizer = jwtTokenizer;
