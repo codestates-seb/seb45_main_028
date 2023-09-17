@@ -68,7 +68,7 @@ public class ItemService {
         memberService.verifiyAdmin();
         Item item = mapper.itemPostDtoToItem(requestBody);
 
-        existItemName(item);
+        verifySameItemNameExist(item);
 
         List<ItemImage> images = saveImages(itemImgFileList, item);
         item.setImages(images);
@@ -91,17 +91,16 @@ public class ItemService {
         updateImages(itemImgFileList, findItem, updatedItem);
 
         updatedItem.setModifiedAt(LocalDateTime.now());
-        itemRepository.save(updatedItem);
 
-        return updatedItem;
+        return itemRepository.save(updatedItem);
     }
 
     public void deleteItem(long itemId){
         memberService.verifiyAdmin();
 
         Item findItem = findItem(itemId);
-        itemImageService.deleteImage(findItem);
 
+        itemImageService.deleteImage(findItem);
         itemRepository.delete(findItem);
     }
 
@@ -115,7 +114,7 @@ public class ItemService {
         return images;
     }
 
-    private void existItemName(Item item) {
+    private void verifySameItemNameExist(Item item) {
         if (itemRepository.findItemByName(item.getName()) != null) {
             throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
         }
