@@ -37,6 +37,7 @@ import java.util.List;
 
     public Member(String email) {
         this.email = email;
+        this.password = getPassword();
     }
 
 

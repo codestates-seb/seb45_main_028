@@ -82,8 +82,9 @@ public class MemberController {
 
     //회원탈퇴
     @DeleteMapping("/myPage/{member-id}")
-    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId){
-        mypageService.deleteMember(memberId);
+    public ResponseEntity deleteMember(@PathVariable("member-id") Long memberId,
+                                       @RequestParam("passwordToConfirm") String passwordToConfirm){
+        mypageService.deleteMember(memberId, passwordToConfirm);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

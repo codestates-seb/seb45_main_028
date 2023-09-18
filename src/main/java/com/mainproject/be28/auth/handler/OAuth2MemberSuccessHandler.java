@@ -43,21 +43,21 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private void saveMember(String email){
         Member member = new Member();
         member.setEmail(email);
-        //member.setPassword(generateRandomPassword());
+        member.setPassword(generateRandomPassword());
         memberService.createMember(member);
     }
 
-//    private String generateRandomPassword() {
-//        int length = 10;
-//        String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-//
-//        SecureRandom random = new SecureRandom();
-//        String password = random
-//                .ints(length, 0, charset.length())
-//                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
-//                .toString();
-//        return password;
-//    }
+    private String generateRandomPassword() {
+        int length = 10;
+        String charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
+        SecureRandom random = new SecureRandom();
+        String password = random
+                .ints(length, 0, charset.length())
+                .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+                .toString();
+        return password;
+    }
 
     private void redirect(HttpServletRequest request, HttpServletResponse response, String username, List<String> authorities) throws IOException, java.io.IOException {
         String accessToken = delegateAccessToken(username, authorities);
@@ -99,8 +99,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         return UriComponentsBuilder
                 .newInstance()
                 .scheme("http")
-                .host("ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com")
-                .port(80)
+                .host("localhost:8080/login/oauth2/code/google")
+                //.port(80)
                 .path("/")
                 .queryParams(queryParams)
                 .build()

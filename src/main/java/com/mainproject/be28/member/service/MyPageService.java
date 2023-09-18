@@ -61,10 +61,15 @@ public class MyPageService {
     }
 
     //회원 탈퇴
-    public void deleteMember(Long memberId){
+    public void deleteMember(Long memberId, String passwordToConfirm){
         Member member = memberService.findVerifiedMember(memberId);
-
-        memberRepository.delete(member);
+        // 회원의 비밀번호 확인
+        if (passwordEncoder.matches(passwordToConfirm, member.getPassword())) {
+            memberRepository.delete(member);
+        } else {
+            // 비밀번호가 일치하지 않는 경우 예외 또는 처리 방법을 선택할 수 있습니다.
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 
     //작성한 리뷰 조회

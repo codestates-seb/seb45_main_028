@@ -9,6 +9,7 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,17 @@ public class MemberService {
     //회원생성
     public Member createMember(Member member) {
         verifyExistsEmail(member.getEmail());
-        String encryptedPassword = passwordEncoder.encode(member.getPassword());
-        String encryptedPhone = passwordEncoder.encode(member.getPhone());
-        String encryptedAdress = passwordEncoder.encode(member.getAddress());
+        // 비밀번호 확인 및 암호화
+        String rawPassword = member.getPassword();
+        if (rawPassword == null) {
+            throw new IllegalArgumentException("비밀번호는 null일 수 없습니다.");
+        }
+        String encryptedPassword = passwordEncoder.encode(rawPassword);
+//        String encryptedPhone = passwordEncoder.encode(member.getPhone());
+//        String encryptedAddress = passwordEncoder.encode(member.getAddress());
         member.setPassword(encryptedPassword);
-        member.setPhone(encryptedPhone);
-        member.setAddress(encryptedAdress);
+//        member.setPhone(encryptedPhone);
+//        member.setAddress(encryptedAddress);
         member.setRoles(memberAuthority.createRoles(member.getName()));
 //        isAdmin(member.getRoles());
         Member savedMember = memberRepository.save(member);
