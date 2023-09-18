@@ -2,7 +2,6 @@ package com.mainproject.be28.cart.mapper;
 
 import com.mainproject.be28.cart.dto.CartDto;
 import com.mainproject.be28.cart.entity.Cart;
-import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemResponseDto;
 import com.mainproject.be28.cartItem.entity.CartItem;
 import com.mainproject.be28.cartItem.repository.CartItemRepository;
@@ -16,12 +15,10 @@ import java.util.List;
 public class CartMapperImpl implements CartMapper{
     public final CartItemRepository cartItemRepository;
     public final MemberService memberService;
-    public final CartService cartService;
 
-    public CartMapperImpl(CartItemRepository cartItemRepository, MemberService memberService, CartService cartService) {
+    public CartMapperImpl(CartItemRepository cartItemRepository, MemberService memberService) {
         this.cartItemRepository = cartItemRepository;
         this.memberService = memberService;
-        this.cartService = cartService;
     }
 
     public CartDto.Response cartToCartResponseDto(Cart cart) {
