@@ -13,8 +13,8 @@ function Header() {
   };
 
   return (
-    <header className="bg-white py-4 fixed top-0 left-0 right-0 z-10">
-      <div className="container mx-auto flex justify-between items-center">
+    <header className="bg-white py-4 sticky top-0 left-0 right-0  z-10">
+      <div className="container mx-auto flex justify-between  items-center">
         <Link to ='/Main' >
           <img style={{ width: '70px', height: '70px', cursor: 'pointer'}} src='/img/logo.png' alt="logo"></img>
         </Link>

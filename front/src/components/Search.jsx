@@ -4,7 +4,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function Search() {
   return (
-    <div className="flex justify-end justify-items-end">
+    <div className="flex justify-end justify-items-end z-0">
       <div className="flex flex-1 items-center border-[1px] border-gray-400 border-solid rounded-3xl pl-2.5 relative ">
         <FontAwesomeIcon
           icon={faMagnifyingGlass}
