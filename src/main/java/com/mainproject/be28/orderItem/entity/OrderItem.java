@@ -45,5 +45,7 @@ public class OrderItem {
         }
     }
 
-
+    public String setName(Item item){
+        return item.getName();
+    }
 }

@@ -116,20 +116,21 @@ public class CartService {
     @Transactional
     // 장바구니 상품 주문
     public void orderCartItem(List<CartItemDto> cartItemDtos , Order order) {
-        List<OrderItem> cartOrderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
+        List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
 
         for (CartItemDto cartItemDto : cartItemDtos) { // orderItems 리스트에 추가
             Item item = itemService.findItem(cartItemDto.getItemId());
             long quantity = cartItemDto.getCount();
 
-            OrderItem orderItem = new OrderItem(); // 중복 생성을 방지하기 위해 생성자를 이용
+            OrderItem orderItem = new OrderItem();
             orderItem.addOrder(order);
             orderItem.setPrice(item.getPrice());
+            orderItem.setItem(item);
             orderItem.setQuantity(quantity);
 
-            cartOrderItems.add(orderItem);
+            orderItems.add(orderItem);
         }
-        long totalPrice = getTotalPrice(cartOrderItems);
+        long totalPrice = getTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
 
 

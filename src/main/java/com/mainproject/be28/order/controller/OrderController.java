@@ -27,35 +27,37 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper mapper;
+    private  final HttpStatus ok = HttpStatus.OK;
 
     @PostMapping("/new")//주문생성(아이템아이디,개수)
     public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
         Order order = mapper.orderPostDtoToOrders(orderPostDto);
         Order createOrder = orderService.createOrder(order, orderPostDto);
-        SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),HttpStatus.OK);
-        return new ResponseEntity(response, HttpStatus.OK);
+        SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
+        return new ResponseEntity(response, ok);
     }
 
-    @GetMapping("/checkout/{order-id}")//특정 주문을 찾고, 해당 주문이 현재 사용자인지 확인
-    public ResponseEntity<?> getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
+    @GetMapping("/checkout/{order-id}")// 결제 창
+    public ResponseEntity getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
         Order order = orderService.findOrder(orderId);
         orderService.findOrder(orderId);
-        OrderPageResponseDto response = mapper.ordersToOrderPageResponseDto(order);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
+        return new ResponseEntity(response, ok);
     }
 
     @GetMapping("/{memberId}")//현재 사용자의 주문 내역을 조회
     public ResponseEntity getOrderMember(@PathVariable("memberId") long memberId) {
         List<Order> order = orderService.getOrdersByDateToList(memberId);
-        List<OrderResponseDto> response = mapper.OrdersToOrderResponseDtos(order);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        List<OrderResponseDto> responses = mapper.OrdersToOrderResponseDtos(order);
+        SingleResponseDto response =  new SingleResponseDto<>(responses,ok);
+        return new ResponseEntity(response, ok);
     }
 
 
     @DeleteMapping("/{order-id}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("order-id") long orderId) {
+    public ResponseEntity deleteOrder(@PathVariable("order-id") long orderId) {
         orderService.cancelOrder(orderId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 
