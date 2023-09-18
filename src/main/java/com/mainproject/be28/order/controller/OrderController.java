@@ -1,11 +1,7 @@
 package com.mainproject.be28.order.controller;
 
-import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
-
-import com.mainproject.be28.order.dto.OrderPageResponseDto;
 import com.mainproject.be28.order.dto.OrderPostDto;
 import com.mainproject.be28.order.dto.OrderResponseDto;
 import com.mainproject.be28.order.entity.Order;
@@ -31,15 +27,14 @@ public class OrderController {
 
     @PostMapping("/new")//주문생성(아이템아이디,개수)
     public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
-        Order order = orderService.findOrderByMember();
-        Order createOrder = orderService.createOrder(order, orderPostDto);
+        Order order = orderService.createOrder(orderPostDto);
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
     }
 
-    @GetMapping("/checkout/{order-id}")// 결제 창
-    public ResponseEntity getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
-        Order order = orderService.findOrder(orderId);
+    @GetMapping("/checkout")// 결제 창
+    public ResponseEntity getOrderToPay() { // 결제 창
+        Order order = orderService.findOrder();
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
     }
@@ -53,12 +48,10 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/{order-id}")
-    public ResponseEntity deleteOrder(@PathVariable("order-id") long orderId) {
-        orderService.cancelOrder(orderId);
+    @DeleteMapping("/{item-id}")
+    public ResponseEntity deleteOrder(@PathVariable("item-id") long itemId) {
+        orderService.cancelOrder(itemId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-
 }
 

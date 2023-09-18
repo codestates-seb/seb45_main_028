@@ -138,7 +138,6 @@ public class CartService {
 
     }
 
-
     public long getTotalPrice(List<OrderItem> orderItems) {
         long price = 0;
         for (OrderItem orderItem : orderItems) {
