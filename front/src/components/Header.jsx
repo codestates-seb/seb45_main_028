@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
+
 function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [shopDropdownOpen, setShopDropdownOpen] = useState(false);
   const [communityDropdownOpen, setCommunityDropdownOpen] = useState(false);
 
@@ -12,19 +15,31 @@ function Header() {
     setCommunityDropdownOpen(!communityDropdownOpen);
   };
 
+  const handleLogout = () => {
+    // 클라이언트에서 JWT 토큰을 삭제합니다.
+    localStorage.removeItem('token');
+    
+    // 사용자 로그인 상태를 업데이트합니다.
+    setIsLoggedIn(false);
+    
+    // 로그아웃 후 홈페이지로 리디렉션 또는 다른 작업을 수행할 수 있습니다.
+    // 예: 홈페이지로 리디렉션
+    window.location.href = '/';
+  };
+
   return (
     <header className="bg-white py-4 fixed top-0 left-0 right-0 z-10">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to ='/Main' >
+        <Link to="/Main">
           <img style={{ width: '70px', height: '70px', cursor: 'pointer'}} src='/img/logo.png' alt="logo"></img>
         </Link>
         <nav>
           <ul className="flex space-x-32 mr-40 text-center">
-          <Link to="/About">
-            <li className="text-black cursor-pointer hover:text-red-700">
-              About
-            </li>
-          </Link>
+            <Link to="/About">
+              <li className="text-black cursor-pointer hover:text-red-700">
+                About
+              </li>
+            </Link>
             <li className="text-black relative" onMouseEnter={toggleShopDropdown} onMouseLeave={toggleShopDropdown}>
               <span className="cursor-pointer hover:text-red-700">Shop</span>
               {shopDropdownOpen && (
@@ -37,14 +52,14 @@ function Header() {
             </li>
             <li className="text-black relative" onMouseEnter={toggleCommunityDropdown} onMouseLeave={toggleCommunityDropdown}>
               <Link to="/Announcement">
-              <span className="cursor-pointer hover:text-red-700">Community</span>
+                <span className="cursor-pointer hover:text-red-700">Community</span>
               </Link>
               {communityDropdownOpen && (
                 <ul className="absolute h-50 top-full  bg-white shadow-lg py-2 text-center">
                   <Link to="/Announcement">
-                  <li className="px-2 py-4 hover:bg-gray-100 hover:text-red-700">
-                    <a>공지사항</a>
-                  </li>
+                    <li className="px-2 py-4 hover:bg-gray-100 hover:text-red-700">
+                      <a>공지사항</a>
+                    </li>
                   </Link>
                   <li className="px-2 py-4 hover:bg-gray-100 hover:text-red-700 ">
                     <a>Q&A</a>
@@ -55,13 +70,19 @@ function Header() {
                 </ul>
               )}
             </li>
-            <li className="text-black cursor-pointer hover:text-red-700">MyPage</li>
+            <li className="text-black cursor-pointer hover:text-red-700">
+            
+            </li>
             <li className="text-black cursor-pointer hover:text-red-700">Cart</li>
             <li className="text-black cursor-pointer hover:text-red-700">Order</li>
           </ul>
         </nav>
-        <h1 className="text-black cursor-pointer hover:text-red-700">Login</h1>
-        <h1 className="text-black cursor-pointer hover:text-red-700">Logout</h1>
+        
+        <h1 className="text-black cursor-pointer hover:text-red-700">MyPage</h1>
+
+        
+        <h1 className="text-black cursor-pointer hover:text-red-700" onClick={handleLogout}>Logout</h1>
+        
       </div>
     </header>
   );

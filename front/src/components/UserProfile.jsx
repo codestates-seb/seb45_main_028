@@ -11,23 +11,17 @@ function UserProfile() {
           className="w-24 h-24 rounded-full mx-auto mb-4"
         />
         <h2 className="text-3xl font-semibold">John Doe</h2>
-        <p className="text-gray-600">123 Main St</p>
       </div>
-      <div className="mt-8 space-x-4 text-center">
+        
+        
         <Link
-          to="/view-profile"
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full font-semibold transition duration-300"
-        >
-          회원 정보 조회
-        </Link>
-        <Link
-          to="/edit-profile"
-          className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-full font-semibold transition duration-300"
+          to="/EditProfile"
+          className="bg-black hover:bg-pink-600 text-white py-2 px-4 rounded-full font-semibold transition duration-300"
         >
           프로필 수정
         </Link>
       </div>
-    </div>
+    
   );
 }
 

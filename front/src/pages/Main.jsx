@@ -2,6 +2,7 @@ import React, { useState }  from 'react';
 import MainPageImg from '../components/MainPageImg'
 import Modal from 'react-modal';
 import Header from '../components/Header';
+import Footer from '../components/Footer'
 
 
 const customStyles = {
@@ -102,6 +103,7 @@ function Main() {
                     <img className="w-72 h-96 rounded-lg cursor-pointer" src="/img/main_collabo_2.png" alt="main img 1-2" />   
                     <img className="w-72 h-96 rounded-lg cursor-pointer" src="/img/main_collabo_3.jpg" alt="main img 1-3" />   
                 </div>
+                <Footer/>
         </div>
         
     </main>

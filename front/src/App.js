@@ -1,4 +1,3 @@
-
 import QuestionList from "./pages/QuestionList";
 import "./css/input.css";
 import ReviewList from "./pages/ReviewList";
@@ -21,6 +20,7 @@ import Main from './pages/Main';
 import About from './pages/About';
 import Announcement from './pages/Announcement';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import EditProfile from "./components/EditProfile";
 
 
 const App = () => {
@@ -34,8 +34,14 @@ const App = () => {
           <Route path="/Main" element={<Main />} />
           <Route path="/About" element={<About />} />
           <Route path="/Announcement" element={<Announcement />} />
+          <Route path="/UserProfile" element={<UserProfile />} />
+          <Route path="/EditProfile" element={<EditProfile/>} />
+          <Route path="/ProductList" element={<ProductList/>} />
+          <Route path="/QuestionWrite" element={<QuestionWrite />} />
+          
+
         </Routes>
-        <Footer/>
+        
       </div>
     </Router>
   );
