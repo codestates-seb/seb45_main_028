@@ -97,7 +97,7 @@ public class CartService {
     }
 
     @Transactional
-    public Order createCartOrder(Order order, CartOrderDto cartOrderDto) {
+    public Order createCartOrder( Order order,CartOrderDto cartOrderDto) {
         Member member = memberService.findMember(cartOrderDto.getMemberId());
 
         order.setStatus(OrderStatus.NOT_PAID); // 주문 상태
@@ -152,5 +152,6 @@ public class CartService {
         cartItemList.add(cartItemRepository.save(cartItem));
         cart.setCartItems(cartItemList);
     }
+
 
 }

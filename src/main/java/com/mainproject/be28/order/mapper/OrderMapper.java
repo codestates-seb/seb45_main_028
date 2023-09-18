@@ -40,7 +40,7 @@ public interface OrderMapper {
         // 주문 목록을 스트림으로 변환하고, 각 주문을 OrderResponseDto로 변환하는 람다 표현식을 사용하여 매핑
         List<OrderResponseDto> orderResponseDtos = orders.stream().map(order -> {
             OrderResponseDto orderResponseDto = new OrderResponseDto();
-            orderResponseDto.setName(order.getMember().getName());
+            orderResponseDto.setMemberName(order.getMember().getName());
             orderResponseDto.setOrderNumber(order.getOrderNumber());
             orderResponseDto.setCreatedAt(order.getCreatedAt());
             orderResponseDto.setOrderStatus(order.getStatus());
@@ -50,7 +50,7 @@ public interface OrderMapper {
             List<OrderItem> orderItems = order.getOrderItems();
             List<OrderItemResponseDto> orderItemResponseList = orderItems.stream().map(orderItem -> {
                 OrderItemResponseDto orderItemResponseDto = new OrderItemResponseDto();
-                orderItemResponseDto.setName(orderItem.getItem().getName());
+                orderItemResponseDto.setItemName(orderItem.getItem().getName());
                 orderItemResponseDto.setPrice(orderItem.getItem().getPrice());
                 orderItemResponseDto.setQuantity(orderItem.getQuantity());
                 return orderItemResponseDto;

@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderResponseDto { //주문 목록 조회시 필요
-    private String name;
+    private String memberName;
     private String orderNumber;
     private LocalDateTime createdAt;
     private OrderStatus orderStatus;
