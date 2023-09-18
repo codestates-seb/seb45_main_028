@@ -24,10 +24,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
-    @Mapping(source = "memberId",target = "member.memberId")
-    Order cartOrderPostDtoToOrders(CartOrderDto cartOrderDto);
-    @Mapping(source = "memberId",target = "member.memberId")
-    Order orderPostDtoToOrders(OrderPostDto orderPostDto);
+
     default OrderPageResponseDto ordersToOrderPageResponseDto(Order order) {
         OrderPageResponseDto orderPageResponseDto = new OrderPageResponseDto();
         orderPageResponseDto.setOrderNumber(order.getOrderNumber());

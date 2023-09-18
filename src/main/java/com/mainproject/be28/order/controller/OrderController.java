@@ -31,7 +31,7 @@ public class OrderController {
 
     @PostMapping("/new")//주문생성(아이템아이디,개수)
     public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
-        Order order = mapper.orderPostDtoToOrders(orderPostDto);
+        Order order = orderService.findOrderByMember();
         Order createOrder = orderService.createOrder(order, orderPostDto);
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
@@ -40,14 +40,13 @@ public class OrderController {
     @GetMapping("/checkout/{order-id}")// 결제 창
     public ResponseEntity getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
         Order order = orderService.findOrder(orderId);
-        orderService.findOrder(orderId);
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
     }
 
-    @GetMapping("/{memberId}")//현재 사용자의 주문 내역을 조회
-    public ResponseEntity getOrderMember(@PathVariable("memberId") long memberId) {
-        List<Order> order = orderService.getOrdersByDateToList(memberId);
+    @GetMapping()//현재 사용자의 주문 내역을 조회
+    public ResponseEntity getOrderMember() {
+        List<Order> order = orderService.getOrdersByDateToList();
         List<OrderResponseDto> responses = mapper.OrdersToOrderResponseDtos(order);
         SingleResponseDto response =  new SingleResponseDto<>(responses,ok);
         return new ResponseEntity(response, ok);

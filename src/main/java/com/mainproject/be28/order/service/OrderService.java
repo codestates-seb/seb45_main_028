@@ -38,12 +38,10 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final OrderItemRepository orderItemRepository;
-    @Transactional
+
     //주문생성
     public Order createOrder(Order order, OrderPostDto orderPostDto)   {
-        Member member = memberService.findMember(orderPostDto.getMemberId());
-
-
+        Member member = memberService.findTokenMember();
 
         order.makeOrderNumber();
         order.setMember(member);
@@ -57,8 +55,6 @@ public class OrderService {
         return order;
     }
 
-    @Transactional
-    //// ItemId 와 quantity, member로 OrdersItem를 저장
     public void OrderItemPostDtoToOrdersItem(List<OrderItemPostDto> orderItemPostDtos, Order order) {
         List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
 
@@ -96,8 +92,8 @@ public class OrderService {
     }
 
     //주문내역 확인
-    public List<Order> getOrdersByDateToList(long memberId) {
-        Member member = memberService.findVerifiedMember(memberId);
+    public List<Order> getOrdersByDateToList() {
+        Member member = memberService.findTokenMember();
         return orderRepository.findByMemberOrderByCreatedAtDesc(member);// creat_At을 기준으로 내림차순으로
     }
     //멤버토큰으로 주문찾기
