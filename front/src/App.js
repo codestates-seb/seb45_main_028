@@ -10,7 +10,7 @@ import './App.css';
 import '../src/css/input.css';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
-//import ShoppingCart from './pages/ShoppingCart';
+import ShoppingCart from './pages/ShoppingCart';
 import OAuth from './components/OAuth'
 import UserProfile from './components/UserProfile';
 import ViewProfile from './components/ViewProfile';
@@ -23,11 +23,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import EditProfile from "./components/EditProfile";
 
 
+
 const App = () => {
   return (
     <Router>
       <div>
-        
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/SignUp" element={<SignUp />} />
@@ -38,10 +38,7 @@ const App = () => {
           <Route path="/EditProfile" element={<EditProfile/>} />
           <Route path="/ProductList" element={<ProductList/>} />
           <Route path="/QuestionWrite" element={<QuestionWrite />} />
-          
-
         </Routes>
-        
       </div>
     </Router>
   );

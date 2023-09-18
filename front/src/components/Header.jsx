@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { NavLink ,Link } from 'react-router-dom';
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,6 +14,7 @@ function Header() {
     setCommunityDropdownOpen(!communityDropdownOpen);
   };
 
+
   const handleLogout = () => {
     // 클라이언트에서 JWT 토큰을 삭제합니다.
     localStorage.removeItem('token');
@@ -27,6 +27,7 @@ function Header() {
     window.location.href = '/';
   };
 
+
   return (
     <header className="bg-white py-4 fixed top-0 left-0 right-0 z-10">
       <div className="container mx-auto flex justify-between items-center">
@@ -35,54 +36,69 @@ function Header() {
         </Link>
         <nav>
           <ul className="flex space-x-32 mr-40 text-center">
-            <Link to="/About">
-              <li className="text-black cursor-pointer hover:text-red-700">
-                About
-              </li>
-            </Link>
-            <li className="text-black relative" onMouseEnter={toggleShopDropdown} onMouseLeave={toggleShopDropdown}>
-              <span className="cursor-pointer hover:text-red-700">Shop</span>
+          <NavLink
+            className={({ isActive}) =>
+                isActive ? 'text-orange-400 cursor-pointer' : 'text-black cursor-pointer hover:text-orange-400'
+          }  to="/About">  
+              About
+          </NavLink>
+          <NavLink
+            className={({ isActive}) =>
+                isActive ? 'text-orange-400 cursor-pointer' : 'text-black cursor-pointer hover:text-orange-400'
+          } onMouseEnter={toggleShopDropdown} onMouseLeave={toggleShopDropdown} to="/ProductList"> 
               {shopDropdownOpen && (
-                <ul className="absolute h-50 top-full bg-white shadow-lg py-2">
-                  <li className="px-4 py-5 hover:bg-gray-100 hover:text-red-700">
+                <ul className="absolute h-50 bg-white shadow-lg py-2">
+                  <li className="px-4 py-5 hover:bg-gray-100 hover:text-orange-400">
                     <a href="#">Best</a>
                   </li>
                 </ul>
               )}
+            </NavLink>
+            <NavLink
+            className={({ isActive}) =>
+                isActive ? 'text-orange-400 cursor-pointer' : 'text-black cursor-pointer hover:text-orange-400'
+          } onMouseEnter={toggleCommunityDropdown} onMouseLeave={toggleCommunityDropdown} to="/Announcement"> 
+              Community
+            {/* <li className="text-black relative" onMouseEnter={toggleCommunityDropdown} onMouseLeave={toggleCommunityDropdown}> */}
+              {/* <Link to="/Announcement">
+              <span className="cursor-pointer hover:text-orange-400">Community</span>
+              </Link> */}
             </li>
             <li className="text-black relative" onMouseEnter={toggleCommunityDropdown} onMouseLeave={toggleCommunityDropdown}>
               <Link to="/Announcement">
                 <span className="cursor-pointer hover:text-red-700">Community</span>
               </Link>
               {communityDropdownOpen && (
-                <ul className="absolute h-50 top-full  bg-white shadow-lg py-2 text-center">
+                <ul className="absolute h-50  bg-white shadow-lg py-2 text-center">
                   <Link to="/Announcement">
-                    <li className="px-2 py-4 hover:bg-gray-100 hover:text-red-700">
-                      <a>공지사항</a>
-                    </li>
+                  <li className="px-2 py-4">
+                    <a>공지사항</a>
+                  </li>
                   </Link>
-                  <li className="px-2 py-4 hover:bg-gray-100 hover:text-red-700 ">
+                  <Link to="/QuestionList">
+                  <li className="px-2 py-4">
                     <a>Q&A</a>
                   </li>
-                  <li className="px-2 py-4 hover:bg-gray-100 hover:text-red-700">
+                  </Link>
+                  <Link to="/QuestionWrite">
+                  <li className="px-2 py-4">
                     <a>1:1문의</a>
                   </li>
+                  </Link>
                 </ul>
               )}
-            </li>
-            <li className="text-black cursor-pointer hover:text-red-700">
-            
-            </li>
-            <li className="text-black cursor-pointer hover:text-red-700">Cart</li>
-            <li className="text-black cursor-pointer hover:text-red-700">Order</li>
+            </NavLink>
+            <NavLink
+            className={({ isActive}) =>
+                isActive ? 'text-orange-400 cursor-pointer' : 'text-black cursor-pointer hover:text-orange-400'
+          }  to="/ShoppingCart">  
+              Cart
+            </NavLink>
+            <li className="text-black cursor-pointer hover:text-orange-400">Order</li>
           </ul>
         </nav>
-        
-        <h1 className="text-black cursor-pointer hover:text-red-700">MyPage</h1>
-
-        
+        <h1 className="text-black cursor-pointer hover:text-red-700">MyPage</h1>        
         <h1 className="text-black cursor-pointer hover:text-red-700" onClick={handleLogout}>Logout</h1>
-        
       </div>
     </header>
   );
