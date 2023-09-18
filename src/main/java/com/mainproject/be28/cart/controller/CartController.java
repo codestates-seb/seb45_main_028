@@ -5,10 +5,9 @@ import com.mainproject.be28.cart.mapper.CartMapper;
 import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemDto;
 import com.mainproject.be28.order.dto.CartOrderDto;
-import com.mainproject.be28.order.dto.OrderPageResponseDto;
-import com.mainproject.be28.order.dto.OrderPostDto;
 import com.mainproject.be28.order.entity.Order;
 import com.mainproject.be28.order.mapper.OrderMapper;
+import com.mainproject.be28.order.service.OrderService;
 import com.mainproject.be28.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,9 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
@@ -29,6 +25,7 @@ public class CartController {
 
     private final CartService cartService;
     private final CartMapper mapper;
+    private final OrderService orderService;
     private final OrderMapper Ordermapper;
     private  final HttpStatus ok = HttpStatus.OK;
 
@@ -75,8 +72,8 @@ public class CartController {
     // 장바구니 상품 주문
     @PostMapping( "/orders")
     public ResponseEntity postCartOrder(@Valid @RequestBody CartOrderDto cartOrderDto){
-        Order order = cartService.findOrderByMember();
-        Order createOrder = cartService.createCartOrder(order, cartOrderDto);
+        Order order = orderService.findOrderByMember();
+        cartService.createCartOrder(order, cartOrderDto);
         SingleResponseDto response = new SingleResponseDto<>(Ordermapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity<>(response,ok);
 

@@ -93,8 +93,7 @@ public class CartService {
     public Cart findCartByMemberId(Long memberId) {
         // memberId를 사용하여 회원 정보를 찾음
         Member member = memberService.findMember(memberId);
-        return cartRepository.findCartByMember(member)
-                .orElse(null);
+        return cartRepository.findCartByMember(member).orElse(null);
     }
 
     @Transactional
@@ -136,7 +135,6 @@ public class CartService {
         }
         long totalPrice = getTotalPrice(orderItems);
         order.setTotalPrice(totalPrice);
-
 
     }
 
