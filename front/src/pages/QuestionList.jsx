@@ -9,9 +9,12 @@ const QuestionList = () => {
   const [isQuestionList, setQuestionList] = useState([]);
   
 
-  const getQuestionlist = () => {
-    return axios.get(
-        "http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/complain/?page=1&size=10" )
+
+  const getQuestionList = () => {
+    return axios
+      .get(
+        "http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/complain/?page=1&size=10"
+      )
       .then((res) => {
         console.log(res);
         setQuestionList(res.data);
@@ -20,11 +23,11 @@ const QuestionList = () => {
   };
 
   const moveToWrite = () => {
-    navigate("/questionwrite");
+    navigate("/QuestionWrite");
   };
 
   useEffect(() => {
-    getQuestionlist();
+    getQuestionList();
   }, []);
 
   return (

@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NavLink ,Link } from 'react-router-dom';
 import MainPageImg from '../components/MainPageImg';
 import Modal from 'react-modal';
 import Header from '../components/Header';
+import Footer from '../components/Footer';
 import MainProduct from '../components/MainProduct';
 
 
@@ -99,8 +101,10 @@ function Main() {
       </div>
       <div className="flex flex-col justify-center mt-20 mb-20">
         <MainProduct />
+        <Footer/>
       </div>
     </main>
+
   );
 }
 
