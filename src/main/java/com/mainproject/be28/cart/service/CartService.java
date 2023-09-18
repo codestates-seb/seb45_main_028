@@ -20,9 +20,6 @@ import com.mainproject.be28.order.service.OrderService;
 
 import com.mainproject.be28.orderItem.entity.OrderItem;
 import com.mainproject.be28.orderItem.repository.OrderItemRepository;
-import com.mainproject.be28.utils.CustomBeanUtils;
-
-import com.mainproject.be28.orderItem.dto.OrderItemPostDto;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,8 +42,7 @@ public class CartService {
 
     public CartService(MemberService memberService, ItemService itemService, OrderService orderService, CartItemService cartItemService,
 
-                       CartRepository cartRepository, CartItemRepository cartItemRepository,
-                       CustomBeanUtils<Cart> beanUtils, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
+                       CartRepository cartRepository, CartItemRepository cartItemRepository,OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
 
         this.memberService = memberService;
         this.itemService = itemService;
@@ -56,8 +52,6 @@ public class CartService {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
 
-
-        this.beanUtils = beanUtils;
 
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
