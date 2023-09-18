@@ -21,8 +21,9 @@ public class CommentService {
     public Comment updateComment(Long id, Comment updatedComment) {
         Comment existingComment = commentRepository.findById(id).orElse(null);
         if (existingComment != null) {
-            existingComment.setContent(updatedComment.getContent());
-            existingComment.setLikeCount(updatedComment.getLikeCount());
+            if (updatedComment.getContent() != null) {
+                existingComment.setContent(updatedComment.getContent());
+            }
             return commentRepository.save(existingComment);
         }
         return null;

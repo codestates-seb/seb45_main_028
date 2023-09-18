@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReviewPostDto {
     private Long itemId;
-    private Long memberId;
     private String content;
     private int score;
 }

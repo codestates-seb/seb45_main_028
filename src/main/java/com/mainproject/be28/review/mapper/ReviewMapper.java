@@ -14,9 +14,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
-    @Mapping(source = "itemId", target = "item.itemId") //itemId 필드 값을 가져와서, Complain 객체의 item 필드의 itemId로 매핑
-    @Mapping(source = "memberId", target = "member.memberId")
-    Review ReviewPostDtoToReview(ReviewPostDto reviewPostDTO);
 
     Review reviewPatchDtoToReview(ReviewPatchDto reviewPatchDto);
     @Mapping(source = "item.name", target ="itemName")

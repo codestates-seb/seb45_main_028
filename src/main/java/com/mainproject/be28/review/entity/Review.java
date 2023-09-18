@@ -3,6 +3,7 @@ package com.mainproject.be28.review.entity;
 import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
+import com.mainproject.be28.order.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,5 +44,13 @@ public class Review extends Auditable {
 
     @Column()
     private int Score;
+
+    //
+    public static Review createReview(Member member) {
+        Review review = new Review();
+        review.setMember(member);
+
+        return review;
+    }
 
 }

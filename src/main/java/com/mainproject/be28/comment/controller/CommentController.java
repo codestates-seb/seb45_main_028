@@ -27,4 +27,15 @@ public class CommentController {
     public Optional<Comment> getCommentById(@PathVariable("commentId") Long commentId){
         return Optional.ofNullable(commentService.getCommentById(commentId));
     }
+
+    @PatchMapping("/{commentId}")
+    public Comment updateComment(@PathVariable Long commentId, @RequestBody CommentDto commentDto) {
+        Comment comment = mapper.commentDtoToComment(commentDto);
+        return commentService.updateComment(commentId, comment);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public void deleteComment(@PathVariable Long commentId) {
+        commentService.deleteComment(commentId);
+    }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 public interface ComplainMapper {
     //ComplainPostDto 객체를 Complain 엔티티로 변환
     @Mapping(source = "itemId", target = "item.itemId") //itemId 필드 값을 가져와서, Complain 객체의 item 필드의 itemId로 매핑
-    @Mapping(source = "memberId", target = "member.memberId")
     Complain complainPostDtoToComplain(ComplainPostDto complainPostDto);
 
    // Complain 엔티티를 ComplainResponseDto 객체로 변환할 때 필요한 매핑 정보를 제공

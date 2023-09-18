@@ -74,7 +74,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
 
     private OrderSpecifier<?> sortCondition(ItemSearchConditionDto search) {
-        Order direction = search.getOrder()!=null&&search.getOrder().equals("asc") ? Order.ASC : Order.DESC;
+        Order direction = search.getOrder()!=null&& search.getOrder().equalsIgnoreCase("asc") ? Order.ASC : Order.DESC;
         if (search.getSort()!=null) {
                 switch (search.getSort()){
                     case "name": return new OrderSpecifier<>(direction,item.name);

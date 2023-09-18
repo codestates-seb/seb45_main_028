@@ -13,8 +13,6 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor
 public class ComplainPostDto {
         @Positive
-        private Long memberId;
-        @Positive
         private Long ItemId;
 
         @NotBlank(message = "문의제목을 적어주세요")

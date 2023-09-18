@@ -19,7 +19,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UploadS3 {
+public class S3Service {
 
     private final AmazonS3Client amazonS3Client;
 
@@ -61,5 +61,22 @@ public class UploadS3 {
 
         return Optional.empty();
 
+    }
+    public String deleteFile(String keyName) {
+
+        String result = "success";
+
+        try {
+            boolean isObjectExist = amazonS3Client.doesObjectExist(bucket, keyName);
+            if (isObjectExist) {
+                amazonS3Client.deleteObject(bucket, keyName);
+            } else {
+                result = "file not found";
+            }
+        } catch (Exception e) {
+            log.debug("Delete File failed", e);
+        }
+
+        return result;
     }
 }
