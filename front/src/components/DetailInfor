@@ -1,0 +1,14 @@
+import React from 'react';
+
+function DetailInfor() {
+    return (
+        <div>
+            <div>
+                
+            </div>
+            
+        </div>
+    );
+}
+
+export default DetailInfor;
