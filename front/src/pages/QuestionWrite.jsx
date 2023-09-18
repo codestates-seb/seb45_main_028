@@ -94,10 +94,10 @@ const QuestionWrite = () => {
         </div>
         <div className="flex justify-evenly pb-16">
           <button
-            className="border border-solid border-gray-300 rounded-3xl p-2 text-[15px] hover:bg-gray-200"
+            className="border border-solid border-gray-400 rounded-3xl p-2 text-[15px] hover:bg-gray-200"
             onClick={saveQuestion}
           >
-            작성완료
+            작성완료..
           </button>
           <button
             className="border border-solid border-gray-300 rounded-3xl p-2 text-[15px] hover:bg-gray-200"
