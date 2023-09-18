@@ -4,7 +4,6 @@ import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.cart.mapper.CartMapper;
 import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemDto;
-import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.dto.OrderPageResponseDto;
 import com.mainproject.be28.order.dto.OrderPostDto;
@@ -59,9 +58,11 @@ public class CartController {
         return new ResponseEntity(response, ok);
     }
 
-    @DeleteMapping("/delete/{cartItemId}")
-    public ResponseEntity deleteCartItem(@PathVariable("cartItemId") long cartItemId) {
-        cartService.removeItem(cartItemId);
+
+    @DeleteMapping("/delete/{itemId}")
+    public ResponseEntity deleteCartItem(@PathVariable("itemId") long itemId) {
+        cartService.removeItem(itemId);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
