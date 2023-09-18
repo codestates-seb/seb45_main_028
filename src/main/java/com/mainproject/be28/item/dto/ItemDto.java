@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -40,13 +41,21 @@ public class ItemDto {
     @Setter
     @NoArgsConstructor
     public static class Patch{
+        @NotNull
         private Long itemId;
+        @Nullable
         private String name;
+        @Nullable
         private Long price;
+        @Nullable
         private String detail;
+        @Nullable
         private String status;
+        @Nullable
         private String color;
+        @Nullable
         private String brand;
+        @Nullable
         private String category;
     }
 
