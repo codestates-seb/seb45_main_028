@@ -1,5 +1,6 @@
 package com.mainproject.be28.order.repository;
 
+import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.order.data.OrderStatus;
 import com.mainproject.be28.order.entity.Order;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Optional<Order> findByOrderNumber(String orderNumber);
+    Optional<Order> findOrderByMember(Member member);
 
     List<Order> findByMemberOrderByCreatedAtDesc(Member member);
 }

@@ -2,6 +2,7 @@ package com.mainproject.be28.cart.entity;
 
 import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.cartItem.entity.CartItem;
+import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,4 +36,5 @@ public class Cart extends Auditable  {
 
         return cart;
     }
+
 }

@@ -11,6 +11,7 @@ import com.mainproject.be28.order.dto.OrderResponseDto;
 import com.mainproject.be28.order.entity.Order;
 import com.mainproject.be28.order.mapper.OrderMapper;
 import com.mainproject.be28.order.service.OrderService;
+import com.mainproject.be28.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,40 +27,37 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper mapper;
+    private  final HttpStatus ok = HttpStatus.OK;
 
-    @PostMapping("/{memberId}")//주문생성(아이템아이디,개수)
-    public ResponseEntity<?> postOrder(@Valid @RequestBody OrderPostDto orderPostDto,
-                                       @PathVariable("memberId") long memberId) throws IOException {
-
-        Order order = new Order();
-        Order createdOrder = orderService.createOrder(order, orderPostDto, memberId);
-        return new ResponseEntity<>(HttpStatus.OK);
-
+    @PostMapping("/new")//주문생성(아이템아이디,개수)
+    public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
+        Order order = mapper.orderPostDtoToOrders(orderPostDto);
+        Order createOrder = orderService.createOrder(order, orderPostDto);
+        SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
+        return new ResponseEntity(response, ok);
     }
 
-    @GetMapping("/checkout/{order-id}")//특정 주문을 찾고, 해당 주문이 현재 사용자인지 확인
-    public ResponseEntity<?> getOrderToPay(@PathVariable("order-id") @PositiveOrZero long orderId,
-                                           @RequestParam("memberId") long memberId) { // 결제 창
+    @GetMapping("/checkout/{order-id}")// 결제 창
+    public ResponseEntity getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
         Order order = orderService.findOrder(orderId);
-        orderService.checkOrderHolder(order, memberId);
-        OrderPageResponseDto response = mapper.ordersToOrderPageResponseDto(order);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        orderService.findOrder(orderId);
+        SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
+        return new ResponseEntity(response, ok);
     }
 
     @GetMapping("/{memberId}")//현재 사용자의 주문 내역을 조회
-    public ResponseEntity<?> getOrderMember(@PathVariable("memberId") long memberId) {
+    public ResponseEntity getOrderMember(@PathVariable("memberId") long memberId) {
         List<Order> order = orderService.getOrdersByDateToList(memberId);
-        List<OrderResponseDto> response = mapper.OrdersToOrderResponseDtos(order);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        List<OrderResponseDto> responses = mapper.OrdersToOrderResponseDtos(order);
+        SingleResponseDto response =  new SingleResponseDto<>(responses,ok);
+        return new ResponseEntity(response, ok);
     }
 
 
-    @DeleteMapping("/{order-number}")
-    public ResponseEntity<?> deleteOrder(@PathVariable("order-number") String orderNumber,
-                                         @RequestParam("memberId") long memberId) {
-        orderService.checkOrderHolder(orderNumber,memberId);
-        orderService.cancelOrder(orderNumber);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/{order-id}")
+    public ResponseEntity deleteOrder(@PathVariable("order-id") long orderId) {
+        orderService.cancelOrder(orderId);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 

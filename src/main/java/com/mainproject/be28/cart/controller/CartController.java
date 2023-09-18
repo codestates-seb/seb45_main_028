@@ -5,7 +5,10 @@ import com.mainproject.be28.cart.mapper.CartMapper;
 import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemDto;
 import com.mainproject.be28.order.dto.CartOrderDto;
+import com.mainproject.be28.order.dto.OrderPageResponseDto;
+import com.mainproject.be28.order.dto.OrderPostDto;
 import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.order.mapper.OrderMapper;
 import com.mainproject.be28.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,6 +29,7 @@ public class CartController {
 
     private final CartService cartService;
     private final CartMapper mapper;
+    private final OrderMapper Ordermapper;
     private  final HttpStatus ok = HttpStatus.OK;
 
     @PostMapping
@@ -53,9 +58,11 @@ public class CartController {
         return new ResponseEntity(response, ok);
     }
 
+
     @DeleteMapping("/delete/{itemId}")
     public ResponseEntity deleteCartItem(@PathVariable("itemId") long itemId) {
         cartService.removeItem(itemId);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -65,19 +72,14 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
-    // 장바구니 상품(들) 주문
-    @PostMapping(value = "/orders/{memberId}")
-    @ResponseBody
-    public ResponseEntity orders(@RequestBody CartOrderDto cartOrderDto, @PathVariable("memberId") @Positive Long memberId ) {
+    // 장바구니 상품 주문
+    @PostMapping( "/orders")
+    public ResponseEntity postCartOrder(@Valid @RequestBody CartOrderDto cartOrderDto){
+        Order order = Ordermapper.cartOrderPostDtoToOrders(cartOrderDto);
+        Order createOrder = cartService.createCartOrder(order, cartOrderDto);
+        SingleResponseDto response = new SingleResponseDto<>(Ordermapper.ordersToOrderPageResponseDto(order),ok);
+        return new ResponseEntity<>(response,ok);
 
-    List<CartOrderDto> orderDtoList = cartOrderDto.getCartOrderItemList();
-
-        if (orderDtoList == null || orderDtoList.size() == 0) {
-            return new ResponseEntity<String>("주문할 상품을 선택해주세요.", HttpStatus.BAD_REQUEST);
-        }
-        Order order = new Order();
-        Long orderId = cartService.orderCartItem(order,orderDtoList, memberId);
-        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
 }

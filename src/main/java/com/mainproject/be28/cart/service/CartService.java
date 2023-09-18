@@ -12,17 +12,24 @@ import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
+import com.mainproject.be28.order.data.OrderStatus;
 import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.order.repository.OrderRepository;
 import com.mainproject.be28.order.service.OrderService;
+
+import com.mainproject.be28.orderItem.entity.OrderItem;
+import com.mainproject.be28.orderItem.repository.OrderItemRepository;
+import com.mainproject.be28.utils.CustomBeanUtils;
+
 import com.mainproject.be28.orderItem.dto.OrderItemPostDto;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service @Slf4j
 public class CartService {
@@ -32,9 +39,15 @@ public class CartService {
     private final CartItemService cartItemService;
     private final ItemService itemService;
     private final OrderService orderService;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+
 
     public CartService(MemberService memberService, ItemService itemService, OrderService orderService, CartItemService cartItemService,
-                       CartRepository cartRepository, CartItemRepository cartItemRepository) {
+
+                       CartRepository cartRepository, CartItemRepository cartItemRepository,
+                       CustomBeanUtils<Cart> beanUtils, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
+
         this.memberService = memberService;
         this.itemService = itemService;
         this.orderService = orderService;
@@ -42,6 +55,13 @@ public class CartService {
 
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
+
+
+        this.beanUtils = beanUtils;
+
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
+
     }
 @Transactional
     public Cart addCart(CartItemDto cartItemDto) {
@@ -63,45 +83,76 @@ public class CartService {
         return cartRepository.findCartByMember(member).orElseGet(() -> cartRepository.save(Cart.createCart(member)));
     }
 
+
+
     public void removeItem(long itemId) { // 장바구니 내 개별 상품 제거
         Member member = memberService.findTokenMember();
         Cart cart = cartRepository.findCartByMember(member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
         CartItem cartItem = cartItemRepository.findCartItemByCart_CartIdAndItem_ItemId(cart.getCartId(), itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_ITEM_NOT_FOUND));
+
         cartItemRepository.delete(cartItem);
     }
     public void removeAllItem() { // 장바구니 전체 삭제
         Cart cart = findCartByMember();
         cartRepository.delete(cart);
     }
+    public Cart findCartByMemberId(Long memberId) {
+        // memberId를 사용하여 회원 정보를 찾음
+        Member member = memberService.findMember(memberId);
+        return cartRepository.findCartByMember(member)
+                .orElse(null);
+    }
 
-    // 장바구니 상품(들) 주문
-    public Long orderCartItem(Order order, List<CartOrderDto> cartOrderDtoList, Long memberId) {
-        List<OrderItemPostDto> orderDtoList = new ArrayList<>();
+    @Transactional
+    public Order createCartOrder(Order order, CartOrderDto cartOrderDto) {
+        Member member = memberService.findMember(cartOrderDto.getMemberId());
 
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
+        order.setStatus(OrderStatus.NOT_PAID); // 주문 상태
+        order.setMember(member);
+        order.makeOrderNumber(); // 주문 번호 만들기
 
-            // CartOrderDto를 OrderItemPostDto로 변환
-            OrderItemPostDto orderDto = new OrderItemPostDto();
-            orderDto.setItemId(cartItem.getItem().getItemId());
-            orderDto.setQuantity(cartItem.getCount());
+        // 주문 항목 생성 및 저장
+        orderCartItem(cartOrderDto.getOrderItems(), order);
 
-            // OrderItemPostDto를 리스트에 추가
-            orderDtoList.add(orderDto);
+        Long cartItemIdToRemove = cartOrderDto.getCartItemId();
+        removeItem(cartItemIdToRemove);
+
+
+        // 주문 저장
+        orderRepository.save(order);
+
+        return order;
+    }
+    @Transactional
+    // 장바구니 상품 주문
+    public void orderCartItem(List<CartItemDto> cartItemDtos , Order order) {
+        List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
+
+        for (CartItemDto cartItemDto : cartItemDtos) { // orderItems 리스트에 추가
+            Item item = itemService.findItem(cartItemDto.getItemId());
+            long quantity = cartItemDto.getCount();
+
+            OrderItem orderItem = new OrderItem();
+            orderItem.addOrder(order);
+            orderItem.setPrice(item.getPrice());
+            orderItem.setItem(item);
+            orderItem.setQuantity(quantity);
+
+            orderItems.add(orderItem);
         }
+        long totalPrice = getTotalPrice(orderItems);
+        order.setTotalPrice(totalPrice);
 
-        // 주문 생성 메서드 호출
-        Long orderId = orderService.orders(order, orderDtoList, memberId);
 
-        // 주문한 장바구니 상품을 제거
-        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
-            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId())
-                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
-            cartItemRepository.delete(cartItem);
+    }
+
+
+    public long getTotalPrice(List<OrderItem> orderItems) {
+        long price = 0;
+        for (OrderItem orderItem : orderItems) {
+            price += orderItem.getPrice() * orderItem.getQuantity();
         }
-
-        return orderId;
+        return price;
     }
 
     private void addItemInCart(Cart cart, CartItem cartItem) {
@@ -109,4 +160,5 @@ public class CartService {
         cartItemList.add(cartItemRepository.save(cartItem));
         cart.setCartItems(cartItemList);
     }
+
 }

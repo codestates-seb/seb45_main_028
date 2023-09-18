@@ -33,29 +33,19 @@ public class OrderItem {
 
 
 
-    @Builder
     public OrderItem(long quantity, Item item) {
         this.quantity = quantity;
         this.item = item;
     }
+
     public void addOrder(Order order) {
         this.order = order;
         if(!order.getOrderItems().contains(this)) {
             order.addOrderItem(this);
         }
     }
-    public static OrderItem createOrderItem(Item item, long quantity) {
 
-        OrderItem orderItem = new OrderItem();
-        orderItem.setItem(item);
-        orderItem.setQuantity(quantity);
-        orderItem.setPrice(item.getPrice());
-
-        return orderItem;
-    }
-
-
-    public String setName(String name) {
+    public String setName(Item item){
         return item.getName();
     }
 }
