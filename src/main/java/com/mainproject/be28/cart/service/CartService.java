@@ -46,7 +46,7 @@ public class CartService {
     public CartService(MemberService memberService, ItemService itemService, OrderService orderService, CartItemService cartItemService,
 
                        CartRepository cartRepository, CartItemRepository cartItemRepository,
-                       CustomBeanUtils<Cart> beanUtils, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
+                      OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
 
         this.memberService = memberService;
         this.itemService = itemService;
@@ -55,10 +55,6 @@ public class CartService {
 
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
-
-
-        this.beanUtils = beanUtils;
-
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
 
@@ -103,9 +99,9 @@ public class CartService {
                 .orElse(null);
     }
 
-    @Transactional
+
     public Order createCartOrder(Order order, CartOrderDto cartOrderDto) {
-        Member member = memberService.findMember(cartOrderDto.getMemberId());
+        Member member = memberService.findTokenMember();
 
         order.setStatus(OrderStatus.NOT_PAID); // 주문 상태
         order.setMember(member);
@@ -123,7 +119,7 @@ public class CartService {
 
         return order;
     }
-    @Transactional
+
     // 장바구니 상품 주문
     public void orderCartItem(List<CartItemDto> cartItemDtos , Order order) {
         List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
@@ -145,7 +141,11 @@ public class CartService {
 
 
     }
-
+    public Order findOrderByMember() {
+        Member member = memberService.findTokenMember();
+        return orderRepository.findOrderByMember(member).orElseGet(()
+                -> orderRepository.save(Order.createOrder(member)));
+    }
 
     public long getTotalPrice(List<OrderItem> orderItems) {
         long price = 0;

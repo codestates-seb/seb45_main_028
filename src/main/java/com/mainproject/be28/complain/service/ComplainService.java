@@ -41,8 +41,9 @@ public class ComplainService {
     public Complain createComplain(ComplainPostDto complainPostDto) {
 
         Complain complain = mapper.complainPostDtoToComplain(complainPostDto);
-        Member member = memberService.findMember(complainPostDto.getMemberId());
+        Member member = memberService.findTokenMember();
         Item item = itemService.findItem(complainPostDto.getItemId());
+
         complain.setMember(member);
         complain.setItem(item);
 

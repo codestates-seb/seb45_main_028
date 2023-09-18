@@ -75,7 +75,7 @@ public class CartController {
     // 장바구니 상품 주문
     @PostMapping( "/orders")
     public ResponseEntity postCartOrder(@Valid @RequestBody CartOrderDto cartOrderDto){
-        Order order = Ordermapper.cartOrderPostDtoToOrders(cartOrderDto);
+        Order order = cartService.findOrderByMember();
         Order createOrder = cartService.createCartOrder(order, cartOrderDto);
         SingleResponseDto response = new SingleResponseDto<>(Ordermapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity<>(response,ok);

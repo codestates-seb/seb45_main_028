@@ -23,6 +23,8 @@ public class ComplainController {
 
     private final ComplainService complainService;
     private final ComplainMapper mapper;
+    private  final HttpStatus ok = HttpStatus.OK;
+
 
     public ComplainController(ComplainService complainService, ComplainMapper mapper) {
         this.complainService = complainService;
@@ -33,14 +35,15 @@ public class ComplainController {
     public ResponseEntity postComplain(@RequestBody @Valid ComplainPostDto complainPostDto) {
 
         Complain response = complainService.createComplain(complainPostDto);
-        return new ResponseEntity<> (new SingleResponseDto<>(mapper.complainToComplainResponseDto(response)),HttpStatus.OK);
+        SingleResponseDto responses =  new SingleResponseDto<>(mapper.complainToComplainResponseDto(response),ok);
+        return new ResponseEntity(responses, ok);
     }
 
     @GetMapping ("{complain-id}") // 문의사항 상세보기
     public ResponseEntity<ComplainResponseDto> getComplain(@PathVariable("complain-id") @Positive long complainId) {
         Complain response = complainService.findComplain(complainId);
-        ComplainResponseDto complainResponse = mapper.complainToComplainResponseDto(response);
-        return new ResponseEntity<>(complainResponse, HttpStatus.OK);
+        SingleResponseDto responses =  new SingleResponseDto<>(mapper.complainToComplainResponseDto(response),ok);
+        return new ResponseEntity(responses, ok);
     }
 
     @GetMapping("") //문의사항 목록보기
@@ -69,7 +72,8 @@ public class ComplainController {
 
         Complain response = complainService.updateComplain(complain);
 
-        return new ResponseEntity<>(mapper.complainToComplainResponseDto(response), HttpStatus.OK);
+        SingleResponseDto responses =  new SingleResponseDto<>(mapper.complainToComplainResponseDto(response),ok);
+        return new ResponseEntity(responses, ok);
     }
 
     @DeleteMapping("/{complain-id}")//문의사항 삭제

@@ -2,8 +2,15 @@ package com.mainproject.be28.review.service;
 
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
+import com.mainproject.be28.item.entity.Item;
+import com.mainproject.be28.item.service.ItemService;
+import com.mainproject.be28.member.entity.Member;
+import com.mainproject.be28.member.service.MemberService;
+import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.review.dto.ReviewPostDto;
 import com.mainproject.be28.review.dto.ReviewResponseDto;
 import com.mainproject.be28.review.entity.Review;
+import com.mainproject.be28.review.mapper.ReviewMapper;
 import com.mainproject.be28.review.repository.ReviewRepository;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import lombok.AllArgsConstructor;
@@ -20,11 +27,26 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final CustomBeanUtils<Review> beanUtils;
+    private final MemberService memberService;
+    private final ReviewMapper mapper;
+    private final ItemService itemService;
+
 
     //리뷰 생성
-    public  Review createReview(Review review){
+    public  Review createReview(ReviewPostDto reviewPostDto){
+        Review review = new Review();
+        Member member = memberService.findTokenMember();
+        Item item = itemService.findItem(reviewPostDto.getItemId());
+        int score = reviewPostDto.getScore();
+        String content = reviewPostDto.getContent();
+
+        review.setScore(score);
+        review.setContent(content);
+        review.setItem(item);
+        review.setMember(member);
         return reviewRepository.save(review);
     }
+
 
     //리뷰 수정
     public Review updateReview(Review review) {
@@ -63,5 +85,12 @@ public class ReviewService {
         }
         return null;
     }
+
+    public Review findReviewByMember() {
+        Member member = memberService.findTokenMember();
+        return reviewRepository.save(Review.createReview(member));
+    }
+
+
 }
 
