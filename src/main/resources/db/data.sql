@@ -4,8 +4,8 @@ INSERT INTO MEMBER VALUES (101, 'test1@test.com', '{noop}test1', '테스트1', '
 INSERT INTO MEMBER VALUES (102, 'test2@test.com','{noop}test2',  '테스트2', '010-7654-3210', '경기도 xx시 xx구 xx동', 0);
 INSERT INTO MEMBER VALUES  (103, 'test3@test.com','{noop}test3',  '테스트3', '010-7777-7777', '인천시 ㅁㅁ구 ㅁㅁ동', 5);
 INSERT INTO MEMBER VALUES  (104, 'admin@gmail.com','{noop}1234',  '관리자', '010-5325-5325', '인천시 ㅁㅁ구 ㅁㅁ동', 5);
-INSERT INTO MEMBER_ROLES VALUES  (1, 104, 'ADMIN');
-INSERT INTO MEMBER_ROLES VALUES  (2, 104, 'USER');
+INSERT INTO MEMBER_ROLES VALUES  (101, 104, 'ADMIN');
+INSERT INTO MEMBER_ROLES VALUES  (102, 104, 'USER');
 -- BOARD 테이블 데이터
 INSERT INTO BOARD VALUES (101, '첫 번째 게시물', 101, '첫 번째 게시물 내용입니다.', 100, 50, '자유게시판', NOW(),NOW());
 INSERT INTO BOARD VALUES (102, '두 번째 게시물', 102, '두 번째 게시물 내용입니다.', 120, 60, '스터디모집', NOW(),NOW());
