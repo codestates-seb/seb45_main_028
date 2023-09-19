@@ -1,6 +1,5 @@
 package com.mainproject.be28.item.dto;
 
-import com.mainproject.be28.itemImage.dto.ItemImageResponseDto;
 import com.mainproject.be28.review.dto.ReviewResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -64,6 +63,5 @@ public class ItemDto {
     public static class Response {
         private OnlyItemResponseDto item;
         private List<ReviewResponseDto> reviews;
-        private List<ItemImageResponseDto> imageURLs;
     }
 }

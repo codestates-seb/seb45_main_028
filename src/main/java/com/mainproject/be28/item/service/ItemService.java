@@ -88,7 +88,6 @@ public class ItemService {
         Item updatedItem =
                 beanUtils.copyNonNullProperties(newItem, findItem);
 
-//        if(findItem.getStock()>0&&newItem.getStock()==0){updatedItem.setStock(findItem.getStock());}
         updateImages(itemImgFileList, findItem, updatedItem);
 
         updatedItem.setModifiedAt(LocalDateTime.now());
@@ -122,7 +121,7 @@ public class ItemService {
     }
 
     private void updateImages(List<MultipartFile> itemImgFileList, Item findItem, Item updatedItem) throws IOException {
-        List<ItemImage> images = findItem.getImages()==null?new ArrayList<>():new ArrayList<>(findItem.getImages());
+        List<ItemImage> images = findItem.getImages()==null?new ArrayList<>():findItem.getImages();
 
         //새로운 파일 이미지가 있다면, 새로 추가
         if (itemImgFileList != null) {

@@ -16,7 +16,7 @@ public class OnlyItemResponseDto {
     private String name;
     private Long price;
     private String detail;
-    private Object stocks;
+    private String stocks;
     private String color;
     private Double score;
     private String brand;

@@ -28,6 +28,7 @@ logging:
         orm:
           jpa: DEBUG
 server:
+#  port: 8081
   servlet:
     encoding:
       force-response: true

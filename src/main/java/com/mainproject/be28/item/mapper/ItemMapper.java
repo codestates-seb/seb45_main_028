@@ -37,8 +37,10 @@ public interface ItemMapper {
         return onlyItemResponseDto.build();
     }
 
-    public default Object checkStock(Item item) {
-        return item.getStock() >0? item.getStock():"품절";
+    public default String checkStock(Item item) {
+        if(item.getStock()>10) {return "재고 있음";}
+        else if(item.getStock()>0){return String.format("%d개 남음", item.getStock());}
+        else return "품절";
     }
     Item onlyItemResponseDtotoItem(OnlyItemResponseDto onlyItemResponseDto);
 
@@ -47,9 +49,8 @@ public interface ItemMapper {
         OnlyItemResponseDto onlyitemResponseDto = itemToOnlyItemResponseDto(item);
 
         List<ReviewResponseDto> reviewResponseDtos = getReviewsResponseDto(item);
-        List<ItemImageResponseDto> itemImageResponseDtos = getImageResponseDto(item);
 
-        return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos, itemImageResponseDtos);
+        return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos);
     }
 
     default List<ItemImageResponseDto> getImageResponseDto(Item item){
