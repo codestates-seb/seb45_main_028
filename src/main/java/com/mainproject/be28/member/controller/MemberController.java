@@ -1,6 +1,6 @@
 package com.mainproject.be28.member.controller;
 
-import com.mainproject.be28.comment.dto.CommentDto;
+import com.mainproject.be28.comment.dto.CommentResponseDto;
 import com.mainproject.be28.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.member.dto.MemberPatchDto;
 import com.mainproject.be28.member.dto.MemberPostDto;
@@ -89,9 +89,9 @@ public class MemberController {
 
     //작성한 댓글 조회
     @GetMapping("/myPage/myComment")
-    public ResponseEntity<List<CommentDto>> getMyComments(@RequestParam int page,@RequestParam int size) {
+    public ResponseEntity<List<CommentResponseDto>> getMyComments(@RequestParam int page,@RequestParam int size) {
         
-        Page<CommentDto> myComments = mypageService.getMyComments(page, size);
+        Page<CommentResponseDto> myComments = mypageService.getMyComments(page, size);
         MultiResponseDto response = new MultiResponseDto<>(myComments.getContent(), myComments, HttpStatus.OK);
         return new ResponseEntity(response,HttpStatus.OK);
     }

@@ -1,6 +1,6 @@
 package com.mainproject.be28.member.service;
 
-import com.mainproject.be28.comment.dto.CommentDto;
+import com.mainproject.be28.comment.dto.CommentResponseDto;
 import com.mainproject.be28.comment.entity.Comment;
 import com.mainproject.be28.comment.mapper.CommentMapper;
 import com.mainproject.be28.comment.repository.CommentRepository;
@@ -91,13 +91,13 @@ public class MyPageService {
     }
 
     //작성한 댓글 조회
-    public Page<CommentDto> getMyComments(int page, int size) {
+    public Page<CommentResponseDto> getMyComments(int page, int size) {
         long memberId = memberService.findTokenMemberId();
         PageRequest pageRequest = PageRequest.of(page - 1, size);
         List<Comment> myComments = commentRepository.findCommentsByMember_MemberId(memberId);
-        List<CommentDto> myCommentsDto = new ArrayList<>();
+        List<CommentResponseDto> myCommentsDto = new ArrayList<>();
         for (Comment comment : myComments) {
-            myCommentsDto.add(commentMapper.commentToCommentDto(comment));
+            myCommentsDto.add(commentMapper.commentToCommentResponseDto(comment));
         }
         return new PageImpl<>(myCommentsDto, pageRequest, myCommentsDto.size());
     }

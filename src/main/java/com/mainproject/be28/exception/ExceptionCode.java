@@ -10,6 +10,7 @@ public enum ExceptionCode {
     MEMBER_NOT_AUTHORIZED(401, "Member not authorized"),
     POST_NOT_FOUND(404, "POST not found"),
     ANSWER_NOT_FOUND(404, "Answer not found"),
+    COMMENT_NOT_FOUND(404, "Answer not found"),
     ITEM_NOT_FOUND(404, "ITEM not found"),
     ITEM_EXIST(409, "동일한 상품명이 존재합니다."),
     CART_NOT_FOUND(404, "CART NOT FOUND"),
@@ -29,7 +30,7 @@ public enum ExceptionCode {
     NOT_YET_PAID(404,"아직 결제가 안된 주문입니다"),
     VERIFY_FAILURE(401,"ID 혹은 PW가 일치하지 않습니다."),
     USER_EXIST(409,"존재하는 사용자 입니다." ),
-    DO_NOT_MATCH_PASSWORD(403, "입력한 비밀번호가 일치하지 않습니다.");
+    DO_NOT_MATCH_PASSWORD(403, "입력한 비밀번호가 일치하지 않습니다.")    ;
     @Getter
     private final int status;
 
