@@ -21,9 +21,10 @@ public class CommentController {
     private CommentMapper mapper;
 
     @PostMapping("/boards/{boardId}")
-    public ResponseEntity<Comment> createComment(@PathVariable Long boardId, @RequestBody CommentPostDto commentPostDto) {
-        Comment comment = mapper.commentPostDtoToComment(commentPostDto, boardId);
-        return new ResponseEntity<>(commentService.createComment(comment), HttpStatus.CREATED);
+    public ResponseEntity createComment(@PathVariable Long boardId, @RequestBody CommentPostDto commentPostDto) {
+//        Comment comment = mapper.commentPostDtoToComment(commentPostDto, boardId);
+//        return new ResponseEntity<>(commentService.createComment(comment), HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{commentId}")

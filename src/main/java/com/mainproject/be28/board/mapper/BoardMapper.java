@@ -2,6 +2,7 @@ package com.mainproject.be28.board.mapper;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.dto.BoardPostDto;
+import com.mainproject.be28.board.dto.BoardResponseDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.item.dto.ItemDto;
 import com.mainproject.be28.item.entity.Item;
@@ -20,17 +21,27 @@ public interface BoardMapper {
 //        dto.setMemberId(board.getMember().getMemberId());
 //        return dto;
 //    }
-    @Mapping(source = "memberId", target = "member.memberId")
     Board boardPostDtoToBoard(BoardDto boardPostDto);
 
-    @Mapping(source = "title", target = "title")
-    @Mapping(source = "content", target = "content")
-    @Mapping(source = "boardCategory", target = "boardCategory")
     Board boardPostDtoToBoard(BoardPostDto boardPostDto);
 
     @Mapping(source = "memberId", target = "member.memberId")
     Board boardPatchDtoToBoard(BoardDto boardPatchDto);
 
+    default BoardResponseDto boardToBoardResponseDto(Board board){
+        if ( board == null ) {
+            return null;
+        }
+
+        BoardResponseDto boardResponseDto = new BoardResponseDto();
+        boardResponseDto.setTitle(board.getTitle());
+        boardResponseDto.setContent(board.getContent());
+        boardResponseDto.setMemberName(board.getMember().getName());
+        boardResponseDto.setCreatedAt( board.getCreatedAt() );
+        boardResponseDto.setModifiedAt( board.getModifiedAt() );
+
+        return boardResponseDto;
+    }
     public static Board toEntity(BoardDto dto) {
         Board board = new Board();
         board.setTitle(dto.getTitle());

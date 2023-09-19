@@ -2,10 +2,12 @@ package com.mainproject.be28.board.controller;
 
 import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.dto.BoardPostDto;
+import com.mainproject.be28.board.dto.BoardResponseDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
 import com.mainproject.be28.member.entity.Member;
+import com.mainproject.be28.response.SingleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +26,17 @@ public class BoardController {
     private BoardMapper mapper;
     @PostMapping
     public ResponseEntity createBoard(@RequestBody BoardPostDto boardPostDto) {
-        Board board = mapper.boardPostDtoToBoard(boardPostDto);
-        return new ResponseEntity<>(boardService.createBoard(board), HttpStatus.CREATED);
+        BoardResponseDto board = boardService.createBoard(boardPostDto);
+        SingleResponseDto response = new SingleResponseDto(board, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 
     @GetMapping("/{boardId}")
-    public Optional<Board> getBoardById(@PathVariable("boardId") Long boardId) {
-        return boardService.getBoardById(boardId);
+    public ResponseEntity getBoardById(@PathVariable("boardId") Long boardId) {
+        BoardResponseDto board =boardService.getBoardById(boardId);
+        SingleResponseDto response = new SingleResponseDto(board, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
