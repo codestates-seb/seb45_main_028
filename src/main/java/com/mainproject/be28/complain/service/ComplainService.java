@@ -60,6 +60,7 @@ public class ComplainService {
 
     //complain 객체를 기반으로 엔티티 정보를 업데이트하고, 업데이트된 엔티티를 데이터베이스에 저장하여 반환
     public Complain updateComplain(Complain complain) {
+        Member member = memberService.findTokenMember();
         Complain findComplain = findComplain(complain.getComplainId());
 
         Complain updatedComplain =

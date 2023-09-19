@@ -42,7 +42,10 @@ public class OrderService {
         order.setStatus(OrderStatus.NOT_PAID);
         orderRepository.save(order);
 
-       OrderItem orderItem= orderItemPostDtoToOrderItem(orderPostDto, order);
+        //주문이 완료되면 아이템 줄어듬
+        itemService.decreaseItemStock(orderPostDto.getItemId(), orderPostDto.getQuantity());
+
+        OrderItem orderItem= orderItemPostDtoToOrderItem(orderPostDto, order);
         List<OrderItem> items = new ArrayList<>();
         items.add(orderItem);
         order.setOrderItems(items);
@@ -64,16 +67,6 @@ public class OrderService {
         return orderItem;
     }
 
-    //총합 가격
-    public long getTotalPrice(List<OrderItem> orderItems) {
-        long price = 0;
-        for(OrderItem orderItem : orderItems){
-            price += orderItem.getPrice() * orderItem.getQuantity();
-        }
-        return price;
-    }
-
-
     //주문아이디로 주문찾기
     public Order findOrder() {
         Member member = memberService.findTokenMember();
@@ -86,12 +79,7 @@ public class OrderService {
         Member member = memberService.findTokenMember();
         return orderRepository.findByMemberOrderByCreatedAtDesc(member);// creat_At을 기준으로 내림차순으로
     }
-    //멤버토큰으로 주문찾기
-    public Order findOrderByMember() {
-        Member member = memberService.findTokenMember();
-        return orderRepository.findOrderByMember(member).orElseGet(()
-                -> orderRepository.save(Order.createOrder(member)));
-    }
+
 
     //주문취소(상태만 바꿈)
     public void cancelOrder(long itemId) {

@@ -15,6 +15,7 @@ import com.mainproject.be28.item.service.ItemService;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.order.data.OrderStatus;
+import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.entity.Order;
 import com.mainproject.be28.order.repository.OrderRepository;
 import com.mainproject.be28.order.service.OrderService;
@@ -73,8 +74,6 @@ public class CartService {
         return cartRepository.findCartByMember(member).orElseGet(() -> cartRepository.save(Cart.createCart(member)));
     }
 
-
-
     public void removeItem(long itemId) { // 장바구니 내 개별 상품 제거
         Member member = memberService.findTokenMember();
         Cart cart = cartRepository.findCartByMember(member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_NOT_FOUND));
@@ -93,19 +92,20 @@ public class CartService {
     }
 
     @Transactional
-    public Order createCartOrder() {
+    public Order createCartOrder(CartOrderDto cartOrderDto) {
         Member member = memberService.findTokenMember();
+        Cart cart = cartRepository.findCartByMember(member).orElseThrow(()
+                -> new BusinessLogicException(ExceptionCode.CART_ITEM_NOT_FOUND));
         Order order =  new Order();
-        Cart cart = cartRepository.findCartByMember(member).orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_ITEM_NOT_FOUND));
-
         order.setStatus(OrderStatus.NOT_PAID); // 주문 상태
-        order.setMember(member);
+        order.setMember(member);    //멤버정보
         order.makeOrderNumber(); // 주문 번호 만들기
 
         // 주문 항목 생성 및 저장
         List<OrderItem> orderItemList = new ArrayList<>();
+        //카트항목 가져오기
         List<CartItemResponseDto> cartItems = cartMapperr.getCartItemsResponseDto(cart);
-
+        //카트항목을 주문항목으로 바꿈
         for (CartItemResponseDto cartItem : cartItems) {
             // 아이템 정보 가져오기
             Item item = itemService.findItem(cartItem.getItemId());
@@ -120,12 +120,15 @@ public class CartService {
             // 주문 항목 목록에 추가
             orderItemList.add(orderItem);
         }
-        order.setTotalPrice(getTotalPrice(orderItemList));
-        order.setOrderItems(orderItemList);
-
+        order.setTotalPrice(getTotalPrice(orderItemList)); //총합가격
+        order.setOrderItems(orderItemList); // 주문항목
         // 주문 저장
         orderRepository.save(order);
+        //주문항목 저장
         orderItemRepository.saveAll(orderItemList);
+        //주문 후 아이템 재고 삭제
+        itemService.decreaseItemStock(cartOrderDto.getCartItemId(), cartOrderDto.getCount());
+        //장바구니 삭제?? -> 장바구니 안에 있는 장바구니상품만 삭제
         removeAllItem();
         return order;
     }

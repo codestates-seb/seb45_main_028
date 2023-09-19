@@ -4,6 +4,7 @@ import com.mainproject.be28.cart.entity.Cart;
 import com.mainproject.be28.cart.mapper.CartMapper;
 import com.mainproject.be28.cart.service.CartService;
 import com.mainproject.be28.cartItem.dto.CartItemDto;
+import com.mainproject.be28.order.dto.CartOrderDto;
 import com.mainproject.be28.order.entity.Order;
 import com.mainproject.be28.order.mapper.OrderMapper;
 import com.mainproject.be28.order.service.OrderService;
@@ -70,8 +71,8 @@ public class CartController {
     }
     // 장바구니 상품 주문
     @PostMapping( "/orders")
-    public ResponseEntity postCartOrder(){
-        Order createOrder = cartService.createCartOrder();
+    public ResponseEntity postCartOrder(@RequestBody @Valid CartOrderDto cartOrderDto){
+        Order createOrder = cartService.createCartOrder(cartOrderDto);
         SingleResponseDto response = new SingleResponseDto<>(Ordermapper.ordersToOrderPageResponseDto(createOrder),ok);
         return new ResponseEntity<>(response,ok);
 

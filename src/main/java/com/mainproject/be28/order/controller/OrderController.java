@@ -29,15 +29,15 @@ public class OrderController {
     private final OrderMapper mapper;
     private  final HttpStatus ok = HttpStatus.OK;
 
-    @PostMapping("/new")//주문생성(아이템아이디,개수)
+    @PostMapping("/new")//상품에서 바로주문
     public ResponseEntity postOrder(@Valid @RequestBody OrderPostDto orderPostDto) {
         Order order = orderService.createOrder(orderPostDto);
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
     }
 
-    @GetMapping("/checkout/{order-id}")// 결제 창
-    public ResponseEntity getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
+    @GetMapping("/checkout")// 결제정보
+    public ResponseEntity getOrderToPay() { // 결제 창
         Order order = orderService.findOrder();
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
