@@ -1,8 +1,7 @@
 package com.mainproject.be28.order.entity;
 
 import com.mainproject.be28.auditable.Auditable;
-import com.mainproject.be28.cart.entity.Cart;
-import com.mainproject.be28.cartItem.entity.CartItem;
+import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.order.data.OrderStatus;
 import com.mainproject.be28.orderItem.entity.OrderItem;
@@ -10,11 +9,9 @@ import com.mainproject.be28.payment.entity.PayInfo;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -48,9 +45,7 @@ public class Order extends Auditable {
     private PayInfo payInfo;
 
 
-
-
- //===================================================//
+    //===================================================//
     public void addMember(Member member) {
         this.member = member;
         if (!member.getOrder().contains(this)) {
@@ -67,7 +62,7 @@ public class Order extends Auditable {
 
     public void addPayInfo(PayInfo payInfo) {
         this.payInfo = payInfo;
-        if(payInfo.getOrder() != this) {
+        if (payInfo.getOrder() != this) {
             payInfo.addOrder(this);
         }
     }
@@ -83,4 +78,7 @@ public class Order extends Auditable {
 
         return order;
     }
+
+
+
 }

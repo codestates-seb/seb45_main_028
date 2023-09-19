@@ -103,38 +103,31 @@ public class CartService {
         order.makeOrderNumber(); // 주문 번호 만들기
 
         // 주문 항목 생성 및 저장
-       List<OrderItem> orderItemList =  orderCartItem(cartMapperr.getCartItemsResponseDto(cart), order);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        List<CartItemResponseDto> cartItems = cartMapperr.getCartItemsResponseDto(cart);
 
-        //장바구니 내 상품 모두 비우기
-        removeAllItem();
+        for (CartItemResponseDto cartItem : cartItems) {
+            // 아이템 정보 가져오기
+            Item item = itemService.findItem(cartItem.getItemId());
+
+            // 주문 항목 생성
+            OrderItem orderItem = new OrderItem();
+            orderItem.setPrice(item.getPrice());
+            orderItem.setQuantity(cartItem.getCount());
+            orderItem.setOrder(order);
+            orderItem.setItem(item);
+
+            // 주문 항목 목록에 추가
+            orderItemList.add(orderItem);
+        }
+        order.setTotalPrice(getTotalPrice(orderItemList));
+        order.setOrderItems(orderItemList);
 
         // 주문 저장
         orderRepository.save(order);
         orderItemRepository.saveAll(orderItemList);
+        removeAllItem();
         return order;
-    }
-    @Transactional
-    // 장바구니 상품 주문
-    public List<OrderItem> orderCartItem(List<CartItemResponseDto> cartItemDtos , Order order) {
-        List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
-
-        for (CartItemResponseDto cartItemResponseDto : cartItemDtos) { // orderItems 리스트에 추가
-            Item item = itemService.findItem(cartItemResponseDto.getItemId());
-            long quantity = cartItemResponseDto.getCount();
-
-            OrderItem orderItem = new OrderItem();
-//            orderItem.addOrder(order);
-            orderItem.setPrice(item.getPrice());
-            orderItem.setItem(item);
-            orderItem.setQuantity(quantity);
-
-            orderItems.add(orderItem);
-            orderItem.setOrder(order);
-        }
-        long totalPrice = getTotalPrice(orderItems);
-        order.setTotalPrice(totalPrice);
-
-        return orderItems;
     }
 
     public long getTotalPrice(List<OrderItem> orderItems) {

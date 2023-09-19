@@ -1,6 +1,7 @@
 package com.mainproject.be28.order.dto;
 
 import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.orderItem.dto.OrderItemResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +18,8 @@ public class OrderPageResponseDto { // 결제창에서 넘겨줄 값
     private String phone;
     private Long totalPrice; // 총 결제금액
     private String email; // 주문자 이메일
+
+    private List<OrderItemResponseDto> orderItems;
+
 
 }

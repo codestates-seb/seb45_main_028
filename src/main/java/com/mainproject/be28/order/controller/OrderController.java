@@ -1,7 +1,11 @@
 package com.mainproject.be28.order.controller;
 
+import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.PositiveOrZero;
+
+import com.mainproject.be28.order.dto.OrderPageResponseDto;
 import com.mainproject.be28.order.dto.OrderPostDto;
 import com.mainproject.be28.order.dto.OrderResponseDto;
 import com.mainproject.be28.order.entity.Order;
@@ -32,8 +36,8 @@ public class OrderController {
         return new ResponseEntity(response, ok);
     }
 
-    @GetMapping("/checkout")// 결제 창
-    public ResponseEntity getOrderToPay() { // 결제 창
+    @GetMapping("/checkout/{order-id}")// 결제 창
+    public ResponseEntity getOrderToPay(@PathVariable("order-id")  long orderId) { // 결제 창
         Order order = orderService.findOrder();
         SingleResponseDto response =  new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(order),ok);
         return new ResponseEntity(response, ok);
@@ -48,10 +52,12 @@ public class OrderController {
     }
 
 
-    @DeleteMapping("/{item-id}")
-    public ResponseEntity deleteOrder(@PathVariable("item-id") long itemId) {
-        orderService.cancelOrder(itemId);
+    @DeleteMapping("/{order-id}")
+    public ResponseEntity deleteOrder(@PathVariable("order-id") long orderId) {
+        orderService.cancelOrder(orderId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+
 }
 

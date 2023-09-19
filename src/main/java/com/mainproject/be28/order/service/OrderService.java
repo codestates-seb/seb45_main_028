@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @AllArgsConstructor
@@ -33,36 +34,33 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final OrderItemRepository orderItemRepository;
 
-    //주문생성
     public Order createOrder(OrderPostDto orderPostDto)   {
         Member member = memberService.findTokenMember();
         Order order = new Order();
         order.makeOrderNumber();
         order.setMember(member);
         order.setStatus(OrderStatus.NOT_PAID);
-
         orderRepository.save(order);
-        OrderItem orderItem= orderItemPostDtoToOrderItem(orderPostDto, order);
-//        List<OrderItem> orderItems = new ArrayList<>();
-//        orderItems.add(orderItem);
-//        order.setOrderItems(orderItems);
-        orderItemRepository.save(orderItem);
-        order.setTotalPrice(orderItem.getQuantity()*orderItem.getPrice());
+
+       OrderItem orderItem= orderItemPostDtoToOrderItem(orderPostDto, order);
+        List<OrderItem> items = new ArrayList<>();
+        items.add(orderItem);
+        order.setOrderItems(items);
+        order.setTotalPrice(orderItem.getQuantity() * orderItem.getPrice());
+
         return order;
     }
 
-    public OrderItem orderItemPostDtoToOrderItem(OrderPostDto orderPostDto,Order order) {
-//        List<OrderItem> orderItems = new ArrayList<>(); //orderItems 빈 리스트 생성
+        public OrderItem orderItemPostDtoToOrderItem(OrderPostDto orderPostDto,Order order) {
+        Item item = itemService.findItem(orderPostDto.getItemId());
+        long quantity = orderPostDto.getQuantity();
 
-//        for (OrderItemPostDto orderItemPostDto : orderItemPostDtos) { // orderItems 리스트에 추가
-            Item item = itemService.findItem(orderPostDto.getItemId());
-            long quantity = orderPostDto.getQuantity();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setPrice(item.getPrice());
+        orderItem.setQuantity(quantity);
+        orderItem.setOrder(order);
+        orderItem.setItem(item);
 
-            OrderItem orderItem = new OrderItem(quantity, item); // 중복 생성을 방지하기 위해 생성자를 이용
-//            orderItem.addOrder(order);
-            orderItem.setPrice(item.getPrice());
-            orderItem.setQuantity(quantity);
-            orderItem.setOrder(order);
         return orderItem;
     }
 

@@ -33,6 +33,24 @@ public interface OrderMapper {
         orderPageResponseDto.setPhone(order.getMember().getPhone());
         orderPageResponseDto.setTotalPrice(order.getTotalPrice());
         orderPageResponseDto.setEmail(order.getMember().getEmail());
+
+        List<OrderItem> orderItems = order.getOrderItems();
+
+        // OrderItem 정보를 리스트로 저장하기 위한 리스트 초기화
+        List<OrderItemResponseDto> orderItemResponseList = new ArrayList<>();
+
+        // 주문 항목 정보를 매핑하여 리스트에 추가
+        for (OrderItem orderItem : orderItems) {
+            OrderItemResponseDto orderItemResponseDto = new OrderItemResponseDto();
+            orderItemResponseDto.setItemName(orderItem.getItem().getName()); // 아이템의 이름 설정
+            orderItemResponseDto.setPrice(orderItem.getPrice()); // 아이템의 가격 설정
+            orderItemResponseDto.setQuantity(orderItem.getQuantity()); // 수량 설정
+            orderItemResponseList.add(orderItemResponseDto);
+        }
+
+        // 주문 항목 리스트를 설정
+        orderPageResponseDto.setOrderItems(orderItemResponseList);
+
         return orderPageResponseDto;
     }
     default List<OrderResponseDto> OrdersToOrderResponseDtos(List<Order> orders) {
