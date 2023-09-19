@@ -1,6 +1,7 @@
 package com.mainproject.be28.board.controller;
 
 import com.mainproject.be28.board.dto.BoardDto;
+import com.mainproject.be28.board.dto.BoardPostDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
@@ -22,19 +23,11 @@ public class BoardController {
     @Autowired
     private BoardMapper mapper;
     @PostMapping
-
-    public ResponseEntity createBoard(@RequestBody BoardDto boardDto) {
-        Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
-
-        return new ResponseEntity<>(boardService.createBoard(mapperBoard), HttpStatus.CREATED);
-
-//        Member member = new Member();
-//        member.setMemberId(boardDto.getMemberId());
-//        //board.setMember(member);
-//
-//        return boardService.createBoard(board);
-
+    public ResponseEntity createBoard(@RequestBody BoardPostDto boardPostDto) {
+        Board board = mapper.boardPostDtoToBoard(boardPostDto);
+        return new ResponseEntity<>(boardService.createBoard(board), HttpStatus.CREATED);
     }
+
 
     @GetMapping("/{boardId}")
     public Optional<Board> getBoardById(@PathVariable("boardId") Long boardId) {
