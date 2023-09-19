@@ -15,7 +15,7 @@ const Product = ({ product }) => {
   const saveProduct = (itemId) => {
     axios
       .pacth(
-        "http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/item/{itemId}",
+        "http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/item/{item-Id}",
         {}
       )
       .then((res) => {
@@ -27,7 +27,7 @@ const Product = ({ product }) => {
     if (window.confirm("게시글을 삭제하시겠습니까?")) {
       axios
         .delete(
-          "http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/item/{itemId}"
+          "http://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:8080/item/{item-Id}"
         )
         .then((res) => {
           console.log(res);
@@ -47,6 +47,11 @@ const Product = ({ product }) => {
   const moveToQuestionWrite = () => {
     navigate("/questionwrite");
   };
+
+  const moveToProductDetail = () => {
+    navigate("/productdetail/:itemid");
+  };
+
   return (
     <div className="flex-wrap justify-between flex-row inline-flex p-9 ">
       <div>
@@ -54,17 +59,24 @@ const Product = ({ product }) => {
           <img className="w-[250px] h-[200px]" />
           <div className="text-center p-[15px]">
             {isEdit ? (
-              <input className="text-gray-800 text-sm text-center"
+              <input
+                className="text-gray-800 text-sm text-center"
                 value={isProduct.name}
                 onChange={(e) =>
                   setProduct({ ...isProduct, name: e.target.value })
                 }
               />
             ) : (
-              <div className="text-gray-800 text-sm">{isProduct.name}</div>
+              <div
+                className="text-gray-800 text-sm"
+                onClick={() => moveToProductDetail(isProduct.itemId)}
+              >
+                {isProduct.name}
+              </div>
             )}
             {isEdit ? (
-              <input className="text-gray-800 text-sm text-center font-semibold"
+              <input
+                className="text-gray-800 text-sm text-center font-semibold"
                 value={isProduct.price}
                 onChange={(e) =>
                   setProduct({ ...isProduct, price: e.target.value })
@@ -81,7 +93,7 @@ const Product = ({ product }) => {
           </div>
         </div>
         <div className="flex float-right flex-row text-gray-400 text-xs space-x-1">
-          {!isEdit ? ( 
+          {!isEdit ? (
             <button onClick={() => setEdit(true)}>수정</button>
           ) : (
             <button

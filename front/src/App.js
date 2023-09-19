@@ -21,6 +21,7 @@ import About from "./pages/About";
 import Announcement from "./pages/Announcement";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProductDetail from "./pages/ProductDetail";
+import ShoppingCart from "./pages/ShoppingCart";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/productlist" element={<ProductList />} />
           <Route path="/productupdate" element={<ProductUpdate />} />
           <Route path="/productdetail/:itemid" element={<ProductDetail />} />
+          <Route path="/shoppingcart" element={<ShoppingCart />} />
         </Routes>
       </div>
     </Router>

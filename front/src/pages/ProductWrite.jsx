@@ -87,21 +87,22 @@ const ProductWrite = () => {
       <Header />
       <div className="m-11 flex flex-col items-center ">
         <div className="p-4 ">
-          <div className="text-3xl text-center pb-8 font-light">CONTACT US</div>
+          <div className="text-3xl text-center pb-8 font-normal">상품등록</div>
           <span className="border flex items-center border-solid border-b-sky-400  border-b-[2px] "></span>
-          <div className="text-gray-700 pt-9 ">제목</div>
-          <div>{product.title}</div>
-          <textarea
-            className="h-[40px] w-[600px] border border-gray-300 border-solid rounded-2xl bg-white focus:outline-1 focus:ring focus:outline-gray-200"
-
-            name="title"
-            value={title}
-            onChange={onChange}
-          />
+          <div>
+            <div className="text-gray-700 pt-9 ">제목</div>
+            {/* <div>{product.title}</div> */}
+            <input
+              className="h-[40px] w-[600px] border border-gray-300 border-solid rounded-2xl bg-white focus:outline-1 focus:ring focus:outline-gray-200"
+              name="title"
+              value={title}
+              onChange={onChange}
+            />
+          </div>
         </div>
         <div className="pb-4 ">
           <div className="text-gray-700 ">이메일 주소</div>
-          <div>{product.writer}</div>
+          {/* <div>{product.writer}</div> */}
           <textarea
             className="h-[40px] w-[600px] rounded-2xl border border-gray-300 border-solid bg-white focus:outline-1 focus:ring focus:outline-sky-200"
             name="writer"
@@ -109,7 +110,7 @@ const ProductWrite = () => {
             onChange={onChange}
           />
         </div>
-        <div >
+        <div>
           <div className="text-gray-700">첨부파일</div>
           <div className="h-[40px] w-[600px] rounded-2xl text-center border border-gray-300 border-solid bg-white focus:outline-1 focus:ring focus:outline-sky-200">
             <input className="" type="file"></input>
@@ -123,7 +124,8 @@ const ProductWrite = () => {
           <textarea
             className="h-[600px] w-[600px] border border-gray-300 text-center rounded-2xl border-solid  bg-white focus:outline-1 focus:ring focus:outline-gray-200"
             name="contents"
-            rows="5" cols="5"
+            rows="5"
+            cols="5"
             value={contents}
             onChange={onChange}
             placeholder="내용을 입력해주세요"

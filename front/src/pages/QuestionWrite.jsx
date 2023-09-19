@@ -52,7 +52,7 @@ const QuestionWrite = () => {
       <Header />
       <div className="m-11 flex flex-col items-center ">
         <div className="p-4">
-          <div className="text-3xl text-center pb-8 font-light">1:1 문의</div>
+          <div className="text-3xl text-center pb-8 font-light">CONTACT US</div>
           <span className="border flex items-center border-solid border-b-sky-400  border-b-[2px] "></span>
           <div className="text-gray-700 pt-9 ">ID</div>
           <div>{question.email}</div>
@@ -97,7 +97,7 @@ const QuestionWrite = () => {
             className="border border-solid border-gray-400 rounded-3xl p-2 text-[15px] hover:bg-gray-200"
             onClick={saveQuestion}
           >
-            작성완료..
+            작성완료
           </button>
           <button
             className="border border-solid border-gray-300 rounded-3xl p-2 text-[15px] hover:bg-gray-200"

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import DetailMeuns from '../components/DetailMeuns';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 function ProductDetail() {
     const { id } = useParams();
@@ -17,7 +19,8 @@ function ProductDetail() {
 
     return (
         <>
-        <div className='w-full'>
+        <div className='w-full z-0'>
+            <Header />
             {/* 상단 상품 상세정보 컴포넌트 */}
             <div>
                 {/* 메뉴바 */}
@@ -27,6 +30,7 @@ function ProductDetail() {
                     <Outlet />
                 </div>
             </div>
+            <Footer />
         </div>
         </>
     );
