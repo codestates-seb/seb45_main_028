@@ -50,7 +50,7 @@ CREATE TABLE ITEM (
                       NAME VARCHAR(100),
                       PRICE BIGINT,
                       DETAIL VARCHAR(100),
-                      STATUS VARCHAR(100),
+                      STOCK BIGINT,
                       COLOR VARCHAR(100),
                       BRAND VARCHAR(100),
                       CATEGORY VARCHAR(100),

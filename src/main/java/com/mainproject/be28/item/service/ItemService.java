@@ -48,9 +48,9 @@ public class ItemService {
 
     /*******************public 메서드********************/
     /******일반 유저 - 상품 조회 ******/
-    public Item findItem(long itemId){
-        Item item  = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-        setScoreAndReviewCount(item);
+    public Item findItem(long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
+        setScoreReviewCount(item);
         return item;
     }
 
@@ -58,7 +58,7 @@ public class ItemService {
         PageRequest pageRequest = PageRequest.of(condition.getPage()-1, condition.getSize());
         List<OnlyItemResponseDto> itemList = itemRepository.searchByCondition(condition, pageRequest);
 
-        setScoreAndReviewCountAndURLs(itemList);
+        setStatusReviewScoreURL(itemList);
 
         return new PageImpl<>(itemList, pageRequest, itemList.size());
     }
@@ -88,6 +88,7 @@ public class ItemService {
         Item updatedItem =
                 beanUtils.copyNonNullProperties(newItem, findItem);
 
+//        if(findItem.getStock()>0&&newItem.getStock()==0){updatedItem.setStock(findItem.getStock());}
         updateImages(itemImgFileList, findItem, updatedItem);
 
         updatedItem.setModifiedAt(LocalDateTime.now());
@@ -139,13 +140,14 @@ public class ItemService {
             itemImageRepository.saveAll(images);
         }
     }
-    private void setScoreAndReviewCount(Item item) {
-        item.setReviewCount(item.getReviews().size());
+    private void setScoreReviewCount(Item item) {
+        item.setReviewCount((long) item.getReviews().size());
         item.setScore(updateScore(item));
     }
-    private void setScoreAndReviewCountAndURLs(List<OnlyItemResponseDto> itemList) {
+    private void setStatusReviewScoreURL(List<OnlyItemResponseDto> itemList) {
         for(OnlyItemResponseDto onlyItemResponseDto : itemList){ // 리뷰 평균 평점, 리뷰 수
             Item item = itemRepository.findItemByName(mapper.onlyItemResponseDtotoItem(onlyItemResponseDto).getName());
+            onlyItemResponseDto.setStocks(mapper.checkStock(item));
             onlyItemResponseDto.setReviewCount(item.getReviews().size());
             onlyItemResponseDto.setScore(updateScore(item));
             onlyItemResponseDto.setImageURLs(mapper.getImageResponseDto(item));

@@ -27,14 +27,18 @@ public interface ItemMapper {
         onlyItemResponseDto.name( item.getName() );
         onlyItemResponseDto.price( item.getPrice() );
         onlyItemResponseDto.detail( item.getDetail() );
-        onlyItemResponseDto.status( item.getStatus() );
+        onlyItemResponseDto.stocks( checkStock(item));
         onlyItemResponseDto.color( item.getColor() );
         onlyItemResponseDto.score( item.getScore() );
         onlyItemResponseDto.brand( item.getBrand() );
         onlyItemResponseDto.category( item.getCategory() );
-        onlyItemResponseDto.reviewCount( (int) item.getReviewCount() );
+        onlyItemResponseDto.reviewCount(Math.toIntExact(item.getReviewCount()));
         onlyItemResponseDto.imageURLs(getImageResponseDto(item));
         return onlyItemResponseDto.build();
+    }
+
+    public default Object checkStock(Item item) {
+        return item.getStock() >0? item.getStock():"품절";
     }
     Item onlyItemResponseDtotoItem(OnlyItemResponseDto onlyItemResponseDto);
 

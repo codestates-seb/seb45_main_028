@@ -54,7 +54,7 @@ public class ItemController {
         Item item =itemService.updateItem(requestBody, itemImgFileList);
 
         SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
-        return new ResponseEntity<>(new SingleResponseDto<>(response),ok);
+        return new ResponseEntity<>(response,ok);
     }
 
     @GetMapping("/{item-id}")

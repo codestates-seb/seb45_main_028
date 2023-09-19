@@ -28,7 +28,7 @@ public class ItemDto {
         @NotNull
         private String detail;
         @NotNull
-        private String status;
+        private Integer stock;
         @NotNull
         private String color;
         @NotNull
@@ -41,7 +41,7 @@ public class ItemDto {
     @Setter
     @NoArgsConstructor
     public static class Patch{
-        @NotNull
+        @Nullable
         private Long itemId;
         @Nullable
         private String name;
@@ -50,7 +50,7 @@ public class ItemDto {
         @Nullable
         private String detail;
         @Nullable
-        private String status;
+        private Integer stock;
         @Nullable
         private String color;
         @Nullable

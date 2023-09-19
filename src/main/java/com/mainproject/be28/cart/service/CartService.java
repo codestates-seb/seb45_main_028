@@ -39,33 +39,25 @@ public class CartService {
     private final OrderService orderService;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final CartMapper mapper;
+    private final CartMapper cartMapperr;
 
-
-    public CartService(MemberService memberService, ItemService itemService, OrderService orderService, CartItemService cartItemService,
-
-                       CartRepository cartRepository, CartItemRepository cartItemRepository,OrderRepository orderRepository, OrderItemRepository orderItemRepository,
-    CartMapper mapper) {
-
+    public CartService(MemberService memberService, CartRepository cartRepository, CartItemRepository cartItemRepository, CartItemService cartItemService, ItemService itemService, OrderService orderService, OrderRepository orderRepository, OrderItemRepository orderItemRepository, CartMapper cartMapperr) {
         this.memberService = memberService;
-        this.itemService = itemService;
-        this.orderService = orderService;
-        this.cartItemService = cartItemService;
-
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
-
-        this.mapper = mapper;
-
+        this.cartItemService = cartItemService;
+        this.itemService = itemService;
+        this.orderService = orderService;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
-
+        this.cartMapperr = cartMapperr;
     }
-@Transactional
+
+    @Transactional
     public Cart addCart(CartItemDto cartItemDto) {
     Cart cart = findCartByMember();
 
-    Item item = itemService.findItem(cartItemDto.getItemId());
+    Item item =itemService.findItem(cartItemDto.getItemId());
     CartItem cartItem = cartItemService.findCartItem(cart, item);
 
     cartItem.addCount(cartItemDto.getCount());
@@ -111,7 +103,7 @@ public class CartService {
         order.makeOrderNumber(); // 주문 번호 만들기
 
         // 주문 항목 생성 및 저장
-       List<OrderItem> orderItemList =  orderCartItem(mapper.getCartItemsResponseDto(cart), order);
+       List<OrderItem> orderItemList =  orderCartItem(cartMapperr.getCartItemsResponseDto(cart), order);
 
         //장바구니 내 상품 모두 비우기
         removeAllItem();

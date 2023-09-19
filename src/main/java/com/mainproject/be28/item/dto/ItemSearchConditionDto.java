@@ -31,6 +31,8 @@ public class ItemSearchConditionDto {
     @Nullable
     private String name;
     @Nullable
+    private String status;
+    @Nullable
     @Pattern(regexp = "^(score|review|name|price)$", message = "정렬 기준은 score, review, name, price 중 하나만 입력 되어야 합니다.")
     private String sort;
     @Nullable

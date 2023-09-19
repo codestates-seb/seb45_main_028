@@ -20,10 +20,10 @@ INSERT INTO COMMENT VALUES (104, 102, 102, '두 번째 게시물에 대한 댓�
 
 
 --ITEM테이블 데이터
-INSERT INTO ITEM VALUES (101, '로지텍 키보드', 150000, '키보드', '품절', 'WHITE',  'Logitec', 'Keyboard',NOW(),NOW());
-INSERT INTO ITEM VALUES (102, '맥북 PRO 13인치', 2500000, 'RAM 16GB', '재고 있음', 'SPACE GRAY',  'APPLE', 'Notebook',NOW(),NOW());
-INSERT INTO ITEM VALUES (103, '로지텍 마우스', 100000, '로지텍 마우스', '재고 있음', 'BLACK',  'Logitec', 'Mouse',NOW(),NOW());
-INSERT INTO ITEM VALUES (104, '매직 마우스', 100000, '매직 마우스', '재고 있음', 'BLACK',  'APPLE', 'Mouse',NOW(),NOW());
+INSERT INTO ITEM VALUES (101, '로지텍 키보드', 150000, '키보드', 0, 'WHITE',  'Logitec', 'Keyboard',NOW(),NOW());
+INSERT INTO ITEM VALUES (102, '맥북 PRO 13인치', 2500000, 'RAM 16GB', 11, 'SPACE GRAY',  'APPLE', 'Notebook',NOW(),NOW());
+INSERT INTO ITEM VALUES (103, '로지텍 마우스', 100000, '로지텍 마우스', 200, 'BLACK',  'Logitec', 'Mouse',NOW(),NOW());
+INSERT INTO ITEM VALUES (104, '매직 마우스', 100000, '매직 마우스', 200, 'BLACK',  'APPLE', 'Mouse',NOW(),NOW());
 
 -- CART  테이블 데이터
 INSERT INTO CART VALUES (101, 101,NOW(),NOW());

@@ -1,7 +1,6 @@
 package com.mainproject.be28.complain.service;
 
 import com.mainproject.be28.complain.dto.ComplainPostDto;
-import com.mainproject.be28.complain.dto.ComplainResponsesDto;
 import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.repository.ComplainRepository;
@@ -13,7 +12,6 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
