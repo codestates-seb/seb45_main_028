@@ -2,10 +2,8 @@ package com.mainproject.be28.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mainproject.be28.auth.dto.LoginDto;
-import com.mainproject.be28.auth.refresh.RefreshToken;
 import com.mainproject.be28.auth.refresh.RefreshTokenRepository;
 import com.mainproject.be28.member.entity.Member;
-import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -37,11 +35,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // 로그인 요청이 들어오면 요청값으로 유저네임,패스워드토큰 생성
     @Override
-    @SneakyThrows
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+        LoginDto loginDto = null;
+        try {
+            loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());

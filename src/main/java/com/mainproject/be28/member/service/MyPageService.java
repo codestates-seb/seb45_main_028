@@ -8,6 +8,8 @@ import com.mainproject.be28.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.repository.ComplainRepository;
+import com.mainproject.be28.exception.BusinessLogicException;
+import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.member.dto.MemberPatchDto;
 import com.mainproject.be28.member.dto.PasswordPatchDto;
 import com.mainproject.be28.member.entity.Member;
@@ -47,12 +49,8 @@ public class MyPageService {
     private final ComplainRepository complainRepository;
     private final ComplainMapper complainMapper;
     public Member updateProfile(MemberPatchDto requestBody) {  // 주소, 핸드폰번호 변경.
-        // TODO: 현재 email // password 검증 로직 수정 필요
-//        memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
+        Member findMember = memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
         Member member = mapper.memberPatchToMember(requestBody);
-
-        long memberId = memberService.findTokenMemberId();
-        Member findMember = memberService.findVerifiedMember(memberId);
 
         Member updatedMember =
                 beanUtils.copyNonNullProperties(member, findMember);
@@ -61,19 +59,22 @@ public class MyPageService {
     }
 
     public Member changePassword(PasswordPatchDto passwordPatchDto) {
-        // TODO: 현재 email // password 검증 로직 수정 필요
-//        memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
-        Member findMember = memberService.findTokenMember();
+        Member findMember = memberService.verifyEmailPassword(passwordPatchDto.getEmail(), passwordPatchDto.getPassword());
+        matchPassword(passwordPatchDto);
         String encodedPassword = passwordEncoder.encode(passwordPatchDto.getAfterPassword());
         findMember.setPassword(encodedPassword);
 
         return findMember;
     }
 
+    private static void matchPassword(PasswordPatchDto passwordPatchDto) {
+        boolean matchNewPassword = passwordPatchDto.getAfterPassword().equals(passwordPatchDto.getConfirmPassword());
+        if(!matchNewPassword){ throw new BusinessLogicException(ExceptionCode.DO_NOT_MATCH_PASSWORD);}
+    }
+
     //회원 탈퇴
-    public void deleteMember(){
-        // TODO: 탈퇴 과정에서 확인절차 추가 필요
-        Member member = memberService.findTokenMember();
+    public void deleteMember(String email, String password){
+        Member member = memberService.verifyEmailPassword(email,password);
         memberRepository.delete(member);
     }
 

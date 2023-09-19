@@ -1,6 +1,9 @@
 package com.mainproject.be28.item.dto;
 
+import com.mainproject.be28.itemImage.dto.ItemImageResponseDto;
 import lombok.*;
+
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -19,4 +22,5 @@ public class OnlyItemResponseDto {
     private String brand;
     private String category;
     private Integer reviewCount;
+    private List<ItemImageResponseDto> imageURLs;
 }

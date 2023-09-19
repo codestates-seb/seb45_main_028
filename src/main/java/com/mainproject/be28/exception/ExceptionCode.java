@@ -28,8 +28,8 @@ public enum ExceptionCode {
     ALREADY_CANCELED(404, "이미 취소된 주문입니다"),
     NOT_YET_PAID(404,"아직 결제가 안된 주문입니다"),
     VERIFY_FAILURE(401,"ID 혹은 PW가 일치하지 않습니다."),
-    USER_EXIST(409,"존재하는 사용자 입니다." );
-
+    USER_EXIST(409,"존재하는 사용자 입니다." ),
+    DO_NOT_MATCH_PASSWORD(403, "입력한 비밀번호가 일치하지 않습니다.");
     @Getter
     private final int status;
 

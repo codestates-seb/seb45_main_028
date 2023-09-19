@@ -8,6 +8,7 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
-
+    AuthenticationManager authenticationManager ;
 
     //회원생성
     public Member createMember(Member member) {
@@ -90,17 +91,16 @@ public class MemberService {
     }
 
     //현재 로그인한 회원정보 접근 시 회원 이메일/비밀번호 한번더 검증
-    public void verifyEmailPassword(String email, String password) {
-        //TODO: 로직 수정 필요
+    public Member verifyEmailPassword(String email, String password) {
+        Member currentMember = findTokenMember();
         String currentEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // 현재 로그인되어 있는 회원의 메일
-        Member member = memberRepository.findMemberByEmail(currentEmail).get(); //현재 회원정보
-
-        String currentPassword = member.getPassword(); // 현재 로그인 되어있는 회원의 비밀번호
-        String typedPassword = passwordEncoder.encode(password);
+        Member member = memberRepository.findMemberByEmail(currentEmail).orElseThrow(() -> new BusinessLogicException(ExceptionCode.VERIFY_FAILURE));
+        boolean matchMember = member.equals(currentMember);
         boolean matchEmail = email.equals(currentEmail); //실제 이메일과 입력한 이메일이 일치하는지
-        boolean matchPassword = typedPassword.equals(currentPassword); // 실제 비밀번호와 입력한 비밀번호가 일치하는지
-        if(!matchEmail||!matchPassword){
+        boolean matchPassword = passwordEncoder.matches(password, member.getPassword());
+        if(!matchMember||!matchEmail||!matchPassword){
             throw new BusinessLogicException(ExceptionCode.VERIFY_FAILURE); // 둘 중하나라도 다르다면 인증 실
         }
+        return member;
     }
 }

@@ -69,11 +69,10 @@ public class MemberController {
         return ResponseEntity.ok(responseDto);
     }
 
-
     //회원탈퇴
     @DeleteMapping("/myPage")
-    public ResponseEntity deleteMember(){
-        mypageService.deleteMember();
+    public ResponseEntity deleteMember(@RequestBody String email,@RequestBody String password){
+        mypageService.deleteMember(email, password);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
