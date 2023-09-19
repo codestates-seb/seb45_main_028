@@ -58,7 +58,7 @@ public class ItemService {
         PageRequest pageRequest = PageRequest.of(condition.getPage()-1, condition.getSize());
         List<OnlyItemResponseDto> itemList = itemRepository.searchByCondition(condition, pageRequest);
 
-        setScoreAndReviewCount(itemList);
+        setScoreAndReviewCountAndURLs(itemList);
 
         return new PageImpl<>(itemList, pageRequest, itemList.size());
     }
@@ -143,11 +143,12 @@ public class ItemService {
         item.setReviewCount(item.getReviews().size());
         item.setScore(updateScore(item));
     }
-    private void setScoreAndReviewCount(List<OnlyItemResponseDto> itemList) {
+    private void setScoreAndReviewCountAndURLs(List<OnlyItemResponseDto> itemList) {
         for(OnlyItemResponseDto onlyItemResponseDto : itemList){ // 리뷰 평균 평점, 리뷰 수
             Item item = itemRepository.findItemByName(mapper.onlyItemResponseDtotoItem(onlyItemResponseDto).getName());
             onlyItemResponseDto.setReviewCount(item.getReviews().size());
             onlyItemResponseDto.setScore(updateScore(item));
+            onlyItemResponseDto.setImageURLs(mapper.getImageResponseDto(item));
         }
     }
     private Double updateScore(Item item){

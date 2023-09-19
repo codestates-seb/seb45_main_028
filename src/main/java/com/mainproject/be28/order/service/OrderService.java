@@ -105,7 +105,7 @@ public class OrderService {
         }
     }
     //데이터배이스에서 삭제
-    public void deleteOrder(long orderId) {
+    public void deleteOrder() {
         Order order = findOrder();
         if (order != null) {
             orderRepository.delete(order);

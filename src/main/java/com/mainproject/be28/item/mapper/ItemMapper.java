@@ -16,7 +16,26 @@ import java.util.List;
 public interface ItemMapper {
     Item itemPostDtoToItem(ItemDto.Post itemPostDto);
     Item  itemPatchDtoToItem(ItemDto.Patch itemPatchDto);
-    OnlyItemResponseDto itemToOnlyItemResponseDto(Item item);
+    default OnlyItemResponseDto itemToOnlyItemResponseDto(Item item){
+        if ( item == null ) {
+            return null;
+        }
+
+        OnlyItemResponseDto.OnlyItemResponseDtoBuilder onlyItemResponseDto = OnlyItemResponseDto.builder();
+
+        onlyItemResponseDto.itemId( item.getItemId() );
+        onlyItemResponseDto.name( item.getName() );
+        onlyItemResponseDto.price( item.getPrice() );
+        onlyItemResponseDto.detail( item.getDetail() );
+        onlyItemResponseDto.status( item.getStatus() );
+        onlyItemResponseDto.color( item.getColor() );
+        onlyItemResponseDto.score( item.getScore() );
+        onlyItemResponseDto.brand( item.getBrand() );
+        onlyItemResponseDto.category( item.getCategory() );
+        onlyItemResponseDto.reviewCount( (int) item.getReviewCount() );
+        onlyItemResponseDto.imageURLs(getImageResponseDto(item));
+        return onlyItemResponseDto.build();
+    }
     Item onlyItemResponseDtotoItem(OnlyItemResponseDto onlyItemResponseDto);
 
     default ItemDto.Response itemToItemResponseDto(Item item) {
