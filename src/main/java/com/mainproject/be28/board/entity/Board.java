@@ -1,5 +1,6 @@
 package com.mainproject.be28.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.comment.entity.Comment;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,6 +43,7 @@ public class Board extends Auditable {
     private String boardCategory;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Comment> comments;
 
 

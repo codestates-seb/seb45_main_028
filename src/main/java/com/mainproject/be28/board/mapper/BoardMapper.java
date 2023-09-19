@@ -1,6 +1,7 @@
 package com.mainproject.be28.board.mapper;
 
 import com.mainproject.be28.board.dto.BoardDto;
+import com.mainproject.be28.board.dto.BoardPostDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.item.dto.ItemDto;
 import com.mainproject.be28.item.entity.Item;
@@ -21,6 +22,11 @@ public interface BoardMapper {
 //    }
     @Mapping(source = "memberId", target = "member.memberId")
     Board boardPostDtoToBoard(BoardDto boardPostDto);
+
+    @Mapping(source = "title", target = "title")
+    @Mapping(source = "content", target = "content")
+    @Mapping(source = "boardCategory", target = "boardCategory")
+    Board boardPostDtoToBoard(BoardPostDto boardPostDto);
 
     @Mapping(source = "memberId", target = "member.memberId")
     Board boardPatchDtoToBoard(BoardDto boardPatchDto);

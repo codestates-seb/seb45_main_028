@@ -1,5 +1,6 @@
 package com.mainproject.be28.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mainproject.be28.auditable.Auditable;
 import com.mainproject.be28.board.entity.Board;
@@ -23,6 +24,7 @@ public class Comment extends Auditable {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "Board_ID", nullable = false)
+    @JsonBackReference
     private Board board;
 
     @ManyToOne
