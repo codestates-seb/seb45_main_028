@@ -1,6 +1,5 @@
 package com.mainproject.be28.board.service;
 
-import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.dto.BoardPostDto;
 import com.mainproject.be28.board.dto.BoardResponseDto;
 import com.mainproject.be28.board.entity.Board;
@@ -8,7 +7,6 @@ import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.repository.BoardRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
-import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,7 @@ public class BoardService {
     public BoardResponseDto getBoardById(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
         board.setViewCount(board.getViewCount()+1);
+        boardRepository.save(board);
         return  mapper.boardToBoardResponseDto(board);
     }
 
