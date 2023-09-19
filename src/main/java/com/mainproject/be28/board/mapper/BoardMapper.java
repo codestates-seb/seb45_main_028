@@ -50,15 +50,16 @@ public interface BoardMapper {
     default List<CommentResponseDto> getCommentResponseDtoList(Board board) {
         List<Comment> commentList = board.getComments();
         List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
-
-        for (Comment comment : commentList) {
-            CommentResponseDto commentResponseDto = new CommentResponseDto();
-            commentResponseDto.setMemberName(comment.getMember().getName());
-            commentResponseDto.setContent(comment.getContent());
-            commentResponseDto.setCreatedAt(comment.getCreatedAt());
-            commentResponseDto.setModifiedAt(comment.getModifiedAt());
-            commentResponseDto.setLikeCount(comment.getLikeCount());
-            commentResponseDtos.add(commentResponseDto);
+        if(commentList != null) {
+            for (Comment comment : commentList) {
+                CommentResponseDto commentResponseDto = new CommentResponseDto();
+                commentResponseDto.setMemberName(comment.getMember().getName());
+                commentResponseDto.setContent(comment.getContent());
+                commentResponseDto.setCreatedAt(comment.getCreatedAt());
+                commentResponseDto.setModifiedAt(comment.getModifiedAt());
+                commentResponseDto.setLikeCount(comment.getLikeCount());
+                commentResponseDtos.add(commentResponseDto);
+            }
         }
         return commentResponseDtos;
     }
