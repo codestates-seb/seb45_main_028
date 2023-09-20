@@ -43,7 +43,7 @@ public class OrderService {
         orderRepository.save(order);
 
         //주문이 완료되면 아이템 줄어듬
-        itemService.decreaseItemStock(orderPostDto.getItemId(), orderPostDto.getQuantity());
+        decreaseItemStock(orderPostDto.getItemId(), orderPostDto.getQuantity());
 
         OrderItem orderItem= orderItemPostDtoToOrderItem(orderPostDto, order);
         List<OrderItem> items = new ArrayList<>();
@@ -98,7 +98,20 @@ public class OrderService {
         }
     }
 
+    // 주문이 완료되면 아이템의 재고 수량을 감소시키는 메서드
+    public void decreaseItemStock(long itemId, long quantity) {
+        //아이템이 없으면 오류던짐
+        Item item = itemRepository.findById(itemId).orElseThrow(() ->new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
 
+        // 현재 재고 수량이 주문 수량보다 많아야 함을 확인
+        if (item.getStock() >= quantity) {
+            item.setStock((int) (item.getStock() - quantity));
+            itemRepository.save(item);
+        } else {
+            throw new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND);//재고 부족 에러코드만들기
+
+        }
+    }
 
 
 
