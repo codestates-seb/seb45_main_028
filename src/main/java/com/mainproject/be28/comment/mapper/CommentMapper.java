@@ -1,7 +1,8 @@
 package com.mainproject.be28.comment.mapper;
 
-import com.mainproject.be28.comment.dto.CommentDto;
+import com.mainproject.be28.comment.dto.CommentPatchDto;
 import com.mainproject.be28.comment.dto.CommentPostDto;
+import com.mainproject.be28.comment.dto.CommentResponseDto;
 import com.mainproject.be28.comment.entity.Comment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,11 +10,15 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    @Mapping(source = "memberId", target = "member.memberId")
-    Comment commentDtoToComment(CommentDto commentDto);
+    @Mapping(source = "boardId", target="board.boardId")
+    Comment commentPostDtoToComment(CommentPostDto commentPostDto);
 
-    @Mapping(source = "member.memberId", target = "memberId")
-    CommentDto commentToCommentDto(Comment comment);
+    @Mapping(source = "boardId", target="board.boardId")
+    Comment commentPatchDtoToComment(CommentPatchDto commentPatchDto);
+
+    @Mapping(source= "member.name", target="memberName")
+    CommentResponseDto commentToCommentResponseDto(Comment comment);
+
 }
 
 //    @Mapping(source = "commentPostDto.content", target = "content")

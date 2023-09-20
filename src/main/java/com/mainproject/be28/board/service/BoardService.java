@@ -1,6 +1,5 @@
 package com.mainproject.be28.board.service;
 
-import com.mainproject.be28.board.dto.BoardDto;
 import com.mainproject.be28.board.dto.BoardPostDto;
 import com.mainproject.be28.board.dto.BoardResponseDto;
 import com.mainproject.be28.board.entity.Board;
@@ -8,12 +7,12 @@ import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.repository.BoardRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
-import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +30,7 @@ public class BoardService {
         this.beanUtils = beanUtils;
     }
     public BoardResponseDto createBoard(BoardPostDto boardPostDto) {
+        memberService.verifiyAdmin();
         Board board = mapper.boardPostDtoToBoard(boardPostDto);
         board.setMember(memberService.findTokenMember());
         boardRepository.save(board);
@@ -40,6 +40,7 @@ public class BoardService {
     public BoardResponseDto getBoardById(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
         board.setViewCount(board.getViewCount()+1);
+        boardRepository.save(board);
         return  mapper.boardToBoardResponseDto(board);
     }
 
@@ -48,7 +49,8 @@ public class BoardService {
     }
 
 
-    public Board updateBoard(Long boardId, Board updatedBoardDto) {
+    public BoardResponseDto updateBoard(Long boardId, Board updatedBoardDto) {
+        memberService.verifiyAdmin();
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         Board board = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
         if (updatedBoardDto.getTitle() != null) {
@@ -57,14 +59,18 @@ public class BoardService {
         if (updatedBoardDto.getContent() != null) {
             board.setContent(updatedBoardDto.getContent());
         }
+        board.setModifiedAt(LocalDateTime.now());
+        board = boardRepository.save(board);
 
-        return boardRepository.save(board);
+        BoardResponseDto response = mapper.boardToBoardResponseDto(board);
+        return response;
     }
     // 회원아이디로 게시글 검색기능 추가
     public List<Board> getBoardsByMemberId(Long memberId) {
         return boardRepository.findByMember_MemberId(memberId);
     }
     public void deleteBoard(Long boardId) {
+        memberService.verifiyAdmin();
         boardRepository.deleteById(boardId);
     }
 // 키워드로 게시글검색기능 추가

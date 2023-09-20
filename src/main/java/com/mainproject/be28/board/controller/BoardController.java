@@ -6,16 +6,13 @@ import com.mainproject.be28.board.dto.BoardResponseDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
-import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.response.SingleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/boards")
@@ -70,11 +67,13 @@ public class BoardController {
         return boardService.getNoticeBoards();
     }
     @PatchMapping("/{boardId}")
-    public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
+    public ResponseEntity updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);
         Board board = mapper.boardPatchDtoToBoard(boardDto);
-        board.setModifiedAt(LocalDateTime.now());
-        return boardService.updateBoard(boardId, board);
+
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, board);
+        SingleResponseDto response = new SingleResponseDto(boardResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")
