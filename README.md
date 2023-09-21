@@ -4,14 +4,12 @@
 - **`프로젝트 기간` :** 개발자들을 위한 꿀템을 판매하는 쇼핑몰
 - **`팀원` :** 최성환(팀장), 강소이, 이수현, 박아름(부팀장), 홍지원, 우다연, 이호연
 
-⚡ [프로젝트 깃헙 바로가기](https://github.com/RE-ZERO-In-And-Out/In-And-Out)
-
 ⚡ [배포된 웹 어플리케이션 바로가기](http://28be.s3-website.ap-northeast-2.amazonaws.com/)
 
 # [프로젝트 설명]
 
-### 1) **사용 기술**
-## 기술 스택
+
+### 1) 기술 스택
 ### <span> ⚙️ **Tools** </span>
 | Github | Discord | Notion |
 | :---: | :---: |:---:|
