@@ -2,13 +2,13 @@ package com.mainproject.be28.member.service;
 
 
 import com.mainproject.be28.auth.userdetails.MemberAuthority;
-import com.mainproject.be28.comment.repository.CommentRepository;
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final MemberAuthority memberAuthority;
-
+    AuthenticationManager authenticationManager ;
 
     //회원생성
     public Member createMember(Member member) {
@@ -36,19 +36,20 @@ public class MemberService {
         member.setPassword(encryptedPassword);
         member.setPhone(encryptedPhone);
         member.setAddress(encryptedAdress);
-        member.setRoles(memberAuthority.createRoles(member.getName()));
+        member.setRoles(memberAuthority.createRoles(member.getEmail()));
 //        isAdmin(member.getRoles());
         Member savedMember = memberRepository.save(member);
 
         return savedMember;
     }
 
-    public boolean isAdmin(List<String> roles){
-        boolean admin = false;
+    public void verifiyAdmin(){
+        Member member = findTokenMember();
+        List<String> roles = member.getRoles();
         for(String role : roles){
-            if(role.equals("ADMIN")){admin = true; break;}
+            if(role.equals("ADMIN")){return;}
         }
-        return admin;
+        throw new BusinessLogicException(ExceptionCode.ONLY_ADMIN_CAN);
     }
 
     // 회원이 존재하는지 검사 , 존재하면 예외
@@ -81,24 +82,25 @@ public class MemberService {
 
     public Long findTokenMemberId() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return memberRepository.findMemberByEmail(email).getMemberId();
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        return member.getMemberId();
     }
     public Member findTokenMember() {
         String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return memberRepository.findMemberByEmail(email);
+        return memberRepository.findMemberByEmail(email).orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)) ;
     }
 
     //현재 로그인한 회원정보 접근 시 회원 이메일/비밀번호 한번더 검증
-    public void verifyEmailPassword(String email, String password) {
+    public Member verifyEmailPassword(String email, String password) {
+        Member currentMember = findTokenMember();
         String currentEmail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); // 현재 로그인되어 있는 회원의 메일
-        Member member = memberRepository.findMemberByEmail(currentEmail); //현재 회원정보
-
-        String currentPassword = member.getPassword(); // 현재 로그인 되어있는 회원의 비밀번호
-
+        Member member = memberRepository.findMemberByEmail(currentEmail).orElseThrow(() -> new BusinessLogicException(ExceptionCode.VERIFY_FAILURE));
+        boolean matchMember = member.equals(currentMember);
         boolean matchEmail = email.equals(currentEmail); //실제 이메일과 입력한 이메일이 일치하는지
-        boolean matchPassword = password.equals(currentPassword); // 실제 비밀번호와 입력한 비밀번확 일치하는지
-        if(!matchEmail||!matchPassword){
+        boolean matchPassword = passwordEncoder.matches(password, member.getPassword());
+        if(!matchMember||!matchEmail||!matchPassword){
             throw new BusinessLogicException(ExceptionCode.VERIFY_FAILURE); // 둘 중하나라도 다르다면 인증 실
         }
+        return member;
     }
 }

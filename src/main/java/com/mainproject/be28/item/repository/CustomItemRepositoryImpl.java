@@ -27,7 +27,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
 //todo: 상품정렬 조건 리스트화 (다중조건 정렬)
         return queryFactory
                 .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달
-                       ,item.itemId ,item.name,item.price,item.detail,item.status, item.color,item.brand ,item.category)
+                       ,item.itemId ,item.name,item.price,item.detail,item.stock, item.color,item.brand ,item.category)
                 )
                 .from(item)
                 .leftJoin(item.reviews, review)
@@ -74,7 +74,7 @@ public class CustomItemRepositoryImpl implements CustomItemRepository{
     }
 
     private OrderSpecifier<?> sortCondition(ItemSearchConditionDto search) {
-        Order direction = search.getOrder()!=null&&search.getOrder().equals("asc") ? Order.ASC : Order.DESC;
+        Order direction = search.getOrder()!=null&& search.getOrder().equalsIgnoreCase("asc") ? Order.ASC : Order.DESC;
         if (search.getSort()!=null) {
                 switch (search.getSort()){
                     case "name": return new OrderSpecifier<>(direction,item.name);

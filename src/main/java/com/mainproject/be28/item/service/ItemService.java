@@ -2,14 +2,16 @@ package com.mainproject.be28.item.service;
 
 import com.mainproject.be28.exception.BusinessLogicException;
 import com.mainproject.be28.exception.ExceptionCode;
+import com.mainproject.be28.item.dto.ItemDto;
+import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
 import com.mainproject.be28.item.repository.ItemRepository;
-import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.itemImage.entity.ItemImage;
 import com.mainproject.be28.itemImage.repository.ItemImageRepository;
 import com.mainproject.be28.itemImage.service.ItemImageService;
+import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -32,44 +35,99 @@ public class ItemService {
     private final ItemImageService itemImageService;
     private  final ItemImageRepository itemImageRepository;
     private final CustomBeanUtils<Item> beanUtils;
+    private final MemberService memberService;
 
-    public ItemService(ItemRepository itemRepository, ItemMapper mapper, ItemImageService itemImageService, ItemImageRepository itemImageRepository, CustomBeanUtils<Item> beanUtils) {
+    public ItemService(ItemRepository itemRepository, ItemMapper mapper, ItemImageService itemImageService, ItemImageRepository itemImageRepository, CustomBeanUtils<Item> beanUtils, MemberService memberService) {
         this.itemRepository = itemRepository;
         this.mapper = mapper;
         this.itemImageService = itemImageService;
         this.itemImageRepository = itemImageRepository;
         this.beanUtils = beanUtils;
+        this.memberService = memberService;
     }
 
-    /* *******************퍼블릭 메서드******************* */
-    public Item createItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
-        //todo: 관리자만 아이템 등록 권한 필요
-        if (itemRepository.findItemByName(item.getName()) != null) {
-            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
-        }
-        List<ItemImage> images = new ArrayList<>();
-        if (itemImgFileList != null){
-           images = saveImage(item, itemImgFileList);
-            item.setImages(images);
-        }
-        itemRepository.save(item); // 저장 순서 중요.
-        if(images.size()>0){itemImageRepository.saveAll(images);}
+    /*******************public 메서드********************/
+    /******일반 유저 - 상품 조회 ******/
+    public Item findItem(long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
+        setScoreReviewCount(item);
         return item;
     }
 
-    public Item updateItem(Item item, List<MultipartFile> itemImgFileList) throws IOException {
-        // todo: 관리자만 수정 권한 기능 추가 필요
-       Item findItem = findItem(item.getItemId());
+    public Page<OnlyItemResponseDto> findItems(ItemSearchConditionDto condition){
+        PageRequest pageRequest = PageRequest.of(condition.getPage()-1, condition.getSize());
+        List<OnlyItemResponseDto> itemList = itemRepository.searchByCondition(condition, pageRequest);
+
+        setStatusReviewScoreURL(itemList);
+
+        return new PageImpl<>(itemList, pageRequest, itemList.size());
+    }
+
+    /******관리자 - 상품 등록 및 수정, 삭제******/
+    public Item createItem(ItemDto.Post requestBody, List<MultipartFile> itemImgFileList) throws IOException {
+        memberService.verifiyAdmin();
+        Item item = mapper.itemPostDtoToItem(requestBody);
+
+        verifySameItemNameExist(item);
+
+        List<ItemImage> images = saveImages(itemImgFileList, item);
+        item.setImages(images);
+
+        itemRepository.save(item); // 저장 순서 중요.
+        if(images.size()>0){itemImageRepository.saveAll(images);}
+
+        return item;
+    }
+
+    public Item updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException {
+        memberService.verifiyAdmin();
+
+        Item newItem = mapper.itemPatchDtoToItem(requestBody);
+        Item findItem = findItem(newItem.getItemId());
+
         Item updatedItem =
-                beanUtils.copyNonNullProperties(item, findItem);
+                beanUtils.copyNonNullProperties(newItem, findItem);
+
+        updateImages(itemImgFileList, findItem, updatedItem);
+
+        updatedItem.setModifiedAt(LocalDateTime.now());
+
+        return itemRepository.save(updatedItem);
+    }
+
+    public void deleteItem(long itemId){
+        memberService.verifiyAdmin();
+
+        Item findItem = findItem(itemId);
+
+        itemImageService.deleteImage(findItem);
+        itemRepository.delete(findItem);
+    }
+
+
+    /********************private 메서드********************/
+
+    private List<ItemImage> saveImages(List<MultipartFile> itemImgFileList, Item item) throws IOException {
         List<ItemImage> images = new ArrayList<>();
-        //기존 상품에 이미지가 있다면 다시 등록
-        if(findItem.getImages()!=null){ images = new ArrayList<>(findItem.getImages()); }
+        if (itemImgFileList != null){
+            images = saveImage(item, itemImgFileList);
+        }
+        return images;
+    }
+
+    private void verifySameItemNameExist(Item item) {
+        if (itemRepository.findItemByName(item.getName()) != null) {
+            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
+        }
+    }
+
+    private void updateImages(List<MultipartFile> itemImgFileList, Item findItem, Item updatedItem) throws IOException {
+        List<ItemImage> images = findItem.getImages()==null?new ArrayList<>():findItem.getImages();
 
         //새로운 파일 이미지가 있다면, 새로 추가
         if (itemImgFileList != null) {
             for (MultipartFile image : itemImgFileList) {
-                ItemImage img = itemImageService.uploadImage(image, item);
+                ItemImage img = itemImageService.uploadImage(image, updatedItem);
                 images.add(img);
             }
             //대표 이미지 설정이 안되어있다면, 맨 첫번째 이미지 대표이미지로 설정
@@ -81,42 +139,20 @@ public class ItemService {
             updatedItem.setImages(images);
             itemImageRepository.saveAll(images);
         }
-        item.setModifiedAt(LocalDateTime.now());
-        itemRepository.save(updatedItem);
-
-        return updatedItem;
-
     }
-
-    public Item findItem(long itemId){
-
-        Optional<Item> optionalItem =
-                itemRepository.findById(itemId);
-        Item item  = optionalItem.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-        item.setReviewCount(item.getReviews().size());
+    private void setScoreReviewCount(Item item) {
+        item.setReviewCount((long) item.getReviews().size());
         item.setScore(updateScore(item));
-        return item;
     }
-
-    public Page<OnlyItemResponseDto> findItems(ItemSearchConditionDto condition){
-        PageRequest pageRequest = PageRequest.of(condition.getPage()-1, condition.getSize());
-        List<OnlyItemResponseDto> itemList = itemRepository.searchByCondition(condition, pageRequest);
-
+    private void setStatusReviewScoreURL(List<OnlyItemResponseDto> itemList) {
         for(OnlyItemResponseDto onlyItemResponseDto : itemList){ // 리뷰 평균 평점, 리뷰 수
             Item item = itemRepository.findItemByName(mapper.onlyItemResponseDtotoItem(onlyItemResponseDto).getName());
+            onlyItemResponseDto.setStocks(mapper.checkStock(item));
             onlyItemResponseDto.setReviewCount(item.getReviews().size());
             onlyItemResponseDto.setScore(updateScore(item));
+            onlyItemResponseDto.setImageURLs(mapper.getImageResponseDto(item));
         }
-
-        return new PageImpl<>(itemList, pageRequest, itemList.size());
     }
-    public void deleteItem(long itemId){
-
-        Item findItem = findItem(itemId);
-        // todo: 관리자만 권한삭제 기능 추가 필요
-        itemRepository.delete(findItem);
-    }
-
     private Double updateScore(Item item){
         if(item.getScore()==null){item.setScore(0.0);}
         List<Review> itemList = item.getReviews();
@@ -142,14 +178,4 @@ public class ItemService {
         }
         return images;
     }
-
-
-
-/*  관리자 검증 메서드
-
-    public boolean isAdmin (long tokenMemberId){
-
-        return tokenMemberId == adminId;
-}
-*/
 }

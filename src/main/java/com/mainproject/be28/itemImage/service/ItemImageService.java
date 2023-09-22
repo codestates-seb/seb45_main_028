@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Slf4j
 public class ItemImageService {
-    private final UploadS3 uploadImageS3;
+    private final S3Service S3;
 
-    public ItemImageService(UploadS3 uploadImageS3) {
-        this.uploadImageS3 = uploadImageS3;
+    public ItemImageService(S3Service uploadImageS3) {
+        this.S3 = uploadImageS3;
     }
 
     public ItemImage uploadImage(MultipartFile file, Item item) throws IOException {
@@ -26,7 +27,7 @@ public class ItemImageService {
                             .append(UUID.randomUUID())
                             .append(file.getOriginalFilename());
         String fileName = fileNameBuilder.toString();
-        String savedPath = uploadImageS3.upload(file, fileName);
+        String savedPath = S3.upload(file, fileName);
         log.info("Saved Path : "+savedPath);
 
         return ItemImage.builder().item(item)
@@ -34,5 +35,12 @@ public class ItemImageService {
                 .imageName(fileName)
                 .path(path)
                 .build();
+    }
+
+    public void deleteImage(Item item) {
+        List<ItemImage> images = item.getImages();
+        for (ItemImage image : images) {
+            S3.deleteFile(image.getImageName());
+        }
     }
 }

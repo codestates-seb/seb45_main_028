@@ -1,7 +1,6 @@
 package com.mainproject.be28.complain.service;
 
 import com.mainproject.be28.complain.dto.ComplainPostDto;
-import com.mainproject.be28.complain.dto.ComplainResponsesDto;
 import com.mainproject.be28.complain.entity.Complain;
 import com.mainproject.be28.complain.mapper.ComplainMapper;
 import com.mainproject.be28.complain.repository.ComplainRepository;
@@ -13,7 +12,6 @@ import com.mainproject.be28.member.entity.Member;
 import com.mainproject.be28.member.service.MemberService;
 import com.mainproject.be28.utils.CustomBeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +39,9 @@ public class ComplainService {
     public Complain createComplain(ComplainPostDto complainPostDto) {
 
         Complain complain = mapper.complainPostDtoToComplain(complainPostDto);
-        Member member = memberService.findMember(complainPostDto.getMemberId());
+        Member member = memberService.findTokenMember();
         Item item = itemService.findItem(complainPostDto.getItemId());
+
         complain.setMember(member);
         complain.setItem(item);
 
@@ -61,6 +60,7 @@ public class ComplainService {
 
     //complain 객체를 기반으로 엔티티 정보를 업데이트하고, 업데이트된 엔티티를 데이터베이스에 저장하여 반환
     public Complain updateComplain(Complain complain) {
+        Member member = memberService.findTokenMember();
         Complain findComplain = findComplain(complain.getComplainId());
 
         Complain updatedComplain =

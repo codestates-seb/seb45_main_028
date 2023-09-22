@@ -1,11 +1,9 @@
 package com.mainproject.be28.review.controller;
 
-import com.mainproject.be28.item.service.ItemService;
-import com.mainproject.be28.member.mapper.MemberMapper;
-import com.mainproject.be28.member.service.MemberService;
+import com.mainproject.be28.order.entity.Order;
+import com.mainproject.be28.response.SingleResponseDto;
 import com.mainproject.be28.review.dto.ReviewPatchDto;
 import com.mainproject.be28.review.dto.ReviewPostDto;
-import com.mainproject.be28.review.dto.ReviewResponseDto;
 import com.mainproject.be28.review.entity.Review;
 import com.mainproject.be28.review.mapper.ReviewMapper;
 import com.mainproject.be28.review.service.ReviewService;
@@ -29,9 +27,8 @@ import javax.validation.constraints.Positive;
 public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewMapper mapper;
-    private final ItemService itemService;
-    private final MemberMapper memberMapper;
-    private final MemberService memberService;
+    private  final HttpStatus ok = HttpStatus.OK;
+
 
 
     @PostMapping("/new/{score}")// 리뷰등록
@@ -39,9 +36,9 @@ public class ReviewController {
                                        @RequestBody @Valid  ReviewPostDto reviewPostDto,
                                        @PathVariable("score") int score) {
         reviewPostDto.setScore(score);
-        reviewPostDto.setItemId(itemId);
-       reviewService.createReview(mapper.ReviewPostDtoToReview(reviewPostDto));
-        return new ResponseEntity<>( HttpStatus.CREATED);
+        Review review = reviewService.createReview(reviewPostDto);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.reviewToReviewResponseDto(review),ok);
+        return new ResponseEntity(response, ok);
 
     }
     @PatchMapping("/{review-id}")// 리뷰수정
@@ -50,7 +47,8 @@ public class ReviewController {
         reviewPatchDto.setReviewId(reviewId);
         Review review = mapper.reviewPatchDtoToReview(reviewPatchDto);
         Review response = reviewService.updateReview(review);
-        return  new ResponseEntity<>(mapper.reviewToReviewResponseDto(response),HttpStatus.OK);
+        SingleResponseDto responses = new SingleResponseDto<>(mapper.reviewToReviewResponseDto(review),ok);
+        return new ResponseEntity(responses, ok);
     }
     @DeleteMapping("/{review-id}") //리뷰삭제
     public ResponseEntity deleteReview(@PathVariable("review-id") @Positive long reviewId){
@@ -60,13 +58,15 @@ public class ReviewController {
     @PostMapping("/{review-id}/like")//리뷰 좋아요
     public ResponseEntity addLike(@PathVariable("review-id") Long reviewId) {
         Review likeReview = reviewService.addLike(reviewId);
-        return new ResponseEntity<>( mapper.reviewToReviewResponseDto( likeReview), HttpStatus.OK);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.reviewToReviewResponseDto(likeReview),ok);
+        return new ResponseEntity(response, ok);
         }
 
     @PostMapping("/{review-id}/unlike")
     public ResponseEntity addDislike(@PathVariable("review-id") Long reviewId) {
             Review unlikeReview = reviewService.addDislike(reviewId);
-            return new ResponseEntity<>(mapper.reviewToReviewResponseDto( unlikeReview), HttpStatus.OK);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.reviewToReviewResponseDto(unlikeReview),ok);
+        return new ResponseEntity(response, ok);
         }
 
 }

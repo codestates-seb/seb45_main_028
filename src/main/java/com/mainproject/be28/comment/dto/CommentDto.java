@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 public class CommentDto {
     @NotNull
     private Long commentId;
-    @NotNull
-    private Long boardId;
+//    @NotNull
+//    private Long boardId;
     @NotNull
     private Long memberId;
     private String content;

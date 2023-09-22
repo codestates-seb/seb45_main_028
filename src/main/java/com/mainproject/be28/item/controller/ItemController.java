@@ -1,13 +1,12 @@
 package com.mainproject.be28.item.controller;
 
-import com.mainproject.be28.exception.BusinessLogicException;
-import com.mainproject.be28.exception.ExceptionCode;
 import com.mainproject.be28.item.dto.ItemDto;
+import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.dto.OnlyItemResponseDto;
 import com.mainproject.be28.item.entity.Item;
 import com.mainproject.be28.item.mapper.ItemMapper;
-import com.mainproject.be28.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.item.service.ItemService;
+import com.mainproject.be28.response.MultiResponseDto;
 import com.mainproject.be28.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,48 +31,46 @@ public class ItemController {
     private final static String ITEM_DEFAULT_URL = "/item";
     private final ItemService itemService;
     private final ItemMapper mapper;
+    private final HttpStatus ok = HttpStatus.OK;
     @PostMapping(value = "/new"
             , consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity postItem(@Valid @RequestPart ItemDto.Post requestBody
-                                   , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) {
+                                   , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) throws IOException{
 
-        Item itemMapper = mapper.itemPostDtoToItem(requestBody);
-        Item item;
-        try {
-            item = itemService.createItem(itemMapper, itemImgFileList);
-        } catch (BusinessLogicException e){
-            throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
-        } catch (Exception e) {
-            throw new BusinessLogicException(ExceptionCode.ITEM_REGIST_ERROR);
-        }
+        Item item = itemService.createItem(requestBody, itemImgFileList);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.itemToItemResponseDto(item)),HttpStatus.CREATED);
+        HttpStatus created = HttpStatus.CREATED;
+        SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), created);
+
+        return new ResponseEntity<>(response,created);
     }
 
     @PatchMapping(value = "/{item-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity patchItem(@PathVariable("item-id") @Positive long itemId,
                                         @Valid @RequestPart ItemDto.Patch requestBody, @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList)
             throws IOException {
-        requestBody.setItemId(itemId);
-        Item item = mapper.itemPatchDtoToItem(requestBody);
-        Item response = itemService.updateItem(item, itemImgFileList);
 
-        return new ResponseEntity<>(new SingleResponseDto<>(mapper.itemToItemResponseDto(response)),HttpStatus.OK);
+        requestBody.setItemId(itemId);
+        Item item =itemService.updateItem(requestBody, itemImgFileList);
+
+        SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
+        return new ResponseEntity<>(response,ok);
     }
 
     @GetMapping("/{item-id}")
     public ResponseEntity getItem(@PathVariable("item-id") @Positive long itemId){
 
-        Item response = itemService.findItem(itemId);
+        Item item = itemService.findItem(itemId);
 
-        ItemDto.Response itemResponse = mapper.itemToItemResponseDto(response);
-
-        return new ResponseEntity<>(itemResponse, HttpStatus.OK);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
     @PostMapping( "/search")
     public ResponseEntity getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
-        return new ResponseEntity<>( new SingleResponseDto<>(items), HttpStatus.OK);
+        MultiResponseDto response = new MultiResponseDto<>(items.getContent(), items,ok);
+        return new ResponseEntity<>(response, ok);
     }
 
     @DeleteMapping("/{item-id}")

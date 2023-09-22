@@ -1,18 +1,18 @@
 package com.mainproject.be28.board.controller;
 
 import com.mainproject.be28.board.dto.BoardDto;
+import com.mainproject.be28.board.dto.BoardPostDto;
+import com.mainproject.be28.board.dto.BoardResponseDto;
 import com.mainproject.be28.board.entity.Board;
 import com.mainproject.be28.board.mapper.BoardMapper;
 import com.mainproject.be28.board.service.BoardService;
-import com.mainproject.be28.member.entity.Member;
+import com.mainproject.be28.response.SingleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/boards")
@@ -22,23 +22,18 @@ public class BoardController {
     @Autowired
     private BoardMapper mapper;
     @PostMapping
-
-    public ResponseEntity createBoard(@RequestBody BoardDto boardDto) {
-        Board mapperBoard = mapper.boardPostDtoToBoard(boardDto);
-
-        return new ResponseEntity<>(boardService.createBoard(mapperBoard), HttpStatus.CREATED);
-
-//        Member member = new Member();
-//        member.setMemberId(boardDto.getMemberId());
-//        //board.setMember(member);
-//
-//        return boardService.createBoard(board);
-
+    public ResponseEntity createBoard(@RequestBody BoardPostDto boardPostDto) {
+        BoardResponseDto board = boardService.createBoard(boardPostDto);
+        SingleResponseDto response = new SingleResponseDto(board, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+
     @GetMapping("/{boardId}")
-    public Optional<Board> getBoardById(@PathVariable("boardId") Long boardId) {
-        return boardService.getBoardById(boardId);
+    public ResponseEntity getBoardById(@PathVariable("boardId") Long boardId) {
+        BoardResponseDto board =boardService.getBoardById(boardId);
+        SingleResponseDto response = new SingleResponseDto(board, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
@@ -72,11 +67,13 @@ public class BoardController {
         return boardService.getNoticeBoards();
     }
     @PatchMapping("/{boardId}")
-    public Board updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
+    public ResponseEntity updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
         boardDto.setBoardId(boardId);
         Board board = mapper.boardPatchDtoToBoard(boardDto);
-        board.setModifiedAt(LocalDateTime.now());
-        return boardService.updateBoard(boardId, board);
+
+        BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, board);
+        SingleResponseDto response = new SingleResponseDto(boardResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/{boardId}")

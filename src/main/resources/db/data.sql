@@ -3,8 +3,9 @@
 INSERT INTO MEMBER VALUES (101, 'test1@test.com', '{noop}test1', '테스트1', '010-1234-5678', '서울시 ㅇㅇ구 ㅇㅇ동', 37);
 INSERT INTO MEMBER VALUES (102, 'test2@test.com','{noop}test2',  '테스트2', '010-7654-3210', '경기도 xx시 xx구 xx동', 0);
 INSERT INTO MEMBER VALUES  (103, 'test3@test.com','{noop}test3',  '테스트3', '010-7777-7777', '인천시 ㅁㅁ구 ㅁㅁ동', 5);
-INSERT INTO MEMBER VALUES  (104, 'aa','1',  '테스트', '010-3377-7337', '인천시 ㅁㅁ구 ㅁㅁ동', 5);
-
+INSERT INTO MEMBER VALUES  (104, 'admin@gmail.com','{noop}1234',  '관리자', '010-5325-5325', '인천시 ㅁㅁ구 ㅁㅁ동', 5);
+INSERT INTO MEMBER_ROLES VALUES  (101, 104, 'ADMIN');
+INSERT INTO MEMBER_ROLES VALUES  (102, 104, 'USER');
 -- BOARD 테이블 데이터
 INSERT INTO BOARD VALUES (101, '첫 번째 게시물', 101, '첫 번째 게시물 내용입니다.', 100, 50, '자유게시판', NOW(),NOW());
 INSERT INTO BOARD VALUES (102, '두 번째 게시물', 102, '두 번째 게시물 내용입니다.', 120, 60, '스터디모집', NOW(),NOW());
@@ -19,10 +20,10 @@ INSERT INTO COMMENT VALUES (104, 102, 102, '두 번째 게시물에 대한 댓�
 
 
 --ITEM테이블 데이터
-INSERT INTO ITEM VALUES (101, '로지텍 키보드', 150000, '키보드', '품절', 'WHITE',  'Logitec', 'Keyboard',NOW(),NOW());
-INSERT INTO ITEM VALUES (102, '맥북 PRO 13인치', 2500000, 'RAM 16GB', '재고 있음', 'SPACE GRAY',  'APPLE', 'Notebook',NOW(),NOW());
-INSERT INTO ITEM VALUES (103, '로지텍 마우스', 100000, '로지텍 마우스', '재고 있음', 'BLACK',  'Logitec', 'Mouse',NOW(),NOW());
-INSERT INTO ITEM VALUES (104, '매직 마우스', 100000, '매직 마우스', '재고 있음', 'BLACK',  'APPLE', 'Mouse',NOW(),NOW());
+INSERT INTO ITEM VALUES (101, '로지텍 키보드', 150000, '키보드', 0, 'WHITE',  'Logitec', 'Keyboard',NOW(),NOW());
+INSERT INTO ITEM VALUES (102, '맥북 PRO 13인치', 2500000, 'RAM 16GB', 11, 'SPACE GRAY',  'APPLE', 'Notebook',NOW(),NOW());
+INSERT INTO ITEM VALUES (103, '로지텍 마우스', 100000, '로지텍 마우스', 200, 'BLACK',  'Logitec', 'Mouse',NOW(),NOW());
+INSERT INTO ITEM VALUES (104, '매직 마우스', 100000, '매직 마우스', 200, 'BLACK',  'APPLE', 'Mouse',NOW(),NOW());
 
 -- CART  테이블 데이터
 INSERT INTO CART VALUES (101, 101,NOW(),NOW());

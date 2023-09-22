@@ -1,12 +1,12 @@
 package com.mainproject.be28.item.dto;
 
-import com.mainproject.be28.itemImage.dto.ItemImageResponseDto;
 import com.mainproject.be28.review.dto.ReviewResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,7 +27,7 @@ public class ItemDto {
         @NotNull
         private String detail;
         @NotNull
-        private String status;
+        private Integer stock;
         @NotNull
         private String color;
         @NotNull
@@ -40,13 +40,21 @@ public class ItemDto {
     @Setter
     @NoArgsConstructor
     public static class Patch{
+        @Nullable
         private Long itemId;
+        @Nullable
         private String name;
+        @Nullable
         private Long price;
+        @Nullable
         private String detail;
-        private String status;
+        @Nullable
+        private Integer stock;
+        @Nullable
         private String color;
+        @Nullable
         private String brand;
+        @Nullable
         private String category;
     }
 
@@ -55,6 +63,5 @@ public class ItemDto {
     public static class Response {
         private OnlyItemResponseDto item;
         private List<ReviewResponseDto> reviews;
-        private List<ItemImageResponseDto> imageURLs;
     }
 }

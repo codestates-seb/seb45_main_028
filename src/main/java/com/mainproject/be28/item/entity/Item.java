@@ -6,8 +6,9 @@ import com.mainproject.be28.review.entity.Review;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.*;
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,7 +29,7 @@ public class Item extends Auditable {
     private String detail;
 
     @Column(length = 100)
-    private String status;
+    private Integer stock;
 
     @Column(length = 100)
     private String color;
@@ -43,7 +44,7 @@ public class Item extends Auditable {
     private Double score;
 
     @Transient
-    private long reviewCount;
+    private Long reviewCount;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();
