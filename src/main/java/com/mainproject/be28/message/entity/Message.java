@@ -1,6 +1,6 @@
 package com.mainproject.be28.message.entity;
 
-import com.mainproject.be28.member.entity.Member;
+import com.mainproject.be28.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;

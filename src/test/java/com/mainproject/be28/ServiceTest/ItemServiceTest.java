@@ -7,8 +7,8 @@
 //import com.mainproject.be28.item.mapper.ItemMapper;
 //import com.mainproject.be28.item.repository.ItemRepository;
 //import com.mainproject.be28.item.service.ItemService;
-//import com.mainproject.be28.itemImage.repository.ItemImageRepository;
-//import com.mainproject.be28.itemImage.service.ItemImageService;
+//import com.mainproject.be28.item.repository.ItemImageRepository;
+//import com.mainproject.be28.item.service.ItemImageService;
 //import com.mainproject.be28.member.service.MemberService;
 //import com.mainproject.be28.utils.CustomBeanUtils;
 //import org.junit.jupiter.api.BeforeEach;

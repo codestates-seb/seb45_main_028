@@ -28,9 +28,9 @@ public class QMessage extends EntityPathBase<Message> {
 
     public final NumberPath<Long> messageId = createNumber("messageId", Long.class);
 
-    public final com.mainproject.be28.member.entity.QMember responseMember;
+    public final com.mainproject.be28.domain.member.entity.QMember responseMember;
 
-    public final com.mainproject.be28.member.entity.QMember senderMember;
+    public final com.mainproject.be28.domain.member.entity.QMember senderMember;
 
     public QMessage(String variable) {
         this(Message.class, forVariable(variable), INITS);
@@ -50,8 +50,8 @@ public class QMessage extends EntityPathBase<Message> {
 
     public QMessage(Class<? extends Message> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.responseMember = inits.isInitialized("responseMember") ? new com.mainproject.be28.member.entity.QMember(forProperty("responseMember")) : null;
-        this.senderMember = inits.isInitialized("senderMember") ? new com.mainproject.be28.member.entity.QMember(forProperty("senderMember")) : null;
+        this.responseMember = inits.isInitialized("responseMember") ? new com.mainproject.be28.domain.member.entity.QMember(forProperty("responseMember")) : null;
+        this.senderMember = inits.isInitialized("senderMember") ? new com.mainproject.be28.domain.member.entity.QMember(forProperty("senderMember")) : null;
     }
 
 }
