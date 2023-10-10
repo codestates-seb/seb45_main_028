@@ -3,11 +3,11 @@ package com.mainproject.be28.domain.shopping.cart.service;
 import com.mainproject.be28.domain.shopping.cart.entity.Cart;
 import com.mainproject.be28.domain.shopping.cart.entity.CartItem;
 import com.mainproject.be28.domain.shopping.cart.repository.CartItemRepository;
-import com.mainproject.be28.domain.shopping.item.entity.Item;
 import com.mainproject.be28.global.exception.BusinessLogicException;
 import com.mainproject.be28.global.exception.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 
 
 @Service
@@ -19,8 +19,14 @@ public class CartItemService {
         this.cartItemRepository = cartItemRepository;
     }
 
-    public CartItem findCartItem(Cart cart, Item item) {
-        return cartItemRepository.findCartItemByCart_CartIdAndItem_ItemId(cart.getCartId(), item.getItemId())
+    public CartItem saveCartItem(CartItem cartItem){
+        return cartItemRepository.save(cartItem);
+    }
+    public CartItem findCartItem(Cart cart, long itemId) {
+        return cartItemRepository.findCartItemByCart_CartIdAndItem_ItemId(cart.getCartId(), itemId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_ITEM_NOT_FOUND));
+    }
+    public void deleteCartItem(CartItem cartItem){
+        cartItemRepository.delete(cartItem);
     }
 }

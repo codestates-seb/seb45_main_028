@@ -11,7 +11,13 @@ import com.mainproject.be28.global.exception.ExceptionCode;
 import com.mainproject.be28.domain.member.entity.Member;
 import com.mainproject.be28.domain.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -65,6 +71,17 @@ public class CommentService {
         verifySameMember(memberService.findTokenMember(),comment);
 
         commentRepository.delete(comment);
+    }
+
+    public Page<CommentResponseDto> getMyComments(int page, int size) {
+        long memberId = memberService.findTokenMemberId();
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        List<Comment> myComments = commentRepository.findCommentsByMember_MemberId(memberId);
+        List<CommentResponseDto> myCommentsDto = new ArrayList<>();
+        for (Comment comment : myComments) {
+            myCommentsDto.add(mapper.commentToCommentResponseDto(comment));
+        }
+        return new PageImpl<>(myCommentsDto, pageRequest, myCommentsDto.size());
     }
 }
 

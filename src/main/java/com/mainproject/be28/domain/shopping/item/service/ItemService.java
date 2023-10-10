@@ -12,10 +12,15 @@ import java.io.IOException;
 import java.util.List;
 @Service
 public interface ItemService {
-    Item findItem(long itemId);
+    /*category: 일반 유저 - 상품 조회*/
+    Item verifyExistItem(long itemId);
+    ItemDto.Response findItem(long itemId);
     Page<OnlyItemResponseDto> findItems(ItemSearchConditionDto condition);
-    Item createItem(ItemDto.Post requestBody, List<MultipartFile> itemImgFileList)  throws IOException;
-    Item updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException;
+
+    /*category: 관리자 - 상품 등록 및 수정, 삭제*/
+    ItemDto.Response createItem(ItemDto.Post requestBody, List<MultipartFile> itemImgFileList)  throws IOException;
+    ItemDto.Response updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException;
     void deleteItem(long itemId);
+
 
 }

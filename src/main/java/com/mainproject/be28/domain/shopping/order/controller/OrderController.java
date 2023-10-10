@@ -3,6 +3,7 @@ package com.mainproject.be28.domain.shopping.order.controller;
 import java.util.List;
 import javax.validation.Valid;
 
+import com.mainproject.be28.domain.shopping.order.dto.CartOrderDto;
 import com.mainproject.be28.domain.shopping.order.dto.OrderPostDto;
 import com.mainproject.be28.domain.shopping.order.dto.OrderResponseDto;
 import com.mainproject.be28.domain.shopping.order.entity.Order;
@@ -47,8 +48,12 @@ public class OrderController {
         SingleResponseDto response =  new SingleResponseDto<>(responses,ok);
         return new ResponseEntity(response, ok);
     }
-
-
+    @PostMapping( "/orders")
+    public ResponseEntity postCartOrder(@RequestBody @Valid CartOrderDto cartOrderDto){
+        Order createOrder = orderService.createCartOrder(cartOrderDto);
+        SingleResponseDto response = new SingleResponseDto<>(mapper.ordersToOrderPageResponseDto(createOrder),ok);
+        return new ResponseEntity<>(response,ok);
+    }
     @DeleteMapping("/{order-id}")
     public ResponseEntity deleteOrder(@PathVariable("order-id") long orderId) {
         orderService.cancelOrder(orderId);

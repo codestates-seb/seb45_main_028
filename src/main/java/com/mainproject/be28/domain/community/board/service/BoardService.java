@@ -8,7 +8,6 @@ import com.mainproject.be28.domain.community.board.repository.BoardRepository;
 import com.mainproject.be28.domain.member.service.MemberService;
 import com.mainproject.be28.global.exception.BusinessLogicException;
 import com.mainproject.be28.global.exception.ExceptionCode;
-import com.mainproject.be28.global.utils.CustomBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,13 +23,9 @@ public class BoardService {
     private BoardMapper mapper;
     @Autowired
     private MemberService memberService;
-    private final CustomBeanUtils<Board> beanUtils;
 
-    public BoardService(CustomBeanUtils<Board> beanUtils) {
-        this.beanUtils = beanUtils;
-    }
     public BoardResponseDto createBoard(BoardPostDto boardPostDto) {
-        memberService.verifiyAdmin();
+        memberService.verifyAdmin();
         Board board = mapper.boardPostDtoToBoard(boardPostDto);
         board.setMember(memberService.findTokenMember());
         boardRepository.save(board);
@@ -50,7 +45,7 @@ public class BoardService {
 
 
     public BoardResponseDto updateBoard(Long boardId, Board updatedBoardDto) {
-        memberService.verifiyAdmin();
+        memberService.verifyAdmin();
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         Board board = optionalBoard.orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOARD_NOT_FOUND));
         if (updatedBoardDto.getTitle() != null) {
@@ -70,7 +65,7 @@ public class BoardService {
         return boardRepository.findByMember_MemberId(memberId);
     }
     public void deleteBoard(Long boardId) {
-        memberService.verifiyAdmin();
+        memberService.verifyAdmin();
         boardRepository.deleteById(boardId);
     }
 // 키워드로 게시글검색기능 추가

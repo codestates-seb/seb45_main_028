@@ -11,49 +11,50 @@ import org.mapstruct.Mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel =  "spring")
 public interface ItemMapper {
     Item itemPostDtoToItem(ItemDto.Post itemPostDto);
     Item  itemPatchDtoToItem(ItemDto.Patch itemPatchDto);
-    default OnlyItemResponseDto itemToOnlyItemResponseDto(Item item){
+
+    default OnlyItemResponseDto itemToOnlyItemResponseDto(Item item) {
         if ( item == null ) {
             return null;
         }
 
         OnlyItemResponseDto.OnlyItemResponseDtoBuilder onlyItemResponseDto = OnlyItemResponseDto.builder();
-
         onlyItemResponseDto.itemId( item.getItemId() );
         onlyItemResponseDto.name( item.getName() );
         onlyItemResponseDto.price( item.getPrice() );
         onlyItemResponseDto.detail( item.getDetail() );
-        onlyItemResponseDto.stocks( checkStock(item));
         onlyItemResponseDto.color( item.getColor() );
         onlyItemResponseDto.score( item.getScore() );
         onlyItemResponseDto.brand( item.getBrand() );
+        onlyItemResponseDto.stocks(checkStock(item));
         onlyItemResponseDto.category( item.getCategory() );
-        onlyItemResponseDto.reviewCount(Math.toIntExact(item.getReviewCount()));
+        onlyItemResponseDto.reviewCount(item.getReviewCount());
         onlyItemResponseDto.imageURLs(getImageResponseDto(item));
+
         return onlyItemResponseDto.build();
     }
-
-    public default String checkStock(Item item) {
-        if(item.getStock()>10) {return "재고 있음";}
-        else if(item.getStock()>0){return String.format("%d개 남음", item.getStock());}
-        else return "품절";
-    }
-    Item onlyItemResponseDtotoItem(OnlyItemResponseDto onlyItemResponseDto);
 
     default ItemDto.Response itemToItemResponseDto(Item item) {
 
         OnlyItemResponseDto onlyitemResponseDto = itemToOnlyItemResponseDto(item);
-
         List<ReviewResponseDto> reviewResponseDtos = getReviewsResponseDto(item);
-
-        return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos);
+        List<ItemImageResponseDto> imageResponseDtos = getImageResponseDto(item);
+        return new ItemDto.Response(onlyitemResponseDto, reviewResponseDtos, imageResponseDtos);
     }
 
-    default List<ItemImageResponseDto> getImageResponseDto(Item item){
+
+    default List<OnlyItemResponseDto> itemListToOnlyItemResponseDtoList(List<Item> itemList) {
+        List<OnlyItemResponseDto> onlyItemResponsesDto = new ArrayList<>();
+        for (Item item : itemList) {
+            onlyItemResponsesDto.add(itemToOnlyItemResponseDto(item));
+        }
+        return onlyItemResponsesDto;
+    }
+
+    default List<ItemImageResponseDto> getImageResponseDto(Item item) {
         List<ItemImageResponseDto> itemImageResponseDtos = new ArrayList<>();
         List<ItemImage> imageList = item.getImages();
 
@@ -61,12 +62,12 @@ public interface ItemMapper {
             for (ItemImage image : imageList) {
                 ItemImageResponseDto itemImageResponseDto =
                         ItemImageResponseDto.builder()
-                        . itemId(image.getItem().getItemId())
-                        .itemImageId(image.getItemImageId())
-                        .imageName(image.getImageName())
-                        .URL(image.getBaseUrl() + image.getImageName())
-                        .representationImage(image.getRepresentationImage())
-                        .build();
+                                . itemId(image.getItem().getItemId())
+                                .itemImageId(image.getItemImageId())
+                                .imageName(image.getImageName())
+                                .URL(image.getBaseUrl() + image.getImageName())
+                                .representationImage(image.getRepresentationImage())
+                                .build();
                 itemImageResponseDtos.add(itemImageResponseDto);
             }
         }
@@ -93,5 +94,11 @@ public interface ItemMapper {
             }
         }
         return reviewResponseDtos;
+    }
+
+    default String checkStock(Item item) {
+        if(item.getStock()>10) {return "재고 있음";}
+        else if(item.getStock()>0){return String.format("%d개 남음", item.getStock());}
+        else return "품절";
     }
 }

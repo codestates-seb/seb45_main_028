@@ -1,116 +1,44 @@
 package com.mainproject.be28.domain.member.service;
 
 import com.mainproject.be28.domain.community.comment.dto.CommentResponseDto;
-import com.mainproject.be28.domain.community.comment.entity.Comment;
-import com.mainproject.be28.domain.community.comment.mapper.CommentMapper;
-import com.mainproject.be28.domain.community.comment.repository.CommentRepository;
+import com.mainproject.be28.domain.community.comment.service.CommentService;
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
-import com.mainproject.be28.domain.shopping.complain.entity.Complain;
-import com.mainproject.be28.domain.shopping.complain.mapper.ComplainMapper;
-import com.mainproject.be28.domain.shopping.complain.repository.ComplainRepository;
-import com.mainproject.be28.domain.member.dto.MemberPatchDto;
-import com.mainproject.be28.domain.member.dto.PasswordPatchDto;
-import com.mainproject.be28.domain.member.entity.Member;
-import com.mainproject.be28.domain.member.repository.MemberRepository;
-import com.mainproject.be28.global.exception.BusinessLogicException;
-import com.mainproject.be28.global.exception.ExceptionCode;
-import com.mainproject.be28.domain.member.mapper.MemberMapper;
+import com.mainproject.be28.domain.shopping.complain.service.ComplainService;
+import com.mainproject.be28.domain.shopping.review.service.ReviewService;
 import com.mainproject.be28.domain.shopping.review.dto.ReviewResponseDto;
-import com.mainproject.be28.domain.shopping.review.entity.Review;
-import com.mainproject.be28.domain.shopping.review.mapper.ReviewMapper;
-import com.mainproject.be28.domain.shopping.review.repository.ReviewRepository;
-import com.mainproject.be28.global.utils.CustomBeanUtils;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @Transactional
-@RequiredArgsConstructor
 @Slf4j
 public class MyPageService {
-    private final MemberMapper mapper;
-    private final MemberRepository memberRepository;
-    private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final MemberService memberService;
-    private final CustomBeanUtils<Member> beanUtils;
-    private final ReviewRepository reviewRepository;
-    private final ReviewMapper reviewMapper;
-    private final ComplainRepository complainRepository;
-    private final ComplainMapper complainMapper;
-    public Member updateProfile(MemberPatchDto requestBody) {  // 주소, 핸드폰번호 변경.
-        Member findMember = memberService.verifyEmailPassword(requestBody.getEmail(), requestBody.getPassword());
-        Member member = mapper.memberPatchToMember(requestBody);
 
-        Member updatedMember =
-                beanUtils.copyNonNullProperties(member, findMember);
+    public final MemberService memberService;
+    private final CommentService commentService;
+    private final ReviewService reviewService;
+    private final ComplainService complainService;
 
-        return memberRepository.save(updatedMember);
-    }
-
-    public Member changePassword(PasswordPatchDto passwordPatchDto) {
-        Member findMember = memberService.verifyEmailPassword(passwordPatchDto.getEmail(), passwordPatchDto.getPassword());
-        matchPassword(passwordPatchDto);
-        String encodedPassword = passwordEncoder.encode(passwordPatchDto.getAfterPassword());
-        findMember.setPassword(encodedPassword);
-
-        return findMember;
-    }
-
-    private static void matchPassword(PasswordPatchDto passwordPatchDto) {
-        boolean matchNewPassword = passwordPatchDto.getAfterPassword().equals(passwordPatchDto.getConfirmPassword());
-        if(!matchNewPassword){ throw new BusinessLogicException(ExceptionCode.DO_NOT_MATCH_PASSWORD);}
-    }
-
-    //회원 탈퇴
-    public void deleteMember(String email, String password){
-        Member member = memberService.verifyEmailPassword(email,password);
-        memberRepository.delete(member);
+    public MyPageService(MemberService memberService, CommentService commentService, ReviewService reviewService, ComplainService complainService) {
+        this.memberService = memberService;
+        this.commentService = commentService;
+        this.reviewService = reviewService;
+        this.complainService = complainService;
     }
 
     //작성한 리뷰 조회
     public Page<ReviewResponseDto> getMyReviews(long memberId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
-        List<Review> myReviews = reviewRepository.findAllByMember_MemberId(memberId);
-        List<ReviewResponseDto> myReviewsDto = new ArrayList<>();
-        for (Review review : myReviews) {
-            myReviewsDto.add(reviewMapper.reviewToReviewResponseDto(review));
-        }
-
-        return new PageImpl<>(myReviewsDto, pageRequest, myReviewsDto.size());
+        return reviewService.getMyReviews(memberId, page, size);
     }
 
     //작성한 댓글 조회
     public Page<CommentResponseDto> getMyComments(int page, int size) {
-        long memberId = memberService.findTokenMemberId();
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
-        List<Comment> myComments = commentRepository.findCommentsByMember_MemberId(memberId);
-        List<CommentResponseDto> myCommentsDto = new ArrayList<>();
-        for (Comment comment : myComments) {
-            myCommentsDto.add(commentMapper.commentToCommentResponseDto(comment));
-        }
-        return new PageImpl<>(myCommentsDto, pageRequest, myCommentsDto.size());
+        return commentService.getMyComments(page, size);
     }
-
     //작성한 문의 조회
     public Page<ComplainResponseDto> getMyComplains(int page, int size) {
-        long memberId = memberService.findTokenMemberId();
-        PageRequest pageRequest = PageRequest.of(page - 1, size);
-        List<Complain> myComplains = complainRepository.findAllByMember_MemberId(memberId);
-        List<ComplainResponseDto> myComplainsDto = new ArrayList<>();
-        for (Complain complain : myComplains) {
-            myComplainsDto.add(complainMapper.complainToComplainResponseDto(complain));
-        }
-        return new PageImpl<>(myComplainsDto, pageRequest, myComplainsDto.size());
+        return complainService.getMyComplains(page, size);
     }
 }

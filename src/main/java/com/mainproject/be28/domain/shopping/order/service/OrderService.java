@@ -1,7 +1,11 @@
 package com.mainproject.be28.domain.shopping.order.service;
 
 
+import com.mainproject.be28.domain.shopping.cart.entity.Cart;
+import com.mainproject.be28.domain.shopping.cart.entity.CartItem;
+import com.mainproject.be28.domain.shopping.cart.service.CartService;
 import com.mainproject.be28.domain.shopping.order.data.OrderStatus;
+import com.mainproject.be28.domain.shopping.order.dto.CartOrderDto;
 import com.mainproject.be28.domain.shopping.order.dto.OrderPostDto;
 import com.mainproject.be28.domain.shopping.order.entity.Order;
 import com.mainproject.be28.domain.shopping.order.repository.OrderRepository;
@@ -13,7 +17,6 @@ import com.mainproject.be28.domain.shopping.order.repository.OrderItemRepository
 import com.mainproject.be28.global.exception.BusinessLogicException;
 import com.mainproject.be28.global.exception.ExceptionCode;
 import com.mainproject.be28.domain.member.entity.Member;
-import com.mainproject.be28.domain.member.repository.MemberRepository;
 import com.mainproject.be28.domain.member.service.MemberService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,13 +29,13 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 @Transactional
-public class OrderService {
+public class OrderService  {
     private final OrderRepository orderRepository;
     private final ItemService itemService;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final OrderItemRepository orderItemRepository;
+    private final CartService cartService;
 
     public Order createOrder(OrderPostDto orderPostDto)   {
         Member member = memberService.findTokenMember();
@@ -55,7 +58,7 @@ public class OrderService {
     }
 
         public OrderItem orderItemPostDtoToOrderItem(OrderPostDto orderPostDto,Order order) {
-        Item item = itemService.findItem(orderPostDto.getItemId());
+        Item item = itemService.verifyExistItem(orderPostDto.getItemId());
         long quantity = orderPostDto.getQuantity();
 
         OrderItem orderItem = new OrderItem();
@@ -90,7 +93,7 @@ public class OrderService {
             orderRepository.save(order);
         }
     }
-    //데이터배이스에서 삭제
+    //데이터베이스에서 삭제
     public void deleteOrder() {
         Order order = findOrder();
         if (order != null) {
@@ -114,7 +117,48 @@ public class OrderService {
     }
 
 
+    @Transactional
+    public Order createCartOrder(CartOrderDto cartOrderDto) {
+        Member member = memberService.findTokenMember();
+        Cart cart = cartService.findCartByMember();
 
+        Order order =  Order.builder()
+                .status(OrderStatus.NOT_PAID) // 주문 상태
+                .member(member)
+                .build();    //멤버정보
 
+        order.makeOrderNumber(); // 주문 번호 만들기
 
+        // 주문 항목 생성 및 저장
+        List<OrderItem> orderItemList = new ArrayList<>();
+        //카트항목 가져오기
+        List<CartItem> cartItems = cart.getCartItems();
+        //카트항목을 주문항목으로 바꿈
+        for (CartItem cartItem : cartItems) {
+            // 아이템 정보 가져오기
+            Item item = cartItem.getItem();
+
+            // 주문 항목 생성
+            OrderItem orderItem = OrderItem.builder()
+                    .price(item.getPrice())
+                    .quantity(cartItem.getCount())
+                    .order(order)
+                    .item(item)
+                    .build();
+
+            // 주문 항목 목록에 추가
+            orderItemList.add(orderItem);
+        }
+        order.setTotalPrice(cartService.getTotalPrice(orderItemList)); //총합가격
+        order.setOrderItems(orderItemList); // 주문항목
+        // 주문 저장
+        orderRepository.save(order);
+        //주문항목 저장
+        orderItemRepository.saveAll(orderItemList);
+        //주문 후 아이템 재고 삭제
+       decreaseItemStock(cartOrderDto.getCartItemId(), cartOrderDto.getCount());
+        //장바구니 삭제?? -> 장바구니 안에 있는 장바구니상품만 삭제
+        cartService.removeAllItem();
+        return order;
+    }
 }

@@ -4,10 +4,6 @@ import com.mainproject.be28.domain.shopping.cart.entity.Cart;
 import com.mainproject.be28.domain.shopping.cart.mapper.CartMapper;
 import com.mainproject.be28.domain.shopping.cart.service.CartService;
 import com.mainproject.be28.domain.shopping.cart.dto.CartItemDto;
-import com.mainproject.be28.domain.shopping.order.dto.CartOrderDto;
-import com.mainproject.be28.domain.shopping.order.entity.Order;
-import com.mainproject.be28.domain.shopping.order.mapper.OrderMapper;
-import com.mainproject.be28.domain.shopping.order.service.OrderService;
 import com.mainproject.be28.global.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +21,6 @@ public class CartController {
 
     private final CartService cartService;
     private final CartMapper mapper;
-    private final OrderMapper Ordermapper;
-    private final OrderService orderService;
     private  final HttpStatus ok = HttpStatus.OK;
 
     @PostMapping
@@ -59,7 +53,6 @@ public class CartController {
     @DeleteMapping("/delete/{itemId}")
     public ResponseEntity deleteCartItem(@PathVariable("itemId") long itemId) {
         cartService.removeItem(itemId);
-
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -67,15 +60,5 @@ public class CartController {
     public ResponseEntity deleteAll() {
         cartService.removeAllItem();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
-    // 장바구니 상품 주문
-    @PostMapping( "/orders")
-    public ResponseEntity postCartOrder(@RequestBody @Valid CartOrderDto cartOrderDto){
-        Order createOrder = cartService.createCartOrder(cartOrderDto);
-        SingleResponseDto response = new SingleResponseDto<>(Ordermapper.ordersToOrderPageResponseDto(createOrder),ok);
-        return new ResponseEntity<>(response,ok);
-
-    }
-
 }

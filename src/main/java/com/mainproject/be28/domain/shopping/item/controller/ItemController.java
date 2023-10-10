@@ -3,9 +3,7 @@ package com.mainproject.be28.domain.shopping.item.controller;
 import com.mainproject.be28.domain.shopping.item.dto.ItemDto;
 import com.mainproject.be28.domain.shopping.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.domain.shopping.item.dto.OnlyItemResponseDto;
-import com.mainproject.be28.domain.shopping.item.entity.Item;
 import com.mainproject.be28.domain.shopping.item.service.ItemService;
-import com.mainproject.be28.domain.shopping.item.mapper.ItemMapper;
 import com.mainproject.be28.global.response.MultiResponseDto;
 import com.mainproject.be28.global.response.SingleResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -28,47 +26,48 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class ItemController {
-    private final static String ITEM_DEFAULT_URL = "/item";
     private final ItemService itemService;
-    private final ItemMapper mapper;
     private final HttpStatus ok = HttpStatus.OK;
+
     @PostMapping(value = "/new"
             , consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity postItem(@Valid @RequestPart ItemDto.Post requestBody
+    public ResponseEntity createItem(@Valid @RequestPart ItemDto.Post requestBody
                                    , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) throws IOException{
 
-        Item item = itemService.createItem(requestBody, itemImgFileList);
+        ItemDto.Response item =  itemService.createItem(requestBody, itemImgFileList);
 
         HttpStatus created = HttpStatus.CREATED;
-        SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), created);
+
+        SingleResponseDto response = new SingleResponseDto<>(item, created);
 
         return new ResponseEntity<>(response,created);
     }
 
     @PatchMapping(value = "/{item-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity patchItem(@PathVariable("item-id") @Positive long itemId,
+    public ResponseEntity updateItem(@PathVariable("item-id") @Positive long itemId,
                                         @Valid @RequestPart ItemDto.Patch requestBody, @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList)
             throws IOException {
 
         requestBody.setItemId(itemId);
-        Item item =itemService.updateItem(requestBody, itemImgFileList);
+        ItemDto.Response itemResponse =  itemService.updateItem(requestBody, itemImgFileList);
 
-        SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
+        SingleResponseDto response = new SingleResponseDto<>(itemResponse, ok);
         return new ResponseEntity<>(response,ok);
     }
 
     @GetMapping("/{item-id}")
     public ResponseEntity getItem(@PathVariable("item-id") @Positive long itemId){
 
-        Item item = itemService.findItem(itemId);
+        ItemDto.Response item = itemService.findItem(itemId);
 
-        SingleResponseDto response = new SingleResponseDto<>(mapper.itemToItemResponseDto(item), ok);
+        SingleResponseDto response = new SingleResponseDto<>(item, ok);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping( "/search")
     public ResponseEntity getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
+
         MultiResponseDto response = new MultiResponseDto<>(items.getContent(), items,ok);
         return new ResponseEntity<>(response, ok);
     }
@@ -80,4 +79,5 @@ public class ItemController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

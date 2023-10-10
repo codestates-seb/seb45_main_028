@@ -63,5 +63,6 @@ public class ItemDto {
     public static class Response {
         private OnlyItemResponseDto item;
         private List<ReviewResponseDto> reviews;
+        private List<ItemImageResponseDto> images;
     }
 }

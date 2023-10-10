@@ -1,7 +1,7 @@
 package com.mainproject.be28.domain.shopping.item.repository;
 
 import com.mainproject.be28.domain.shopping.item.dto.ItemSearchConditionDto;
-import com.mainproject.be28.domain.shopping.item.dto.OnlyItemResponseDto;
+import com.mainproject.be28.domain.shopping.item.entity.Item;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -10,7 +10,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -19,15 +18,13 @@ import static com.mainproject.be28.domain.shopping.review.entity.QReview.review;
 
 
 @RequiredArgsConstructor
-@Repository
 @Slf4j
 public class CustomItemRepositoryImpl implements CustomItemRepository{
     private final JPAQueryFactory queryFactory;
-    @Override
-    public List<OnlyItemResponseDto> searchByCondition(ItemSearchConditionDto condition, Pageable pageable){
-//todo: 상품정렬 조건 리스트화 (다중조건 정렬)
+    public List<Item> searchByCondition(ItemSearchConditionDto condition, Pageable pageable){
+//TODO: 상품정렬 조건 리스트화 (다중조건 정렬)
         return queryFactory
-                .select(Projections.bean(OnlyItemResponseDto.class // dto 클래스 및 필드 전달
+                .select(Projections.bean(Item.class // 엔티티 및 필드 전달
                        ,item.itemId ,item.name,item.price,item.detail,item.stock, item.color,item.brand ,item.category)
                 )
                 .from(item)

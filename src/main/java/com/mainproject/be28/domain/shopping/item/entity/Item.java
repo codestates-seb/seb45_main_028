@@ -43,7 +43,7 @@ public class Item extends Auditable {
     private Double score;
 
     @Transient
-    private Long reviewCount;
+    private Integer reviewCount;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Review> reviews = new ArrayList<>();

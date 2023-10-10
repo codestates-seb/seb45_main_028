@@ -1,6 +1,7 @@
 package com.mainproject.be28.domain.shopping.complain.service;
 
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainPostDto;
+import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.domain.shopping.complain.entity.Complain;
 import com.mainproject.be28.domain.shopping.complain.mapper.ComplainMapper;
 import com.mainproject.be28.domain.shopping.complain.repository.ComplainRepository;
@@ -12,10 +13,13 @@ import com.mainproject.be28.domain.member.entity.Member;
 import com.mainproject.be28.domain.member.service.MemberService;
 import com.mainproject.be28.global.utils.CustomBeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,7 +44,7 @@ public class ComplainService {
 
         Complain complain = mapper.complainPostDtoToComplain(complainPostDto);
         Member member = memberService.findTokenMember();
-        Item item = itemService.findItem(complainPostDto.getItemId());
+        Item item = itemService.verifyExistItem(complainPostDto.getItemId());
 
         complain.setMember(member);
         complain.setItem(item);
@@ -91,5 +95,16 @@ public class ComplainService {
             throw new BusinessLogicException(ExceptionCode.Complain_NOT_FOUND);
         }
     }
+
+    public Page<ComplainResponseDto> getMyComplains(int page, int size) {
+        long memberId = memberService.findTokenMemberId();
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        List<Complain> myComplains = complainRepository.findAllByMember_MemberId(memberId);
+        List<ComplainResponseDto> myComplainsDto = new ArrayList<>();
+        for (Complain complain : myComplains) {
+            myComplainsDto.add(mapper.complainToComplainResponseDto(complain));
+        }
+        return new PageImpl<>(myComplainsDto, pageRequest, myComplainsDto.size());
     }
+}
 

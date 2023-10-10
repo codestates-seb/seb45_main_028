@@ -44,21 +44,18 @@ public class MemberController {
     // 회원 개인정보(주소,전화번호) 수정
     @PatchMapping("/myPage")
     public ResponseEntity patchProfile(@RequestBody MemberPatchDto requestBody) {
-        Member updatedMember = mypageService.updateProfile(requestBody);
+        Member updatedMember = memberService.updateProfile(requestBody);
 
-        if (updatedMember != null) {
-            SingleResponseDto response = new SingleResponseDto(mapper.memberToMemberResponse(updatedMember), HttpStatus.OK);
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        SingleResponseDto response = new SingleResponseDto(mapper.memberToMemberResponse(updatedMember), HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
     //회원 비밀번호 수정
     @PatchMapping("/myPage/pw")
     public ResponseEntity patchPassword(@RequestBody PasswordPatchDto requestBody) {
-        Member member = mypageService.changePassword(requestBody);
-        return ResponseEntity.ok().build();
+        memberService.changePassword(requestBody);
+        SingleResponseDto response = new SingleResponseDto<>("비밀번호 변경 성공", HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
     // 회원 정보 조회
@@ -72,14 +69,14 @@ public class MemberController {
     //회원탈퇴
     @DeleteMapping("/myPage")
     public ResponseEntity deleteMember(@RequestBody String email,@RequestBody String password){
-        mypageService.deleteMember(email, password);
+        memberService.deleteMember(email, password);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
     //작성한 게시물 조회
-    @GetMapping("/myPage/myReview")
+    @GetMapping("/myReview")
     public ResponseEntity<List<ReviewResponseDto>> getMyReviews(@RequestParam int page,@RequestParam int size) {
         long memberId = memberService.findTokenMemberId();
         Page<ReviewResponseDto> myReviews = mypageService.getMyReviews(memberId,page,size);
@@ -88,7 +85,7 @@ public class MemberController {
     }
 
     //작성한 댓글 조회
-    @GetMapping("/myPage/myComment")
+    @GetMapping("/myComment")
     public ResponseEntity<List<CommentResponseDto>> getMyComments(@RequestParam int page,@RequestParam int size) {
         
         Page<CommentResponseDto> myComments = mypageService.getMyComments(page, size);
@@ -96,7 +93,7 @@ public class MemberController {
         return new ResponseEntity(response,HttpStatus.OK);
     }
     //작성한  문의 조회
-    @GetMapping("/myPage/myComplain")
+    @GetMapping("/myComplain")
     public ResponseEntity<List<ComplainResponseDto>> getMyComplains(@RequestParam int page, @RequestParam int size) {
         
         Page<ComplainResponseDto> myComplains = mypageService.getMyComplains(page, size);

@@ -18,11 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-
-
 @Service
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
@@ -39,43 +38,49 @@ public class ItemServiceImpl implements ItemService {
         this.beanUtils = beanUtils;
     }
 
-    /*******************public 메서드********************/
-    /******일반 유저 - 상품 조회 ******/
-    public Item findItem(long itemId) {
+    /*  일반 유저 - 상품 조회 */
+    public ItemDto.Response findItem(long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
+        setScoreReviewCount(item);
+        return mapper.itemToItemResponseDto(item);
+    }
+    public Item verifyExistItem(long itemId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
         setScoreReviewCount(item);
         return item;
     }
 
+
     public Page<OnlyItemResponseDto> findItems(ItemSearchConditionDto condition){
         PageRequest pageRequest = PageRequest.of(condition.getPage()-1, condition.getSize());
-        List<OnlyItemResponseDto> itemList = itemRepository.searchByCondition(condition, pageRequest);
+        List<Item> itemList = itemRepository.searchByCondition(condition, pageRequest);
+        for (Item item : itemList) {
+            setScoreReviewCount(item);
+        }
 
-        setStatusReviewScoreURL(itemList);
+        List<OnlyItemResponseDto>  items = mapper.itemListToOnlyItemResponseDtoList(itemList);
 
-        return new PageImpl<>(itemList, pageRequest, itemList.size());
+        return new PageImpl<>(items, pageRequest,items.size());
     }
-    /******관리자 - 상품 등록 및 수정, 삭제******/
-    public Item createItem(ItemDto.Post requestBody, List<MultipartFile> itemImgFileList) throws IOException {
-        memberService.verifiyAdmin();
+    /* 관리자 - 상품 등록 및 수정, 삭제 */
+    @Transactional
+    public ItemDto.Response createItem(ItemDto.Post requestBody, List<MultipartFile> itemImgFileList) throws IOException {
+        memberService.verifyAdmin();
         Item item = mapper.itemPostDtoToItem(requestBody);
 
         verifySameItemNameExist(item);
+        itemRepository.save(item); // 상품 저장 후, 상품에 매핑된 이미지 저장하는 순서.
 
-        List<ItemImage> images = itemImageService.saveImages(itemImgFileList, item);
-        item.setImages(images);
+        createItemImage(itemImgFileList, item);
 
-        itemRepository.save(item); // 저장 순서 중요.
-        itemImageService.saveImages(images);
-
-        return item;
+        return mapper.itemToItemResponseDto(item);
     }
 
-    public Item updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException {
-        memberService.verifiyAdmin();
-
+    @Transactional
+    public ItemDto.Response updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException {
+        memberService.verifyAdmin();
         Item newItem = mapper.itemPatchDtoToItem(requestBody);
-        Item findItem = findItem(newItem.getItemId());
+        Item findItem = verifyExistItem(newItem.getItemId());
 
         Item updatedItem =
                 beanUtils.copyNonNullProperties(newItem, findItem);
@@ -84,37 +89,35 @@ public class ItemServiceImpl implements ItemService {
 
         updatedItem.setModifiedAt(LocalDateTime.now());
 
-        return itemRepository.save(updatedItem);
+        return mapper.itemToItemResponseDto(itemRepository.save(updatedItem));
     }
 
     public void deleteItem(long itemId) {
-        memberService.verifiyAdmin();
+        memberService.verifyAdmin();
 
-        Item findItem = findItem(itemId);
+        Item findItem = verifyExistItem(itemId);
 
         itemRepository.delete(findItem);
     }
 
-    /********************private 메서드********************/
+    /* private 메서드 */
     private void verifySameItemNameExist(Item item) {
         if (itemRepository.findItemByName(item.getName()) != null) {
             throw new BusinessLogicException(ExceptionCode.ITEM_EXIST);
         }
     }
 
+    private void createItemImage(List<MultipartFile> itemImgFileList, Item item) throws IOException {
+        List<ItemImage> images = itemImageService.saveImages(itemImgFileList, item);
+        item.setImages(images);
+        itemImageService.saveImages(images);
+    }
+
     private void setScoreReviewCount(Item item) {
-        item.setReviewCount((long) item.getReviews().size());
+        item.setReviewCount((item.getReviews().size()));
         item.setScore(updateScore(item));
     }
-    private void setStatusReviewScoreURL(List<OnlyItemResponseDto> itemList) {
-        for(OnlyItemResponseDto onlyItemResponseDto : itemList){ // 리뷰 평균 평점, 리뷰 수
-            Item item = itemRepository.findItemByName(mapper.onlyItemResponseDtotoItem(onlyItemResponseDto).getName());
-            onlyItemResponseDto.setStocks(mapper.checkStock(item));
-            onlyItemResponseDto.setReviewCount(item.getReviews().size());
-            onlyItemResponseDto.setScore(updateScore(item));
-            onlyItemResponseDto.setImageURLs(mapper.getImageResponseDto(item));
-        }
-    }
+
     private Double updateScore(Item item){
         if(item.getScore()==null){item.setScore(0.0);}
         List<Review> itemList = item.getReviews();
@@ -126,5 +129,6 @@ public class ItemServiceImpl implements ItemService {
         score = (double)Math.round(score*100)/100;
         return score;
     }
+
 
 }

@@ -24,11 +24,16 @@ public class ItemImageService {
         this.itemImageRepository = itemImageRepository;
     }
 
+
     public ItemImage uploadImage(MultipartFile file, Item item) throws IOException {
         StringBuilder fileNameBuilder = new StringBuilder();
         String path = "image/";
-        fileNameBuilder.append(path)
-                            .append(UUID.randomUUID())
+        fileNameBuilder
+                            .append(path)
+                            .append(item.getCategory().toUpperCase())
+                            .append("_")
+                            .append(UUID.randomUUID().toString(), 0, 10)
+                            .append("_")
                             .append(file.getOriginalFilename());
         String fileName = fileNameBuilder.toString();
         String savedPath = S3.upload(file, fileName);
@@ -70,7 +75,10 @@ public class ItemImageService {
         }
         return images;
     }
-
+    public void saveImages(List<ItemImage> images) {
+        if(images.size()>0){
+            itemImageRepository.saveAll(images);}
+    }
     public void updateImages(List<MultipartFile> itemImgFileList, Item findItem, Item updatedItem) throws IOException {
         List<ItemImage> images = findItem.getImages()==null?new ArrayList<>():findItem.getImages();
 
@@ -81,18 +89,19 @@ public class ItemImageService {
                 images.add(img);
             }
             //대표 이미지 설정이 안되어있다면, 맨 첫번째 이미지 대표이미지로 설정
-            ItemImage repImg = images.get(0);
-            if(repImg.getRepresentationImage()==null||!repImg.getRepresentationImage().equals("YES")) {
-                repImg.setRepresentationImage("YES");
-                images.set(0, repImg);
-            }
-            updatedItem.setImages(images);
-            itemImageRepository.saveAll(images);
+            setRepresentationImage(updatedItem, images);
         }
     }
 
-    public void saveImages(List<ItemImage> images) {
-        if(images.size()>0){
-            itemImageRepository.saveAll(images);}
+    private void setRepresentationImage(Item updatedItem, List<ItemImage> images) {
+        ItemImage repImg = images.get(0);
+        if(repImg.getRepresentationImage()==null||!repImg.getRepresentationImage().equals("YES")) {
+            repImg.setRepresentationImage("YES");
+            images.set(0, repImg);
+        }
+        updatedItem.setImages(images);
+        itemImageRepository.saveAll(images);
     }
+
+
 }
