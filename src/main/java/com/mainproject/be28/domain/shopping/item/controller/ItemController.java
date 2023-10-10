@@ -31,49 +31,49 @@ public class ItemController {
 
     @PostMapping(value = "/new"
             , consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity createItem(@Valid @RequestPart ItemDto.Post requestBody
+    public ResponseEntity<SingleResponseDto<ItemDto.Response>> createItem(@Valid @RequestPart ItemDto.Post requestBody
                                    , @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList) throws IOException{
 
         ItemDto.Response item =  itemService.createItem(requestBody, itemImgFileList);
 
         HttpStatus created = HttpStatus.CREATED;
 
-        SingleResponseDto response = new SingleResponseDto<>(item, created);
+        SingleResponseDto<ItemDto.Response> response = new SingleResponseDto<>(item, created);
 
-        return new ResponseEntity<>(response,created);
+        return new ResponseEntity<>(response, created);
     }
 
     @PatchMapping(value = "/{item-id}", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity updateItem(@PathVariable("item-id") @Positive long itemId,
+    public ResponseEntity<SingleResponseDto<ItemDto.Response>> updateItem(@PathVariable("item-id") @Positive long itemId,
                                         @Valid @RequestPart ItemDto.Patch requestBody, @Nullable @RequestPart(name = "images") List<MultipartFile> itemImgFileList)
             throws IOException {
 
         requestBody.setItemId(itemId);
         ItemDto.Response itemResponse =  itemService.updateItem(requestBody, itemImgFileList);
 
-        SingleResponseDto response = new SingleResponseDto<>(itemResponse, ok);
+        SingleResponseDto<ItemDto.Response> response = new SingleResponseDto<>(itemResponse, ok);
         return new ResponseEntity<>(response,ok);
     }
 
     @GetMapping("/{item-id}")
-    public ResponseEntity getItem(@PathVariable("item-id") @Positive long itemId){
+    public ResponseEntity<SingleResponseDto<ItemDto.Response>> getItem(@PathVariable("item-id") @Positive long itemId){
 
         ItemDto.Response item = itemService.findItem(itemId);
 
-        SingleResponseDto response = new SingleResponseDto<>(item, ok);
+        SingleResponseDto<ItemDto.Response> response = new SingleResponseDto<>(item, ok);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping( "/search")
-    public ResponseEntity getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
+    public ResponseEntity<MultiResponseDto<OnlyItemResponseDto>> getItems(@Valid ItemSearchConditionDto itemSearchConditionDto){
         Page<OnlyItemResponseDto> items = itemService.findItems(itemSearchConditionDto);
 
-        MultiResponseDto response = new MultiResponseDto<>(items.getContent(), items,ok);
+        MultiResponseDto<OnlyItemResponseDto> response = new MultiResponseDto<>(items.getContent(), items,ok);
         return new ResponseEntity<>(response, ok);
     }
 
     @DeleteMapping("/{item-id}")
-    public ResponseEntity deleteItem(@PathVariable("item-id") @Positive long itemId){
+    public ResponseEntity<HttpStatus> deleteItem(@PathVariable("item-id") @Positive long itemId){
 
         itemService.deleteItem(itemId);
 
