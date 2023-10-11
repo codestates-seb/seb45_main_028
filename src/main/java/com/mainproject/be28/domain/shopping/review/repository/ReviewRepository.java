@@ -9,7 +9,5 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review,Long> {
     List<Review> findAllByMember_MemberId(long memberId);
-
-
-
+    List<Review> findAllByMember_Name(String name);
 }

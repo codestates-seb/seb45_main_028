@@ -2,17 +2,15 @@ package com.mainproject.be28.domain.shopping.item.entity;
 
 import com.mainproject.be28.global.auditable.Auditable;
 import com.mainproject.be28.domain.shopping.review.entity.Review;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Getter
-@Setter
-@Table
+@Entity @Table
+@Builder
+@Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class Item extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,10 +44,10 @@ public class Item extends Auditable {
     private Integer reviewCount;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Review> reviews = new ArrayList<>();
+    private List<Review> reviews;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<ItemImage> Images = new ArrayList<>();
+    private List<ItemImage> Images;
 
 
 }

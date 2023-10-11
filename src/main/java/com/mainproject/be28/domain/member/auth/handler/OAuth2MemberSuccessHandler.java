@@ -3,7 +3,7 @@ package com.mainproject.be28.domain.member.auth.handler;
 import com.mainproject.be28.domain.member.auth.jwt.JwtTokenizer;
 import com.mainproject.be28.domain.member.auth.userdetails.MemberAuthority;
 import com.mainproject.be28.domain.member.entity.Member;
-import com.mainproject.be28.domain.member.service.MemberService;
+import com.mainproject.be28.domain.member.service.Layer1.MemberService;
 import io.jsonwebtoken.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Getter
-public class SingleResponseDto<T> extends BaseResponse{
+public final class SingleResponseDto<T> extends BaseResponse{
     private T data;
     public SingleResponseDto(T data, HttpStatus status) {
         this.status = status.value();

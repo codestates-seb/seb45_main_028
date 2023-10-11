@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter @AllArgsConstructor @NoArgsConstructor
 public class BaseResponse {
-    int status;
-    String message;
+    protected int status;
+    protected String message;
+
 }

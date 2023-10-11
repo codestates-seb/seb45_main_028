@@ -1,4 +1,4 @@
-package com.mainproject.be28.domain.member.service;
+package com.mainproject.be28.domain.member.service.Layer1;
 
 import com.mainproject.be28.domain.member.auth.refresh.RefreshToken;
 import com.mainproject.be28.domain.member.auth.refresh.RefreshTokenRepository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-    private RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     public AuthService(RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;

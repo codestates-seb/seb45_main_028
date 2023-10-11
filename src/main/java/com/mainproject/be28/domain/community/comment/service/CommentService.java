@@ -6,11 +6,10 @@ import com.mainproject.be28.domain.community.comment.dto.CommentResponseDto;
 import com.mainproject.be28.domain.community.comment.entity.Comment;
 import com.mainproject.be28.domain.community.comment.mapper.CommentMapper;
 import com.mainproject.be28.domain.community.comment.repository.CommentRepository;
+import com.mainproject.be28.domain.member.service.Layer2.MemberVerifyService;
 import com.mainproject.be28.global.exception.BusinessLogicException;
 import com.mainproject.be28.global.exception.ExceptionCode;
 import com.mainproject.be28.domain.member.entity.Member;
-import com.mainproject.be28.domain.member.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,16 +20,19 @@ import java.util.List;
 
 @Service
 public class CommentService {
-    @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
-    private CommentMapper mapper;
-    @Autowired
-    private MemberService memberService;
+    private final CommentRepository commentRepository;
+    private final CommentMapper mapper;
+    private final MemberVerifyService memberVerifyService;
+
+    public CommentService(CommentRepository commentRepository, CommentMapper mapper, MemberVerifyService memberVerifyService) {
+        this.commentRepository = commentRepository;
+        this.mapper = mapper;
+        this.memberVerifyService = memberVerifyService;
+    }
 
     public CommentResponseDto createComment(CommentPostDto commentPostDto){
         Comment comment = mapper.commentPostDtoToComment(commentPostDto);
-        Member member = memberService.findTokenMember();
+        Member member = memberVerifyService.findTokenMember();
         comment.setMember(member);
         comment.setLikeCount(0L);
         commentRepository.save(comment);
@@ -43,7 +45,7 @@ public class CommentService {
     }
 
     public CommentResponseDto updateComment(Long id, CommentPatchDto updatedComment) {
-        Member member = memberService.findTokenMember();
+        Member member = memberVerifyService.findTokenMember();
         Comment originComment = commentRepository.findById(updatedComment.getCommentId()).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
         Comment comment = mapper.commentPatchDtoToComment(updatedComment);
 
@@ -68,15 +70,14 @@ public class CommentService {
 
     public void deleteComment(Long id){
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
-        verifySameMember(memberService.findTokenMember(),comment);
+        verifySameMember(memberVerifyService.findTokenMember(),comment);
 
         commentRepository.delete(comment);
     }
 
-    public Page<CommentResponseDto> getMyComments(int page, int size) {
-        long memberId = memberService.findTokenMemberId();
+    public Page<CommentResponseDto> findCommentsByMember(String name,int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        List<Comment> myComments = commentRepository.findCommentsByMember_MemberId(memberId);
+        List<Comment> myComments = commentRepository.findCommentsByMember_Name(name);
         List<CommentResponseDto> myCommentsDto = new ArrayList<>();
         for (Comment comment : myComments) {
             myCommentsDto.add(mapper.commentToCommentResponseDto(comment));

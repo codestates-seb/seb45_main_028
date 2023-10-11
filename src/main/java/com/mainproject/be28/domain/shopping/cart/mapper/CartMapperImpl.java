@@ -1,11 +1,11 @@
 package com.mainproject.be28.domain.shopping.cart.mapper;
 
+import com.mainproject.be28.domain.member.service.Layer2.MemberVerifyService;
 import com.mainproject.be28.domain.shopping.cart.dto.CartDto;
 import com.mainproject.be28.domain.shopping.cart.entity.Cart;
 import com.mainproject.be28.domain.shopping.cart.dto.CartItemResponseDto;
 import com.mainproject.be28.domain.shopping.cart.entity.CartItem;
 import com.mainproject.be28.domain.shopping.cart.repository.CartItemRepository;
-import com.mainproject.be28.domain.member.service.MemberService;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,16 +14,16 @@ import java.util.List;
 @Component
 public class CartMapperImpl implements CartMapper{
     public final CartItemRepository cartItemRepository;
-    public final MemberService memberService;
+    public final MemberVerifyService memberVerifyService;
 
-    public CartMapperImpl(CartItemRepository cartItemRepository, MemberService memberService) {
+    public CartMapperImpl(CartItemRepository cartItemRepository, MemberVerifyService memberVerifyService) {
         this.cartItemRepository = cartItemRepository;
-        this.memberService = memberService;
+        this.memberVerifyService = memberVerifyService;
     }
 
     public CartDto.Response cartToCartResponseDto(Cart cart) {
         if (cart == null) {
-            Cart.createCart(memberService.findTokenMember());
+            Cart.createCart(memberVerifyService.findTokenMember());
         }
         List<CartItemResponseDto> cartItemResponseDtos = getCartItemsResponseDto(cart);
         long price = getTotalPrice(cartItemResponseDtos);

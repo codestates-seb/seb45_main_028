@@ -3,11 +3,11 @@ package com.mainproject.be28.global.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
-public class PageInfo {
-    private int page;
-    private int size;
-    private long totalElements;
-    private int totalPages;
+@Getter @AllArgsConstructor
+public final class PageInfo {
+    private final  int page;
+    private final int size;
+    private final long totalElements;
+    private final int totalPages;
+
 }

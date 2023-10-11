@@ -1,5 +1,6 @@
 package com.mainproject.be28.domain.shopping.complain.service;
 
+import com.mainproject.be28.domain.member.service.Layer2.MemberVerifyService;
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainPostDto;
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.domain.shopping.complain.entity.Complain;
@@ -10,7 +11,6 @@ import com.mainproject.be28.global.exception.ExceptionCode;
 import com.mainproject.be28.domain.shopping.item.entity.Item;
 import com.mainproject.be28.domain.shopping.item.service.ItemService;
 import com.mainproject.be28.domain.member.entity.Member;
-import com.mainproject.be28.domain.member.service.MemberService;
 import com.mainproject.be28.global.utils.CustomBeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,17 +24,15 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class ComplainService {
+public class ComplainService  {
+    private final MemberVerifyService memberVerifyService;
     private final ComplainRepository complainRepository;
-    private final CustomBeanUtils<Complain> beanUtils;
-    private final MemberService memberService;
     private final ItemService itemService;
     private final ComplainMapper mapper;
 
-    public ComplainService(ComplainRepository complainRepository, CustomBeanUtils<Complain> beanUtils, MemberService memberService, ItemService itemService, ComplainMapper mapper) {
+    public ComplainService(MemberVerifyService memberVerifyService, ComplainRepository complainRepository,ItemService itemService, ComplainMapper mapper) {
+        this.memberVerifyService = memberVerifyService;
         this.complainRepository = complainRepository;
-        this.beanUtils = beanUtils;
-        this.memberService = memberService;
         this.itemService = itemService;
         this.mapper = mapper;
     }
@@ -43,7 +41,7 @@ public class ComplainService {
     public Complain createComplain(ComplainPostDto complainPostDto) {
 
         Complain complain = mapper.complainPostDtoToComplain(complainPostDto);
-        Member member = memberService.findTokenMember();
+        Member member = memberVerifyService.findTokenMember();
         Item item = itemService.verifyExistItem(complainPostDto.getItemId());
 
         complain.setMember(member);
@@ -64,9 +62,8 @@ public class ComplainService {
 
     //complain 객체를 기반으로 엔티티 정보를 업데이트하고, 업데이트된 엔티티를 데이터베이스에 저장하여 반환
     public Complain updateComplain(Complain complain) {
-        Member member = memberService.findTokenMember();
         Complain findComplain = findComplain(complain.getComplainId());
-
+        CustomBeanUtils<Complain> beanUtils = new CustomBeanUtils<>();
         Complain updatedComplain =
                 beanUtils.copyNonNullProperties(complain, findComplain);//complain 객체에서 변경된 부분만을 findComplain 엔티티에 복사
         return complainRepository.save(updatedComplain);
@@ -96,10 +93,9 @@ public class ComplainService {
         }
     }
 
-    public Page<ComplainResponseDto> getMyComplains(int page, int size) {
-        long memberId = memberService.findTokenMemberId();
+    public Page<ComplainResponseDto> findComplainsByMember(String name, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page - 1, size);
-        List<Complain> myComplains = complainRepository.findAllByMember_MemberId(memberId);
+        List<Complain> myComplains = complainRepository.findAllByMember_Name(name);
         List<ComplainResponseDto> myComplainsDto = new ArrayList<>();
         for (Complain complain : myComplains) {
             myComplainsDto.add(mapper.complainToComplainResponseDto(complain));

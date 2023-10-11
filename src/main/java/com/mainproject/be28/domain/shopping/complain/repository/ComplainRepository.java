@@ -14,6 +14,7 @@ public interface ComplainRepository extends JpaRepository<Complain, Long> {
     Page<Complain> findAllByComplainStatus(Pageable pageable, Complain.ComplainStatus complainStatus);
 
     List<Complain> findAllByMember_MemberId(long memberId);
+    List<Complain> findAllByMember_Name(String name);
 }
 
 

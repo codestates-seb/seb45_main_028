@@ -8,7 +8,7 @@ import com.mainproject.be28.domain.member.auth.refresh.RefreshTokenRepository;
 import com.mainproject.be28.domain.member.auth.userdetails.MemberAuthority;
 import com.mainproject.be28.domain.member.auth.userdetails.UserDetailService;
 import com.mainproject.be28.domain.member.repository.MemberRepository;
-import com.mainproject.be28.domain.member.service.MemberService;
+import com.mainproject.be28.domain.member.service.Layer1.MemberService;
 import lombok.Getter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,12 +46,12 @@ public class SecurityConfig {
     private final UserDetailService userDetailService;
 
 //    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String clientId = "asdiofjasdiofj0jcxzvi0xcjivzxjcv";
+    private final String clientId = "asdiofjasdiofj0jcxzvi0xcjivzxjcv";
 
 //    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
-    private String clientSecret="sd90fasud0vuz9cx0vjzcoxjvosdfjmklm";
+    private final String clientSecret="sd90fasud0vuz9cx0vjzcoxjvosdfjmklm";
 
-    public SecurityConfig(JwtTokenizer jwtTokenizer,MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository, MemberService memberService, UserDetailService userDetailService) {
+    public SecurityConfig(JwtTokenizer jwtTokenizer, MemberAuthority memberAuthority, RefreshTokenRepository refreshTokenRepository, MemberRepository memberRepository, MemberService memberService, UserDetailService userDetailService) {
         this.jwtTokenizer = jwtTokenizer;
         this.memberAuthority = memberAuthority;
         this.refreshTokenRepository = refreshTokenRepository;

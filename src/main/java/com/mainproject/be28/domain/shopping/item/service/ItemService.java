@@ -23,4 +23,6 @@ public interface ItemService {
     void deleteItem(long itemId);
 
 
+    // 주문이 완료되면 아이템의 재고 수량을 감소시키는 메서드
+    void decreaseItemStock(long itemId, long quantity);
 }

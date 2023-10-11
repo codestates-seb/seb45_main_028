@@ -44,6 +44,7 @@ dependencies {
     // Swagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation 'org.jetbrains:annotations:24.0.0'
 
 
     compileOnly 'org.projectlombok:lombok'

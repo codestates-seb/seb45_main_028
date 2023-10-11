@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter @Setter
-public class ErrorResponse {
-    private int status;
+public final class ErrorResponse {
+    private  int status;
     private String message;
     private List<FieldError> fieldErrors;
 
@@ -36,9 +36,9 @@ public class ErrorResponse {
 
     @Getter
     public static class FieldError {
-        private String field;
-        private Object rejectedValue;
-        private String reason;
+        private final String field;
+        private final Object rejectedValue;
+        private final String reason;
 
         private FieldError(String field, Object rejectedValue, String reason) {
             this.field = field;
