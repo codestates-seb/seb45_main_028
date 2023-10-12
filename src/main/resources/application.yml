@@ -56,3 +56,4 @@ cloud:
     s3.bucket: 28be
     region.static: ap-northeast-2
     stack.auto: false
+

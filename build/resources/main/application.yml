@@ -1,35 +1,25 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2 # 경로
-      settings:
-        web-allow-others: true
-  datasource:
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    url: jdbc:h2:mem:test
-    sql:
-      init:
-        schema-locations: classpath*:db/schema.sql #h2 테이블 위치
-        data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
-
-
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: none    #스키마 직접 생성 (자동생성 X)
-    show-sql: true        # SQL 쿼리 출력
+      ddl-auto: none
+
     properties:
       hibernate:
-        format_sql: true  # SQL pretty print
-        jdbc:
-          time_zone: Asia/Seoul   # 서버 시간 서울로 변경
-  sql:
-    init:
-      schema-locations: classpath*:db/schema.sql #h2 테이블 위치
-      data-locations: classpath*:db/data.sql  #h2 초기 데이터를 넣게 위한 스크립트 위치
+        highlight_sql: true
+        format_sql: true
+        show_sql: true
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  datasource:
+    url: jdbc:mysql://ec2-52-79-52-23.ap-northeast-2.compute.amazonaws.com:3306/main28
+    username: seb45
+    password: Seb45_main28
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 logging:
   level:
@@ -37,7 +27,33 @@ logging:
       springframework:
         orm:
           jpa: DEBUG
-server:                   # 모든 response 에 대해 지정된 인코딩 적용(한글 깨짐 방지)
+server:
+#  port: 8081
   servlet:
     encoding:
       force-response: true
+h2:
+  console:
+    enabled: false
+
+jwt:
+  access-token-expiration-minutes: 60
+  refresh-token-expiration-minutes: 120
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          clientId: ${G_CLIENT_ID}
+          clientSecret: ${G_CLIENT_SECRET}
+          scope:
+            - email
+            - profile
+cloud:
+  aws:
+    credentials.access-key: ${S3_ACCESS_KEY}
+    credentials.secret-key: ${S3_SECRET_KEY}
+    s3.bucket: 28be
+    region.static: ap-northeast-2
+    stack.auto: false
+

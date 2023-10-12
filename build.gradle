@@ -9,7 +9,9 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10' // queryDSL
 }
-
+jar{
+    enabled = false
+}
 group = 'com.mainproject'
 version = '0.0.1-SNAPSHOT'
 
@@ -44,6 +46,7 @@ dependencies {
     // Swagger
     implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation 'org.jetbrains:annotations:24.0.0'
 
 
     compileOnly 'org.projectlombok:lombok'
