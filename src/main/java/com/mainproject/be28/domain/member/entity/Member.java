@@ -46,8 +46,7 @@ import java.util.List;
 
 
     @OneToMany(mappedBy = "member")
-    @Builder.Default
-    private List<Order> order = new ArrayList();
+    private List<Order> order;
 
     public void addOrder(Order order) {
         this.order.add(order);
