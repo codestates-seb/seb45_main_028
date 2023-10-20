@@ -17,5 +17,4 @@ public class AuthService {
         RefreshToken refreshToken = refreshTokenRepository.findByUsername(username);
         refreshTokenRepository.delete(refreshToken);
     }
-
 }

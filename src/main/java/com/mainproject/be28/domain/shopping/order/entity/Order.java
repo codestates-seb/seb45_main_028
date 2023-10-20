@@ -7,11 +7,7 @@ import com.mainproject.be28.domain.shopping.payment.entity.PayInfo;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import org.apache.commons.lang3.RandomStringUtils;
 
 
 @Getter
@@ -65,10 +61,7 @@ public class Order extends Auditable {
         }
     }
 
-    public void makeOrderNumber() {
-        String date = ZonedDateTime.now(ZoneId.of("UTC")).plusHours(9).format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        this.orderNumber = date + RandomStringUtils.randomNumeric(6);
-    }
+
 
     public static Order createOrder(Member member) {
         Order order = new Order();

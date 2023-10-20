@@ -1,13 +1,12 @@
 package com.mainproject.be28.domain.community.board.controller;
 
-import com.mainproject.be28.domain.community.board.dto.BoardDto;
-import com.mainproject.be28.domain.community.board.dto.BoardPostDto;
 import com.mainproject.be28.domain.community.board.dto.BoardResponseDto;
 import com.mainproject.be28.domain.community.board.entity.Board;
-import com.mainproject.be28.domain.community.board.mapper.BoardMapper;
 import com.mainproject.be28.domain.community.board.service.BoardService;
+import com.mainproject.be28.global.response.MultiResponseDto;
 import com.mainproject.be28.global.response.SingleResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,26 +18,19 @@ import java.util.List;
 public class BoardController {
     @Autowired
     private BoardService boardService;
-    @Autowired
-    private BoardMapper mapper;
-    @PostMapping
-    public ResponseEntity createBoard(@RequestBody BoardPostDto boardPostDto) {
-        BoardResponseDto board = boardService.createBoard(boardPostDto);
-        SingleResponseDto response = new SingleResponseDto(board, HttpStatus.CREATED);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
 
     @GetMapping("/{boardId}")
     public ResponseEntity getBoardById(@PathVariable("boardId") Long boardId) {
-        BoardResponseDto board =boardService.getBoardById(boardId);
+        BoardResponseDto board =boardService.getBoard(boardId);
         SingleResponseDto response = new SingleResponseDto(board, HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @GetMapping
-    public List<Board> getAllBoards() {
-        return boardService.getAllBoards();
+    public ResponseEntity<MultiResponseDto<BoardResponseDto>> getAllBoards(@RequestParam(name = "page", defaultValue = "1") int page,
+                                                                               @RequestParam(name = "size", defaultValue = "10") int size) {
+        Page<BoardResponseDto> board = boardService.getAllBoards(page, size);
+        MultiResponseDto<BoardResponseDto> response = new MultiResponseDto<>(board, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //회원아이디로 게시글 검색기능 추가
@@ -66,18 +58,5 @@ public class BoardController {
     public List<Board> getNoticeBoards(){
         return boardService.getNoticeBoards();
     }
-    @PatchMapping("/{boardId}")
-    public ResponseEntity updateBoard(@PathVariable("boardId") Long boardId, @RequestBody BoardDto boardDto) {
-        boardDto.setBoardId(boardId);
-        Board board = mapper.boardPatchDtoToBoard(boardDto);
 
-        BoardResponseDto boardResponseDto = boardService.updateBoard(boardId, board);
-        SingleResponseDto response = new SingleResponseDto(boardResponseDto, HttpStatus.OK);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{boardId}")
-    public void deleteBoard(@PathVariable("boardId") Long boardId) {
-        boardService.deleteBoard(boardId);
-    }
 }

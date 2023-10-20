@@ -11,10 +11,10 @@ public final class MultiResponseDto<T> extends BaseResponse{
     private final List<T> data;
     private final PageInfo pageInfo;
 
-    public MultiResponseDto(List<T> data, Page page, HttpStatus status) {
+    public MultiResponseDto(Page<T> page, HttpStatus status) {
         this.status = status.value();
         this.message = status.getReasonPhrase();
-        this.data = data;
+        this.data = page.getContent();
         this.pageInfo = new PageInfo(page.getNumber() + 1,
                 page.getSize(), page.getTotalElements(), page.getTotalPages());
     }

@@ -2,9 +2,11 @@ package com.mainproject.be28.domain.shopping.cart.service;
 
 import com.mainproject.be28.domain.member.entity.Member;
 import com.mainproject.be28.domain.member.service.Layer2.MemberVerifyService;
+import com.mainproject.be28.domain.shopping.cart.dto.CartDto;
 import com.mainproject.be28.domain.shopping.cart.dto.CartItemDto;
 import com.mainproject.be28.domain.shopping.cart.entity.Cart;
 import com.mainproject.be28.domain.shopping.cart.entity.CartItem;
+import com.mainproject.be28.domain.shopping.cart.mapper.CartMapper;
 import com.mainproject.be28.domain.shopping.cart.repository.CartRepository;
 import com.mainproject.be28.domain.shopping.order.entity.OrderItem;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +22,19 @@ public class CartServiceImpl implements CartService{
     private final CartRepository cartRepository;
     private final CartItemService cartItemService;
     private final MemberVerifyService memberVerifyService;
+    private final CartMapper mapper;
 
-    public CartServiceImpl(CartRepository cartRepository, CartItemService cartItemService, MemberVerifyService memberVerifyService) {
+    public CartServiceImpl(CartRepository cartRepository, CartItemService cartItemService, MemberVerifyService memberVerifyService, CartMapper mapper) {
         this.cartRepository = cartRepository;
         this.cartItemService = cartItemService;
         this.memberVerifyService = memberVerifyService;
+        this.mapper = mapper;
     }
 
     @Transactional
-    public Cart addCart(CartItemDto cartItemDto) {
+    public CartDto.Response addCart(CartItemDto cartItemDto) {
     Cart cart = findCartByMember();
-    CartItem cartItem = cartItemService.findCartItem(cart, cartItemDto.getItemId());
+    CartItem cartItem = cartItemService.findCartItem(cart.getCartId(), cartItemDto.getItemId());
 
     cartItem.addCount(cartItemDto.getCount());
     cartItem.setModifiedAt(LocalDateTime.now());
@@ -38,16 +42,19 @@ public class CartServiceImpl implements CartService{
     addItemInCart(cart, cartItem);
     cartRepository.save(cart);
 
-    return cart;
+    return mapper.cartToCartResponseDto(cart);
 }
     public Cart findCartByMember() {
         Member member =  memberVerifyService.findTokenMember();
         return cartRepository.findCartByMember(member).orElseGet(() -> cartRepository.save(Cart.createCart(member)));
     }
+    public Cart findCartByMember(Member member) {
+        return cartRepository.findCartByMember(member).orElseGet(() -> cartRepository.save(Cart.createCart(member)));
+    }
 
     public void removeItem(long itemId) { // 장바구니 내 개별 상품 제거
         Cart cart = findCartByMember();
-        CartItem cartItem = cartItemService.findCartItem(cart, itemId);
+        CartItem cartItem = cartItemService.findCartItem(cart.getCartId(), itemId);
 
         cartItemService.deleteCartItem(cartItem);
     }

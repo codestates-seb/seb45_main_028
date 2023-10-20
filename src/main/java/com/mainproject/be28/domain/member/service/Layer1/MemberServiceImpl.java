@@ -1,7 +1,6 @@
 package com.mainproject.be28.domain.member.service.Layer1;
 
 
-import com.mainproject.be28.domain.community.comment.dto.CommentResponseDto;
 import com.mainproject.be28.domain.member.dto.MemberPatchDto;
 import com.mainproject.be28.domain.member.dto.MemberPostDto;
 import com.mainproject.be28.domain.member.dto.MemberResponseDto;
@@ -10,16 +9,12 @@ import com.mainproject.be28.domain.member.entity.Member;
 import com.mainproject.be28.domain.member.mapper.MemberMapper;
 import com.mainproject.be28.domain.member.service.Layer2.GetMineService;
 import com.mainproject.be28.domain.member.service.Layer2.ProfileService;
-import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
-import com.mainproject.be28.domain.shopping.review.dto.ReviewResponseDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-@Slf4j
 public class MemberServiceImpl implements MemberService {
     private final ProfileService profileService;
     private final MemberMapper mapper;
@@ -63,18 +58,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Page<ReviewResponseDto> getMyReviews(int page, int size) {
-        return getMineService.getMyReviews(page,size);
+    public <T>Page<T> getMine(int page, int size, Class<T> condition) {
+        return getMineService.getMine(page, size, condition);
     }
-
-    @Override
-    public Page<CommentResponseDto> getMyComments(int page, int size) {
-        return getMineService.getMyComments(page, size);
-    }
-
-    @Override
-    public Page<ComplainResponseDto> getMyComplains(int page, int size) {
-        return getMineService.getMyComplains(page, size);
-    }
+//
+//    @Override
+//    public Page<ReviewResponseDto> getMyReviews(int page, int size) {
+//        ReviewResponseDto responseDto = new ReviewResponseDto();
+//
+//        return (Page<ReviewResponseDto>) getMineService.getMine(page, size, responseDto.getClass());
+//    }
+//
+//    @Override
+//    public Page<CommentResponseDto> getMyComments(int page, int size) {
+//        return (Page<CommentResponseDto>) getMineService.getMine(page, size, CommentResponseDto.class);
+//    }
+//
+//    @Override
+//    public Page<ComplainResponsesDto> getMyComplains(int page, int size) {
+//        return (Page<ComplainResponsesDto>) getMineService.getMine(page, size, ComplainResponsesDto.class);
+//    }
 
 }

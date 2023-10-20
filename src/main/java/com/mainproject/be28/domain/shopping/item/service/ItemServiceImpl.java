@@ -1,6 +1,5 @@
 package com.mainproject.be28.domain.shopping.item.service;
 
-import com.mainproject.be28.domain.member.service.Layer2.MemberVerifyService;
 import com.mainproject.be28.domain.shopping.item.dto.ItemDto;
 import com.mainproject.be28.domain.shopping.item.dto.ItemSearchConditionDto;
 import com.mainproject.be28.domain.shopping.item.dto.OnlyItemResponseDto;
@@ -23,13 +22,12 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Service @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
    private final ItemMapper mapper;
     private final ItemImageService itemImageService;
-    private final MemberVerifyService memberVerifyService;
-
 
     /*  일반 유저 - 상품 조회 */
     public ItemDto.Response findItem(long itemId) {
@@ -37,14 +35,10 @@ public class ItemServiceImpl implements ItemService {
         setScoreReviewCount(item);
         return mapper.itemToItemResponseDto(item);
     }
-    public Item verifyExistItem(long itemId) {
-        Item item = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
-        setScoreReviewCount(item);
-        return item;
-    }
 
 
     public Page<OnlyItemResponseDto> findItems(ItemSearchConditionDto condition){
+        setDefaultPageRequest(condition);
         PageRequest pageRequest = PageRequest.of(condition.getPage()-1, condition.getSize());
         List<Item> itemList = itemRepository.searchByCondition(condition, pageRequest);
         for (Item item : itemList) {
@@ -58,9 +52,8 @@ public class ItemServiceImpl implements ItemService {
     /* 관리자 - 상품 등록 및 수정, 삭제 */
     @Transactional
     public ItemDto.Response createItem(ItemDto.Post requestBody, List<MultipartFile> itemImgFileList) throws IOException {
-        memberVerifyService.verifyAdmin();
-        Item item = mapper.itemPostDtoToItem(requestBody);
 
+        Item item = mapper.itemPostDtoToItem(requestBody);
         verifySameItemNameExist(item);
         itemRepository.save(item); // 상품 저장 후, 상품에 매핑된 이미지 저장하는 순서.
 
@@ -68,10 +61,8 @@ public class ItemServiceImpl implements ItemService {
 
         return mapper.itemToItemResponseDto(item);
     }
-
     @Transactional
     public ItemDto.Response updateItem(ItemDto.Patch requestBody, List<MultipartFile> itemImgFileList) throws IOException {
-        memberVerifyService.verifyAdmin();
         Item newItem = mapper.itemPatchDtoToItem(requestBody);
         Item findItem = verifyExistItem(newItem.getItemId());
 
@@ -86,28 +77,22 @@ public class ItemServiceImpl implements ItemService {
         return mapper.itemToItemResponseDto(itemRepository.save(updatedItem));
     }
 
-    public void deleteItem(long itemId) {
-        memberVerifyService.verifyAdmin();
-
-        Item findItem = verifyExistItem(itemId);
-
+    @Override
+    public void deleteItem(long id) {
+        Item findItem = verifyExistItem(id);
         itemRepository.delete(findItem);
     }
 
-    @Override
-    public void decreaseItemStock(long itemId, long quantity) {
-        {
-            //아이템이 없으면 오류던짐
-            Item item = verifyExistItem(itemId);
 
-            // 현재 재고 수량이 주문 수량보다 많아야 함을 확인
-            if (item.getStock() >= quantity) {
-                item.setStock((int) (item.getStock() - quantity));
-                itemRepository.save(item);
-            } else {
-                throw new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND);//재고 부족 에러코드만들기
-            }
-        }
+    /* Item Service 용 메서드 */
+
+    public Item verifyExistItem(long itemId) {
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.ITEM_NOT_FOUND));
+        setScoreReviewCount(item);
+        return item;
+    }
+    public void save(Item item) {
+        itemRepository.save(item);
     }
 
     /* private 메서드 */
@@ -140,5 +125,11 @@ public class ItemServiceImpl implements ItemService {
         return score;
     }
 
-
+    private void setDefaultPageRequest(ItemSearchConditionDto condition) {
+        if(condition.getPage()==0){
+            condition.setPage(1);}
+        if(condition.getSize()==0){
+            condition.setSize(9);}
+    }
+    
 }

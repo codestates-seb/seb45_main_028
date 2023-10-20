@@ -25,7 +25,7 @@ public interface ComplainMapper {
 
     Complain complainPatchDtoToComplain(ComplainPatchDto complainPatchDto);//ComplainPatchDto 객체를 기반으로 Complain 엔티티 객체로 변환하는 매핑
 
-    public default List<ComplainResponsesDto> complainsToComplainResponsesDto(List<Complain> complains) {
+    default List<ComplainResponsesDto> complainsToComplainResponsesDto(List<Complain> complains) {
         List<ComplainResponsesDto> responseDtos = new ArrayList<>();
 
         for (Complain complain : complains) {

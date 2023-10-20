@@ -2,17 +2,16 @@ package com.mainproject.be28.domain.member.controller;
 
 import com.mainproject.be28.domain.community.comment.dto.CommentResponseDto;
 import com.mainproject.be28.domain.member.dto.MemberResponseDto;
-import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
 import com.mainproject.be28.domain.member.dto.MemberPatchDto;
 import com.mainproject.be28.domain.member.dto.MemberPostDto;
 import com.mainproject.be28.domain.member.dto.PasswordPatchDto;
 import com.mainproject.be28.domain.member.service.Layer1.MemberService;
+import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponsesDto;
 import com.mainproject.be28.global.response.MultiResponseDto;
 import com.mainproject.be28.global.response.SingleResponseDto;
 import com.mainproject.be28.domain.shopping.review.dto.ReviewResponseDto;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/member")
 @RequiredArgsConstructor
-@Slf4j
 public class MemberController {
     private final MemberService memberService;
 
@@ -71,26 +69,27 @@ public class MemberController {
 
     //작성한 게시물 조회
     @GetMapping("/myReview")
-    public ResponseEntity<MultiResponseDto<ReviewResponseDto>> getMyReviews(@RequestParam int page,@RequestParam int size) {
-        Page<ReviewResponseDto> myReviews = memberService.getMyReviews(page,size);
-        MultiResponseDto<ReviewResponseDto> response = new MultiResponseDto<>(myReviews.getContent(), myReviews, HttpStatus.OK);
+    public ResponseEntity<MultiResponseDto<ReviewResponseDto>> getMyReviews(@RequestParam(defaultValue = "1") int page,@RequestParam(defaultValue = "5") int size) {
+
+        Page<ReviewResponseDto> myReviews =memberService.getMine(page,size, ReviewResponseDto.class);
+        MultiResponseDto<ReviewResponseDto> response = new MultiResponseDto<>(myReviews, HttpStatus.OK);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     //작성한 댓글 조회
     @GetMapping("/myComment")
-    public ResponseEntity<MultiResponseDto<CommentResponseDto>> getMyComments(@RequestParam int page,@RequestParam int size) {
+    public ResponseEntity<MultiResponseDto<CommentResponseDto>> getMyComments(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
         
-        Page<CommentResponseDto> myComments = memberService.getMyComments(page, size);
-        MultiResponseDto<CommentResponseDto> response = new MultiResponseDto<>(myComments.getContent(), myComments, HttpStatus.OK);
+        Page<CommentResponseDto> myComments = memberService.getMine(page, size, CommentResponseDto.class);
+        MultiResponseDto<CommentResponseDto> response = new MultiResponseDto<>(myComments, HttpStatus.OK);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
     //작성한  문의 조회
     @GetMapping("/myComplain")
-    public ResponseEntity<MultiResponseDto<ComplainResponseDto>> getMyComplains(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<MultiResponseDto<ComplainResponsesDto>> getMyComplains(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
         
-        Page<ComplainResponseDto> myComplains = memberService.getMyComplains(page, size);
-        MultiResponseDto<ComplainResponseDto> response = new MultiResponseDto<>(myComplains.getContent(), myComplains, HttpStatus.OK);
+        Page<ComplainResponsesDto> myComplains = memberService.getMine(page, size, ComplainResponsesDto.class);
+        MultiResponseDto<ComplainResponsesDto> response = new MultiResponseDto<>(myComplains, HttpStatus.OK);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

@@ -14,9 +14,9 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemSearchConditionDto {
-    @Min(value =1 , message = "page 는 1 이상 입력되어야 합니다.")
+    @Min(value =1, message = "page 는 1 이상 입력되어야 합니다.")
     private int page;
-    @Min(value = 1, message = "size 는 1 이상 입력되어야 합니다.")
+    @Min(value = 9, message = "size 는 9 이상 입력되어야 합니다.")
     private int size;
     @Nullable
     private String category;

@@ -9,6 +9,7 @@ import com.mainproject.be28.global.exception.ExceptionCode;
 import com.mainproject.be28.global.utils.CustomBeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -23,6 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
+    @Transactional
     public Member createMember(Member member) {
         memberVerifyService.verifyExistsEmail(member.getEmail());
         MemberAuthority memberAuthority = new MemberAuthority();

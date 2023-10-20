@@ -1,13 +1,10 @@
 package com.mainproject.be28.domain.member.service.Layer1;
 
-import com.mainproject.be28.domain.community.comment.dto.CommentResponseDto;
 import com.mainproject.be28.domain.member.dto.MemberPatchDto;
 import com.mainproject.be28.domain.member.dto.MemberPostDto;
 import com.mainproject.be28.domain.member.dto.MemberResponseDto;
 import com.mainproject.be28.domain.member.dto.PasswordPatchDto;
 import com.mainproject.be28.domain.member.entity.Member;
-import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
-import com.mainproject.be28.domain.shopping.review.dto.ReviewResponseDto;
 import org.springframework.data.domain.Page;
 
 public interface MemberService {
@@ -18,7 +15,8 @@ public interface MemberService {
     void deleteMember(String email, String password);
     MemberResponseDto getProfile();
 
-    Page<ReviewResponseDto> getMyReviews(int page, int size);
-    Page<CommentResponseDto> getMyComments(int page, int size);
-    Page<ComplainResponseDto> getMyComplains(int page, int size);
+    <T> Page<T> getMine(int page, int size, Class<T> condition);
+//    Page<ReviewResponseDto> getMyReviews(int page, int size);
+//    Page<CommentResponseDto> getMyComments(int page, int size);
+//    Page<ComplainResponsesDto> getMyComplains(int page, int size);
 }

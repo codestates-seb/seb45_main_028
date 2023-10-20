@@ -1,6 +1,5 @@
 package com.mainproject.be28.domain.shopping.cart.service;
 
-import com.mainproject.be28.domain.shopping.cart.entity.Cart;
 import com.mainproject.be28.domain.shopping.cart.entity.CartItem;
 import com.mainproject.be28.domain.shopping.cart.repository.CartItemRepository;
 import com.mainproject.be28.global.exception.BusinessLogicException;
@@ -22,8 +21,8 @@ public class CartItemService {
     public CartItem saveCartItem(CartItem cartItem){
         return cartItemRepository.save(cartItem);
     }
-    public CartItem findCartItem(Cart cart, long itemId) {
-        return cartItemRepository.findCartItemByCart_CartIdAndItem_ItemId(cart.getCartId(), itemId)
+    public CartItem findCartItem(long cartId, long itemId) {
+        return cartItemRepository.findCartItemByCart_CartIdAndItem_ItemId(cartId, itemId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CART_ITEM_NOT_FOUND));
     }
     public void deleteCartItem(CartItem cartItem){

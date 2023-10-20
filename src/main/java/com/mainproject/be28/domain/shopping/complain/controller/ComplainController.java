@@ -3,9 +3,8 @@ package com.mainproject.be28.domain.shopping.complain.controller;
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainPatchDto;
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainPostDto;
 import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponseDto;
-import com.mainproject.be28.domain.shopping.complain.entity.Complain;
-import com.mainproject.be28.domain.shopping.complain.mapper.ComplainMapper;
-import com.mainproject.be28.domain.shopping.complain.service.ComplainService;
+import com.mainproject.be28.domain.shopping.complain.dto.ComplainResponsesDto;
+import com.mainproject.be28.domain.shopping.service.ShoppingService;
 import com.mainproject.be28.global.response.MultiResponseDto;
 import com.mainproject.be28.global.response.SingleResponseDto;
 import org.springframework.data.domain.Page;
@@ -15,71 +14,61 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @RestController
 @RequestMapping("/complain")
 public class ComplainController {
 
-    private final ComplainService complainService;
-    private final ComplainMapper mapper;
+    private final ShoppingService shoppingService;
     private  final HttpStatus ok = HttpStatus.OK;
 
-
-    public ComplainController(ComplainService complainService, ComplainMapper mapper) {
-        this.complainService = complainService;
-        this.mapper = mapper;
+    public ComplainController(ShoppingService shoppingService) {
+        this.shoppingService = shoppingService;
     }
 
     @PostMapping ("/new") // 문의사항등록
-    public ResponseEntity postComplain(@RequestBody @Valid ComplainPostDto complainPostDto) {
+    public ResponseEntity<SingleResponseDto<ComplainResponseDto>> postComplain(@RequestBody @Valid ComplainPostDto complainPostDto) {
 
-        Complain response = complainService.createComplain(complainPostDto);
-        SingleResponseDto responses =  new SingleResponseDto<>(mapper.complainToComplainResponseDto(response),ok);
-        return new ResponseEntity(responses, ok);
+        ComplainResponseDto response = shoppingService.createComplain(complainPostDto);
+        SingleResponseDto<ComplainResponseDto> responses =  new SingleResponseDto<>(response,ok);
+        return new ResponseEntity<>(responses, ok);
     }
 
     @GetMapping ("{complain-id}") // 문의사항 상세보기
-    public ResponseEntity<ComplainResponseDto> getComplain(@PathVariable("complain-id") @Positive long complainId) {
-        Complain response = complainService.findComplain(complainId);
-        SingleResponseDto responses =  new SingleResponseDto<>(mapper.complainToComplainResponseDto(response),ok);
-        return new ResponseEntity(responses, ok);
+    public ResponseEntity<SingleResponseDto<ComplainResponseDto>> getComplain(@PathVariable("complain-id") @Positive long complainId) {
+        ComplainResponseDto response = shoppingService.findComplain(complainId);
+        SingleResponseDto<ComplainResponseDto> responses =  new SingleResponseDto<>(response,ok);
+        return new ResponseEntity<>(responses, ok);
     }
 
     @GetMapping("") //문의사항 목록보기
-    public MultiResponseDto getComplains(@RequestParam(name = "page", defaultValue = "1") int page,
+    public ResponseEntity<MultiResponseDto<ComplainResponsesDto>> getComplains(@RequestParam(name = "page", defaultValue = "1") int page,
                                        @RequestParam(name = "size", defaultValue = "10") int size
     ){
         page = Math.max(page - 1, 0); // 페이지가 0이 되지 않도록
-        Page<Complain> pageComplains = complainService.findComplains(page,size);
-
-        List<Complain> complains = pageComplains.getContent();
-
-        return new MultiResponseDto<>(
-                mapper.complainsToComplainResponsesDto(complains),
-                pageComplains, HttpStatus.OK);
-
+        Page<ComplainResponsesDto> pageComplains = shoppingService.findComplains(page,size);
+        MultiResponseDto<ComplainResponsesDto> response = new MultiResponseDto<>(pageComplains, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
     @PatchMapping("/{complain-id}")//문의사항 수정하기
-    public ResponseEntity patchComplain(@PathVariable("complain-id") @Positive long complainId,
+    public ResponseEntity<SingleResponseDto<ComplainResponseDto> > patchComplain(@PathVariable("complain-id") @Positive long complainId,
                                     @Valid @RequestBody ComplainPatchDto complainPatchDto){
 
         complainPatchDto.setComplainId(complainId);
 
-        Complain complain = mapper.complainPatchDtoToComplain(complainPatchDto);
 
-        Complain response = complainService.updateComplain(complain);
+        ComplainResponseDto response = shoppingService.updateComplain(complainPatchDto);
 
-        SingleResponseDto responses =  new SingleResponseDto<>(mapper.complainToComplainResponseDto(response),ok);
-        return new ResponseEntity(responses, ok);
+        SingleResponseDto<ComplainResponseDto> responses =  new SingleResponseDto<>(response,ok);
+        return new ResponseEntity<>(responses, ok);
     }
 
     @DeleteMapping("/{complain-id}")//문의사항 삭제
-    public ResponseEntity deleteComplain(@PathVariable("complain-id") @Positive long complainId){
+    public ResponseEntity<HttpStatus> deleteComplain(@PathVariable("complain-id") @Positive long complainId){
 
-        complainService.deleteComplain(complainId);
+        shoppingService.deleteComplain(complainId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
